@@ -14,6 +14,7 @@ typedef REAL real2[2];
 typedef REAL real3[3];
 typedef REAL real4[4];
 
+typedef REAL real3x3[3][3];
 typedef REAL real4x4[4][4];
 
 #ifdef _MSC_VER

@@ -42,6 +42,15 @@ void test_arithmetic()
 
 	real3_cross(c, ux, uy);
 	real3_print(c, "c = ux cross uy");
+
+	real3 newer = { 5, 10, 15 };
+	real3_normalize(c, newer);
+	real3_print(c, "c = newer.normalize()");
+	printf("UMAG: %f\n", real3_mag(c));
+
+	real3 p1 = { 1, 2, 0 };
+	real3 p2 = { 4, 2, 0 };
+	printf("DISTANCE: %f\n", real3_distance(p1, p2));
 }
 
 int main(int argc, char **argv)
