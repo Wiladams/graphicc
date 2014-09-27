@@ -31,10 +31,10 @@ void test_arithmetic()
 	real3_neg(c, a);
 	real3_print(c, "c = -a");
 
-	real3_scalar_mul(c, a, 5);
+	real3_mul_scalar(c, a, 5);
 	real3_print(c, "c = a * 5");
 
-	real3_scalar_div(c, c, 5);
+	real3_div_scalar(c, c, 5);
 	real3_print(c, "c = c / 5");
 
 	printf("MAG: %f\n", real3_mag(u));

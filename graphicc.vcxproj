@@ -64,7 +64,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="geomtypes.h" />
+    <ClInclude Include="grc_types.h" />
+    <ClInclude Include="grc_config.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="linearalgebra.cpp" />

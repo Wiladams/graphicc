@@ -25,7 +25,7 @@ void real3_sub(real3 c, const real3 a, const real3 b)
 }
 
 // c = c * s
-void real3_scalar_mul(real3 c, const real3 a, const REAL s)
+void real3_mul_scalar(real3 c, const real3 a, const REAL s)
 {
 	c[0] = a[0] * s;
 	c[1] = a[1] * s;
@@ -33,9 +33,9 @@ void real3_scalar_mul(real3 c, const real3 a, const REAL s)
 }
 
 // c = c / s;
-void real3_scalar_div(real3 c, const real3 a, const REAL s)
+void real3_div_scalar(real3 c, const real3 a, const REAL s)
 {
-	real3_scalar_mul(c, a, 1 / s);
+	real3_mul_scalar(c, a, 1 / s);
 }
 
 // c = -c;

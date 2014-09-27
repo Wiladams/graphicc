@@ -1,0 +1,11 @@
+#ifndef CONSTANTS_H
+#define CONSTANTS_H
+
+
+
+#define C_PI 3.14159265358979323846264338327f
+
+
+
+
+#endif

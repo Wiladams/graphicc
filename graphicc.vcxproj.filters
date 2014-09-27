@@ -15,7 +15,10 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="geomtypes.h">
+    <ClInclude Include="grc_types.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="grc_config.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
