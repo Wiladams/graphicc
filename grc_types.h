@@ -14,7 +14,17 @@ typedef REAL real2[2];
 typedef REAL real3[3];
 typedef REAL real4[4];
 
-typedef REAL real3x3[3][3];
+typedef struct _real2x2 {
+	real2 row1;
+	real2 row2;
+} real2x2;
+
+typedef struct _real3x3 {
+	real3 row1;
+	real3 row2;
+	real3 row3;
+} real3x3;
+
 typedef REAL real4x4[4][4];
 
 #ifdef _MSC_VER

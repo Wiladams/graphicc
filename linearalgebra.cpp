@@ -40,12 +40,30 @@ void realn_neg(const int dim, REAL *c, const REAL *a)
 }
 
 // Linear algebra
-REAL realn_dot(const real3 a, const real3 b)
+REAL realn_dot(const int dim, const real3 a, const real3 b)
 {
 	REAL c = 0;
-	REAL c = a[0] * b[0] + a[1] * b[1] + a[2] * b[2];
+	for (int i = 0; i < dim; i++)
+	{
+		c += a[i] * b[0];
+	}
+
 	return c;
 }
+
+REAL realn_mag(const int dim, const real3 a)
+{
+	REAL lsquared = realn_dot(dim, a, a);
+	return sqrt(lsquared);
+}
+
+void realn_normalize(const int dim, real3 c, const real3 a)
+{
+	REAL mag = realn_mag(dim, a);
+	realn_div_scalar(dim, c, a, mag);
+}
+
+
 
 
 
@@ -57,63 +75,7 @@ void real3_set(real3 c, REAL x, REAL y, REAL z)
 	c[2] = z;
 }
 
-// c = a + b
-void real3_add(real3 c, const real3 a, const real3 b)
-{
-	c[0] = a[0] + b[0];
-	c[1] = a[1] + b[1];
-	c[2] = a[2] + b[2];
-}
 
-// c = a - b
-void real3_sub(real3 c, const real3 a, const real3 b)
-{
-	c[0] = a[0] - b[0];
-	c[1] = a[1] - b[1];
-	c[2] = a[2] - b[2];
-}
-
-// c = c * s
-void real3_mul_scalar(real3 c, const real3 a, const REAL s)
-{
-	c[0] = a[0] * s;
-	c[1] = a[1] * s;
-	c[2] = a[2] * s;
-}
-
-// c = c / s;
-void real3_div_scalar(real3 c, const real3 a, const REAL s)
-{
-	real3_mul_scalar(c, a, 1 / s);
-}
-
-// c = -c;
-void real3_neg(real3 c, const real3 a)
-{
-	c[0] = -a[0];
-	c[1] = -a[1];
-	c[2] = -a[2];
-}
-
-// ||c||
-REAL real3_mag(const real3 c)
-{
-	REAL lsquared = real3_dot(c, c);
-	return sqrt(lsquared);
-}
-
-void real3_normalize(real3 c, const real3 a)
-{
-	REAL mag = real3_mag(a);
-	real3_div_scalar(c, a, mag);
-}
-
-// c = a dot b
-REAL real3_dot(const real3 a, const real3 b)
-{
-	REAL c = a[0] * b[0] + a[1] * b[1] + a[2] * b[2];
-	return c;
-}
 
 // c = a cross b
 void real3_cross(real3 c, const real3 a, const real3 b)
@@ -146,88 +108,95 @@ REAL real3_radians_between(const real3 a, const real3 b)
 	return real3_radians_between_units(aunit, bunit);
 }
 
+
+
 /*
 	Matrix routines
 */
+// 2 X 2 Matrix
+void real2x2_neg(real2x2 c, const real2x2 a)
+{
+	c.row1[0] = -a.row1[0];
+	c.row1[1] = -a.row1[1];
+
+	c.row2[0] = -a.row2[0];
+	c.row2[1] = -a.row2[1];
+}
+
+REAL real2x2_det(const real2x2 a)
+{
+	return (a.row1[0] * a.row2[1]) - (a.row1[1] * a.row2[0]);
+}
+
+// 3 X 3 Matrix
+
+//
+//	a  b  c
+//  d  e  f
+//  g  h  i
+//
+
+
 void real3x3_neg(real3x3 c, const real3x3 a)
 {
-	for (int row = 0; row < 3; row++) {
-		for (int column = 0; column < 3; column++) {
-			c[row][column] = -a[row][column];
-		}
-	}
-
-/*
 	// Unrolled
 	// row 1
-	c[0][0] = -a[0][0];
-	c[0][1] = -a[0][1];
-	c[0][2] = -a[0][2];
+	c.row1[0] = -a.row1[0];
+	c.row1[1] = -a.row1[1];
+	c.row1[2] = -a.row1[2];
 
 	// row 2
-	c[1][0] = -a[1][0];
-	c[1][1] = -a[1][1];
-	c[1][2] = -a[1][2];
+	c.row2[0] = -a.row2[0];
+	c.row2[1] = -a.row2[1];
+	c.row2[2] = -a.row2[2];
 
 	// row3
-	c[2][0] = -a[2][0];
-	c[2][1] = -a[2][1];
-	c[2][2] = -a[2][2];
-*/
+	c.row3[0] = -a.row3[0];
+	c.row3[1] = -a.row3[1];
+	c.row3[2] = -a.row3[2];
 }
 
 void real3x3_add(real3x3 c, const real3x3 a, const real3x3 b)
 {
-	for (int row = 0; row < 3; row++) {
-		for (int column = 0; column < 3; column++) {
-			c[row][column] = a[row][column] + b[row][column];
-		}
+	// row1
+	for (int column = 0; column < 3; column++)
+	{
+		c.row1[column] = a.row1[column] + b.row1[column];
 	}
 
-/*
-	// unrolled
-	// row 1
-	c[0][0] = a[0][0] + b[0][0];
-	c[0][1] = a[0][1] + b[0][1];
-	c[0][2] = a[0][2] + b[0][2];
+	// row2
+	for (int column = 0; column < 3; column++)
+	{
+		c.row2[column] = a.row2[column] + b.row2[column];
+	}
 
-	// row 2
-	c[1][0] = a[1][0] + b[1][0];
-	c[1][1] = a[1][1] + b[1][1];
-	c[1][2] = a[1][2] + b[1][2];
-	
 	// row3
-	c[2][0] = a[2][0] + b[2][0];
-	c[2][1] = a[2][1] + b[2][1];
-	c[2][2] = a[2][2] + b[2][2];
-*/
+	for (int column = 0; column < 3; column++)
+	{
+		c.row3[column] = a.row3[column] + b.row3[column];
+	}
 }
 
 void real3x3_sub(real3x3 c, const real3x3 a, const real3x3 b)
 {
-	for (int row = 0; row < 3; row++) {
-		for (int column = 0; column < 3; column++) {
-			c[row][column] = a[row][column] - b[row][column];
-		}
+	// row1
+	for (int column = 0; column < 3; column++)
+	{
+		c.row1[column] = a.row1[column] - b.row1[column];
 	}
 
-/*
-	// Unrolled
-	// row 1
-	c[0][0] = a[0][0] - b[0][0];
-	c[0][1] = a[0][1] - b[0][1];
-	c[0][2] = a[0][2] - b[0][2];
-
-	// row 2
-	c[1][0] = a[1][0] - b[1][0];
-	c[1][1] = a[1][1] - b[1][1];
-	c[1][2] = a[1][2] - b[1][2];
+	// row2
+	for (int column = 0; column < 3; column++)
+	{
+		c.row2[column] = a.row2[column] -b.row2[column];
+	}
 
 	// row3
-	c[2][0] = a[2][0] - b[2][0];
-	c[2][1] = a[2][1] - b[2][1];
-	c[2][2] = a[2][2] - b[2][2];
-*/
+	for (int column = 0; column < 3; column++)
+	{
+		c.row3[column] = a.row3[column] -b.row3[column];
+	}
+
 	// Another way, if function calls are cheap
 	//real3x3_neg(c, b);
 	//real3x3_add(c, a, c);
@@ -236,10 +205,22 @@ void real3x3_sub(real3x3 c, const real3x3 a, const real3x3 b)
 
 void real3x3_mul_scalar(real3x3 c, const real3x3 a, const REAL scalar)
 {
-	for (int row = 0; row < 3; row++) {
-		for (int column = 0; column < 3; column++) {
-			c[row][column] = a[row][column] * scalar;
-		}
+	// row1
+	for (int column = 0; column < 3; column++) 
+	{
+		c.row1[column] = a.row1[column] * scalar;
+	}
+
+	// row2
+	for (int column = 0; column < 3; column++)
+	{
+		c.row2[column] = a.row2[column] * scalar;
+	}
+
+	// row3
+	for (int column = 0; column < 3; column++)
+	{
+		c.row3[column] = a.row3[column] * scalar;
 	}
 }
 
@@ -247,4 +228,23 @@ void real3x3_div_scalar(real3x3 c, const real3x3 a, const REAL scalar)
 {
 	REAL fac = 1 / scalar;
 	real3x3_mul_scalar(c, a, fac);
+}
+
+//
+//	a  b  c
+//  d  e  f
+//  g  h  i
+//
+REAL real3x3_det(const real3x3 a)
+{
+	// (aei +bfg + cdh) - (ceg + bdi + afh)
+	REAL part1 = a.row1[0] * a.row2[1] * a.row3[2];
+	part1 += a.row1[1] * a.row2[2] * a.row3[0];
+	part1 += a.row1[2] * a.row2[0] * a.row3[1];
+
+	REAL part2 = a.row1[2] * a.row2[1] * a.row3[0];
+	part2 += a.row1[1] * a.row2[0] * a.row3[2];
+	part2 += a.row1[0] * a.row2[2] * a.row3[1];
+
+	return part1 - part2;
 }
