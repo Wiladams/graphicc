@@ -21,12 +21,24 @@
     <ClInclude Include="grc_config.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="framebuffer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="pbm.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="linearalgebra.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="test_main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="framebuffer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="pbm.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

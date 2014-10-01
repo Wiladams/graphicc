@@ -21,3 +21,8 @@ limited to desktop operating systems.
 
 These might not be the fastest routines on the planet, but they
 should be correct, and fairly compact.
+
+Interesting libraries
+=====================
+LibGD - http://libgd.bitbucket.org/
+Netpbm - http://netpbm.sourceforge.net/
