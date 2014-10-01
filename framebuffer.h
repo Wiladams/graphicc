@@ -34,7 +34,8 @@ typedef struct _pix_rgba {
 	unsigned char r, g, b, a; 
 } pix_rgba;
 
-#define RGBA(r,g,b,a) ((unsigned int)(r<<24|g<<16|b<<8|a))
+// On a little endian machine
+#define RGBA(r,g,b,a) ((unsigned int)(a<<24|b<<16|g<<8|r))
 
 #ifdef __cplusplus
 extern "C" {

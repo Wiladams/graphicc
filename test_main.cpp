@@ -1,4 +1,7 @@
 #include "linearalgebra.h"
+#include "framebuffer.h"
+#include "pbm.h"
+
 #include <stdio.h>
 
 void real3_write_array(const real3 c)
@@ -53,9 +56,28 @@ void test_arithmetic()
 	printf("DISTANCE: %f\n", real3_distance(p1, p2));
 }
 
+void test_writebitmap()
+{
+	size_t width = 320;
+	size_t height = 240;
+	fb_rgba fb;
+	fb_rgba_init(&fb, width, height);
+
+	unsigned int pRed = RGBA(255, 0, 0, 0);
+
+	for (size_t row = 0; row < height; row++) {
+		fb_rgba_set_pixel(&fb, row, row, pRed);
+	}
+
+	// Now we have a simple image, so write it to a file
+	int err = write_PPM("test.ppm", &fb);
+
+}
+
 int main(int argc, char **argv)
 {
-	test_arithmetic();
+	//test_arithmetic();
+	test_writebitmap();
 
 	return 0;
 }
