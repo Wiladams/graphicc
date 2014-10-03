@@ -41,15 +41,20 @@ REAL real3_radians_between(const real3 a, const real3 b);
 
 
 // matrix 2X2
-void real2x2_neg(real2x2 c, const real2x2 a);
-REAL real2x2_det(const real2x2 a);
+void mat2_neg(mat2 c, const mat2 a);
+REAL mat2_det(const mat2 a);
+REAL mat2_trace(const mat2 a);
+void mat2_trans(const mat2 c, mat2 a);
+void mat2_set_ident(mat2 c);
 
 // Matrix 3X3
-void real3x3_add(real3x3 c, const real3x3 a, const real3x3 b);
-void real3x3_sub(real3x3 c, const real3x3 a, const real3x3 b);
-void real3x3_mul_scalar(real3x3 c, const real3x3 a, const REAL scalar);
-void real3x3_div_scalar(real3x3 c, const real3x3 a, const REAL scalar);
-REAL real3x3_det(const real3x3 a);
+void mat3_add(mat3 c, const mat3 a, const mat3 b);
+void mat3_sub(mat3 c, const mat3 a, const mat3 b);
+void mat3_mul_scalar(mat3 c, const mat3 a, const REAL scalar);
+void mat3_div_scalar(mat3 c, const mat3 a, const REAL scalar);
+REAL mat3_det(const mat3 a);
+REAL mat3_trace(const mat3);
+void mat3_set_ident(mat3 c);
 
 #ifdef __cplusplus
 }

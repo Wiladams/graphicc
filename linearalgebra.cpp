@@ -1,5 +1,6 @@
 #include "linearalgebra.h"
 #include <math.h>
+#include <stdlib.h>
 
 // general methods
 void realn_add(const int dim, REAL *c, const REAL *a, const REAL *b)
@@ -114,7 +115,7 @@ REAL real3_radians_between(const real3 a, const real3 b)
 	Matrix routines
 */
 // 2 X 2 Matrix
-void real2x2_neg(real2x2 c, const real2x2 a)
+void mat2_neg(mat2 c, const mat2 a)
 {
 	c.row1[0] = -a.row1[0];
 	c.row1[1] = -a.row1[1];
@@ -123,10 +124,35 @@ void real2x2_neg(real2x2 c, const real2x2 a)
 	c.row2[1] = -a.row2[1];
 }
 
-REAL real2x2_det(const real2x2 a)
+REAL mat2_det(const mat2 a)
 {
 	return (a.row1[0] * a.row2[1]) - (a.row1[1] * a.row2[0]);
 }
+
+REAL mat2_trace(const mat2 a)
+{
+	return (a.row1[0] + a.row2[1]);
+}
+
+// Assume c and a do NOT occupy the same data space
+void mat2_trans(mat2 c, mat2 a)
+{
+	c.row1[0] = a.row1[0];
+	c.row1[1] = a.row2[0];
+
+	c.row2[0] = a.row1[0];
+	c.row2[1] = a.row2[1];
+}
+
+void mat2_set_ident(mat2 c)
+{
+	c.row1[0] = 1;
+	c.row1[1] = 0;
+
+	c.row2[0] = 0;
+	c.row2[1] = 1;
+}
+
 
 // 3 X 3 Matrix
 
@@ -137,7 +163,7 @@ REAL real2x2_det(const real2x2 a)
 //
 
 
-void real3x3_neg(real3x3 c, const real3x3 a)
+void mat3_neg(mat3 c, const mat3 a)
 {
 	// Unrolled
 	// row 1
@@ -156,7 +182,7 @@ void real3x3_neg(real3x3 c, const real3x3 a)
 	c.row3[2] = -a.row3[2];
 }
 
-void real3x3_add(real3x3 c, const real3x3 a, const real3x3 b)
+void mat3_add(mat3 c, const mat3 a, const mat3 b)
 {
 	// row1
 	for (int column = 0; column < 3; column++)
@@ -177,7 +203,7 @@ void real3x3_add(real3x3 c, const real3x3 a, const real3x3 b)
 	}
 }
 
-void real3x3_sub(real3x3 c, const real3x3 a, const real3x3 b)
+void mat3_sub(mat3 c, const mat3 a, const mat3 b)
 {
 	// row1
 	for (int column = 0; column < 3; column++)
@@ -203,7 +229,7 @@ void real3x3_sub(real3x3 c, const real3x3 a, const real3x3 b)
 
 }
 
-void real3x3_mul_scalar(real3x3 c, const real3x3 a, const REAL scalar)
+void mat3_mul_scalar(mat3 c, const mat3 a, const REAL scalar)
 {
 	// row1
 	for (int column = 0; column < 3; column++) 
@@ -224,10 +250,10 @@ void real3x3_mul_scalar(real3x3 c, const real3x3 a, const REAL scalar)
 	}
 }
 
-void real3x3_div_scalar(real3x3 c, const real3x3 a, const REAL scalar)
+void mat3_div_scalar(mat3 c, const mat3 a, const REAL scalar)
 {
 	REAL fac = 1 / scalar;
-	real3x3_mul_scalar(c, a, fac);
+	mat3_mul_scalar(c, a, fac);
 }
 
 //
@@ -235,7 +261,7 @@ void real3x3_div_scalar(real3x3 c, const real3x3 a, const REAL scalar)
 //  d  e  f
 //  g  h  i
 //
-REAL real3x3_det(const real3x3 a)
+REAL mat3_det(const mat3 a)
 {
 	// (aei +bfg + cdh) - (ceg + bdi + afh)
 	REAL part1 = a.row1[0] * a.row2[1] * a.row3[2];
@@ -247,4 +273,40 @@ REAL real3x3_det(const real3x3 a)
 	part2 += a.row1[0] * a.row2[2] * a.row3[1];
 
 	return part1 - part2;
+}
+
+REAL mat3_trace(const mat3 a)
+{
+	return (a.row1[0] + a.row2[1]+a.row3[2]);
+}
+
+// Assume c and a do NOT occupy the same data space
+void mat3_trans(mat3 c, mat3 a)
+{
+	c.row1[0] = a.row1[0];
+	c.row1[1] = a.row2[0];
+	c.row1[2] = a.row3[0];
+
+	c.row2[0] = a.row1[1];
+	c.row2[1] = a.row2[1];
+	c.row2[2] = a.row3[1];
+
+	c.row3[0] = a.row1[2];
+	c.row3[1] = a.row2[2];
+	c.row3[2] = a.row3[2];
+}
+
+void mat3_set_ident(mat3 c)
+{
+	c.row1[0] = 1;
+	c.row1[1] = 0;
+	c.row1[2] = 0;
+
+	c.row2[0] = 0;
+	c.row2[1] = 1;
+	c.row2[2] = 0;
+
+	c.row3[0] = 0;
+	c.row3[1] = 0;
+	c.row3[2] = 1;
 }

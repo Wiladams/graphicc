@@ -67,6 +67,7 @@
     <ClInclude Include="framebuffer.h" />
     <ClInclude Include="grc_types.h" />
     <ClInclude Include="grc_config.h" />
+    <ClInclude Include="linearalgebra.h" />
     <ClInclude Include="pbm.h" />
   </ItemGroup>
   <ItemGroup>
