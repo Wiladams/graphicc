@@ -21,13 +21,16 @@
     <ClInclude Include="grc_config.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="framebuffer.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="pbm.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="linearalgebra.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="pixelbuffer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="render_rgba.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -38,10 +41,13 @@
     <ClCompile Include="test_main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="framebuffer.cpp">
+    <ClCompile Include="pbm.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="pbm.cpp">
+    <ClCompile Include="pixelbuffer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="render_rgba.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

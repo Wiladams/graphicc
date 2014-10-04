@@ -3,8 +3,8 @@
 #ifndef PPM_H
 #define PPM_H
 
-#include "framebuffer.h"
+#include "pixelbuffer.h"
 
-int write_PPM(const char *filename, fb_rgba *fb);
+int write_PPM(const char *filename, pb_rgba *fb);
 
 #endif

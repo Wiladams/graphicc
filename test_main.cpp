@@ -1,5 +1,6 @@
 #include "linearalgebra.h"
-#include "framebuffer.h"
+#include "pixelbuffer.h"
+#include "render_rgba.h"
 #include "pbm.h"
 
 #include <stdio.h>
@@ -60,13 +61,13 @@ void test_writebitmap()
 {
 	size_t width = 320;
 	size_t height = 240;
-	fb_rgba fb;
-	fb_rgba_init(&fb, width, height);
+	pb_rgba fb;
+	pb_rgba_init(&fb, width, height);
 
 	unsigned int pRed = RGBA(255, 0, 0, 0);
 
 	for (size_t row = 0; row < height; row++) {
-		fb_rgba_set_pixel(&fb, row, row, pRed);
+		render_rgba_set_pixel(&fb, row, row, pRed);
 	}
 
 	// Now we have a simple image, so write it to a file

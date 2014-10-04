@@ -64,16 +64,18 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="framebuffer.h" />
     <ClInclude Include="grc_types.h" />
     <ClInclude Include="grc_config.h" />
     <ClInclude Include="linearalgebra.h" />
     <ClInclude Include="pbm.h" />
+    <ClInclude Include="pixelbuffer.h" />
+    <ClInclude Include="render_rgba.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="framebuffer.cpp" />
     <ClCompile Include="linearalgebra.cpp" />
     <ClCompile Include="pbm.cpp" />
+    <ClCompile Include="pixelbuffer.cpp" />
+    <ClCompile Include="render_rgba.cpp" />
     <ClCompile Include="test_main.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

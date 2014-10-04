@@ -1,11 +1,12 @@
 #include "pbm.h"
+
 #include <stdio.h>
 
 #pragma warning(push)
 #pragma warning(disable: 4996)	// _CRT_SECURE_NO_WARNINGS (fopen) 
 
 
-int write_PPM(const char *filename, fb_rgba *fb)
+int write_PPM(const char *filename, pb_rgba *fb)
 {
 	FILE * fp = fopen(filename, "wb");
 	
