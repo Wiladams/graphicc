@@ -15,8 +15,8 @@ typedef REAL real3[3];
 typedef REAL real4[4];
 
 typedef struct _mat2 {
-	real2 row1;
-	real2 row2;
+	REAL m11, m12;
+	REAL m21, m22;
 } mat2;
 
 typedef struct _mat3 {

@@ -117,40 +117,42 @@ REAL real3_radians_between(const real3 a, const real3 b)
 // 2 X 2 Matrix
 void mat2_neg(mat2 c, const mat2 a)
 {
-	c.row1[0] = -a.row1[0];
-	c.row1[1] = -a.row1[1];
+	c.m11 = -a.m11;
+	c.m12 = -a.m12;
 
-	c.row2[0] = -a.row2[0];
-	c.row2[1] = -a.row2[1];
+	c.m21 = -a.m21;
+	c.m22 = -a.m22;
 }
 
 REAL mat2_det(const mat2 a)
 {
-	return (a.row1[0] * a.row2[1]) - (a.row1[1] * a.row2[0]);
+	return (a.m11 * a.m22) - (a.m12 * a.m21);
 }
 
 REAL mat2_trace(const mat2 a)
 {
-	return (a.row1[0] + a.row2[1]);
+	return a.m11 + a.m22;
 }
 
 // Assume c and a do NOT occupy the same data space
 void mat2_trans(mat2 c, mat2 a)
 {
-	c.row1[0] = a.row1[0];
-	c.row1[1] = a.row2[0];
+	c.m11 = a.m11;
+	c.m12 = a.m21;
 
-	c.row2[0] = a.row1[0];
-	c.row2[1] = a.row2[1];
+	c.m21 = a.m12;
+	c.m22 = a.m22;
 }
 
 void mat2_set_ident(mat2 c)
 {
-	c.row1[0] = 1;
-	c.row1[1] = 0;
+	// memset to zero
+	c.m12 = 0;
+	c.m21 = 0;
 
-	c.row2[0] = 0;
-	c.row2[1] = 1;
+	// set the ones we need to be one
+	c.m11 = 1;
+	c.m22 = 1;
 }
 
 
