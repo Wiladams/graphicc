@@ -8,6 +8,17 @@ enum pixellayouts {
 	rgba
 };
 
+typedef struct _pix_rgba {
+	unsigned char r, g, b, a;
+} pix_rgba;
+
+// On a little endian machine
+#define RGBA(r,g,b,a) ((unsigned int)(a<<24|b<<16|g<<8|r))
+#define GET_R(value) (unsigned int)value &0xff
+#define GET_G(value) ((unsigned int)value &0xff00) >> 8
+#define GET_B(value) ((unsigned int)value &0xff0000) >> 16
+#define GET_A(value) ((unsigned int)value &0xff000000) >> 24
+
 /*
 A pixel buffer is an array of pixels.
 
@@ -29,12 +40,7 @@ typedef struct _pb_rgba {
 	unsigned int		pitch;
 } pb_rgba;
 
-typedef struct _pix_rgba {
-	unsigned char r, g, b, a;
-} pix_rgba;
 
-// On a little endian machine
-#define RGBA(r,g,b,a) ((unsigned int)(a<<24|b<<16|g<<8|r))
 
 #ifdef __cplusplus
 extern "C" {

@@ -1,5 +1,7 @@
+#include <math.h>
 #include "render_rgba.h"
 
+/*
 int render_rgba_get_pixel(pb_rgba *fb, unsigned int x, unsigned int y, unsigned int *value)
 {
 	unsigned int * data = (unsigned int *)&fb->data[y*fb->pitch];
@@ -7,23 +9,83 @@ int render_rgba_get_pixel(pb_rgba *fb, unsigned int x, unsigned int y, unsigned 
 
 	return 0;
 }
-
-int render_rgba_set_pixel(pb_rgba *fb, unsigned int x, unsigned int y, unsigned int value)
+*/
+/*
+void render_rgba_set_pixel(pb_rgba *fb, unsigned int x, unsigned int y, unsigned int value)
 {
-	unsigned int * data = (unsigned int *)&fb->data[y*fb->pitch];
-	data[x] = value;
-
-	return 0;
+	((unsigned int *)&fb->data[y*fb->pitch])[x] = value;
 }
-
+*/
 
 
 int render_rgba_hline(pb_rgba *pb, unsigned int x, unsigned int y, unsigned int length, int value)
 {
-	for (int offset = x; offset < x + length; offset++)
+	for (size_t offset = x; offset < x + length; offset++)
 	{
 		render_rgba_set_pixel(pb, x + offset, y, value);
 	}
 
 	return 0;
+}
+
+int render_rgba_vline(pb_rgba *pb, unsigned int x, unsigned int y, unsigned int length, int value)
+{
+	for (size_t offset = 0; offset < y + length; offset++) {
+		render_rgba_set_pixel(pb, x, y + offset, value);
+	}
+
+	return 0;
+}
+
+//#define sgn(x) x < 0 ? -1 : x==0?0 : 1
+#define sgn(val) ((0 < val) - (val < 0))
+
+// Bresenham simple line drawing
+void render_rgba_line(pb_rgba *pb, unsigned int x1, unsigned int y1, unsigned int x2, unsigned int y2, int color)
+{
+	int i, dx, dy;
+	int sdx, sdy, dxabs, dyabs;
+	unsigned int x, y, px, py;
+
+	dx = x2 - x1;      /* the horizontal distance of the line */
+	dy = y2 - y1;      /* the vertical distance of the line */
+	dxabs = abs(dx);
+	dyabs = abs(dy);
+	sdx = sgn(dx);
+	sdy = sgn(dy);
+	x = dyabs >> 1;
+	y = dxabs >> 1;
+	px = x1;
+	py = y1;
+
+	render_rgba_set_pixel(pb, x1, y1, color);
+
+	if (dxabs >= dyabs) /* the line is more horizontal than vertical */
+	{
+		for (i = 0; i<dxabs; i++)
+		{
+			y += dyabs;
+			if (y >= dxabs)
+			{
+				y -= dxabs;
+				py += sdy;
+			}
+			px += sdx;
+			render_rgba_set_pixel(pb, px, py, color);
+		}
+	}
+	else /* the line is more vertical than horizontal */
+	{
+		for (i = 0; i<dyabs; i++)
+		{
+			x += dxabs;
+			if (x >= dyabs)
+			{
+				x -= dyabs;
+				px += sdx;
+			}
+			py += sdy;
+			render_rgba_set_pixel(pb, px, py, color);
+		}
+	}
 }

@@ -57,28 +57,69 @@ void test_arithmetic()
 	printf("DISTANCE: %f\n", real3_distance(p1, p2));
 }
 
-void test_writebitmap()
+void test_pixelvalues()
 {
-	size_t width = 320;
-	size_t height = 240;
-	pb_rgba fb;
-	pb_rgba_init(&fb, width, height);
+	int value = RGBA(230, 63, 127, 255);
 
-	unsigned int pRed = RGBA(255, 0, 0, 0);
+	printf("RED: %d (230)\tGREEN: %d (63)\tBLUE: %d (127)\tALPHA: %d (255)\n",
+		GET_R(value), GET_G(value), GET_B(value), GET_A(value));
+}
+
+void test_drawpixels()
+{
+	size_t width = 256;
+	size_t height = 256;
+	pb_rgba pb;
+	pb_rgba_init(&pb, width, height);
 
 	for (size_t row = 0; row < height; row++) {
-		render_rgba_set_pixel(&fb, row, row, pRed);
+		for (size_t col = 0; col < width; col++) {
+			int value = RGBA(row, col, 255, 255);
+			//((unsigned int *)(&pb)->data)[(row*(&pb)->width) + col] = value;
+			render_rgba_set_pixel(&pb, col, row, value);
+		}
 	}
 
 	// Now we have a simple image, so write it to a file
-	int err = write_PPM("test.ppm", &fb);
+	int err = write_PPM("test_drawpixel.ppm", &pb);
+
+}
+
+void test_writebitmap()
+{
+	size_t width = 480;
+	size_t height = 480;
+	pb_rgba pb;
+	pb_rgba_init(&pb, width, height);
+
+	unsigned int pRed = RGBA(255, 0, 0, 255);
+	unsigned int pWhite = RGBA(255, 255, 255, 255);
+	unsigned int pGreen = RGBA(0, 255, 0, 255);
+	unsigned int pYellow = RGBA(255, 255, 0, 255);
+	unsigned int pTurquoise = RGBA(0, 255, 255, 255);
+
+	// draw horizontal lines top and bottom
+	render_rgba_hline(&pb, 0, 0, width-1, pWhite);
+	render_rgba_hline(&pb, 0, height - 1, width - 1, pWhite);
+	
+	// draw vertical lines left and right
+	render_rgba_vline(&pb, 0, 0, height - 1, pGreen);
+	render_rgba_vline(&pb, width - 1, 0, height - 1, pTurquoise);
+
+	render_rgba_line(&pb, 0, 0, width - 1, height - 1, pRed);
+	render_rgba_line(&pb, width - 1, 0, 0, height - 1, pYellow);
+
+	// Now we have a simple image, so write it to a file
+	int err = write_PPM("test.ppm", &pb);
 
 }
 
 int main(int argc, char **argv)
 {
 	//test_arithmetic();
-	test_writebitmap();
+	//test_writebitmap();
+	//test_drawpixels();
+	test_pixelvalues();
 
 	return 0;
 }
