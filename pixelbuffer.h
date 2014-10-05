@@ -59,6 +59,10 @@ int pb_rgba_free(pb_rgba *pb);
 
 int pb_rgba_get_frame(pb_rgba *pb, const unsigned int x, const unsigned int y, const unsigned int width, const unsigned int height, pb_rgba *pf);
 
+#define pb_rgba_get_pixel(pb, x, y, value) *value = ((unsigned int *)(pb)->data)[(y*(pb)->pixelpitch)+x]
+#define pb_rgba_set_pixel(pb, x, y, value) ((unsigned int *)(pb)->data)[(y*(pb)->pixelpitch)+x] = value
+
+
 #define pb_rect_contains(rect, x, y) ((x>=(rect)->x && x<= (rect)->x+(rect)->width) && ((y>=(rect)->y) && (y<=(rect)->y+(rect)->height)))
 #define pb_rect_clear(rect) memset((rect), 0, sizeof(pb_rect))
 
