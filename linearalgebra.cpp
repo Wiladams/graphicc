@@ -1,6 +1,7 @@
 #include "linearalgebra.h"
 #include <math.h>
 #include <stdlib.h>
+#include <string.h>
 
 // general methods
 void realn_add(const int dim, REAL *c, const REAL *a, const REAL *b)
@@ -300,15 +301,17 @@ void mat3_trans(mat3 c, mat3 a)
 
 void mat3_set_ident(mat3 c)
 {
+	memset((void *)&c, 0, sizeof(c));
+
 	c.row1[0] = 1;
-	c.row1[1] = 0;
-	c.row1[2] = 0;
+	//c.row1[1] = 0;
+	//c.row1[2] = 0;
 
-	c.row2[0] = 0;
+	//c.row2[0] = 0;
 	c.row2[1] = 1;
-	c.row2[2] = 0;
+	//c.row2[2] = 0;
 
-	c.row3[0] = 0;
-	c.row3[1] = 0;
+	//c.row3[0] = 0;
+	//c.row3[1] = 0;
 	c.row3[2] = 1;
 }

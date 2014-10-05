@@ -20,16 +20,19 @@ typedef struct _mat2 {
 } mat2;
 
 typedef struct _mat3 {
+	//REAL m11, m12, m13;
+	//REAL m21, m22, m23;
+	//REAL m31, m32, m33;
+
 	real3 row1;
 	real3 row2;
 	real3 row3;
 } mat3;
 
 typedef struct _mat4 {
-	real4 row1;
-	real4 row2;
-	real4 row3;
-	real4 row4;
+	REAL m11, m12, m13;
+	REAL m21, m22, m23;
+	REAL m31, m32, m33;
 } mat4;
 
 #ifdef _MSC_VER
