@@ -9,8 +9,8 @@
 extern "C" {
 #endif
 	
-#define render_rgba_get_pixel(pb, x, y, value) *value = ((unsigned int *)(pb)->data)[(y*(pb)->width)+x]
-#define render_rgba_set_pixel(pb, x, y, value) ((unsigned int *)(pb)->data)[(y*(pb)->width)+x] = value
+#define render_rgba_get_pixel(pb, x, y, value) *value = ((unsigned int *)(pb)->data)[(y*(pb)->pixelpitch)+x]
+#define render_rgba_set_pixel(pb, x, y, value) ((unsigned int *)(pb)->data)[(y*(pb)->pixelpitch)+x] = value
 
 int render_rgba_hline(pb_rgba *pb, unsigned int x, unsigned int y, unsigned int length, int value);
 int render_rgba_vline(pb_rgba *pb, unsigned int x, unsigned int y, unsigned int length, int value);

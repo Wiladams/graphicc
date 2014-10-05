@@ -5,7 +5,7 @@
 
 int render_rgba_hline(pb_rgba *pb, unsigned int x, unsigned int y, unsigned int length, int value)
 {
-	unsigned int * data = &((unsigned int *)pb->data)[y*pb->width+x];
+	unsigned int * data = &((unsigned int *)pb->data)[y*pb->pixelpitch+x];
 	size_t count = 1;
 	while (count < length) {
 		*data = value;
@@ -18,11 +18,11 @@ int render_rgba_hline(pb_rgba *pb, unsigned int x, unsigned int y, unsigned int 
 
 int render_rgba_vline(pb_rgba *pb, unsigned int x, unsigned int y, unsigned int length, int value)
 {
-	unsigned int * data = &((unsigned int *)pb->data)[y*pb->width + x];
+	unsigned int * data = &((unsigned int *)pb->data)[y*pb->frame.width + x];
 	size_t count = 1;
 	while (count < length) {
 		*data = value;
-		data += pb->width;
+		data += pb->pixelpitch;
 		count++;
 	}
 

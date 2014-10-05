@@ -13,15 +13,18 @@ int write_PPM(const char *filename, pb_rgba *fb)
 	if (!fp) return -1;
 
 	// write out the image header
-	fprintf(fp, "P6\n%d %d\n255\n", fb->width, fb->height);
+	fprintf(fp, "P6\n%d %d\n255\n", fb->frame.width, fb->frame.height);
+	
+	// write the individual pixel values in binary form
+	unsigned int * pixelPtr = (unsigned int *)fb->data;
 
-	// Now write binary for each row
-	for (size_t row = 0; row < fb->height; row++) {
-		pix_rgba * pixPtr = (pix_rgba *)&fb->data[fb->pitch*row];
-		for (size_t col = 0; col < fb->width; col++){
-			fwrite(&pixPtr[col], 3, 1, fp);
+	for (size_t row = 0; row < fb->frame.height; row++) {
+		for (size_t col = 0; col < fb->frame.width; col++){
+			fwrite(&pixelPtr[col], 3, 1, fp);
 		}
+		pixelPtr += fb->pixelpitch;
 	}
+
 
 	fclose(fp);
 

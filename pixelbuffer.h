@@ -19,6 +19,7 @@ typedef struct _pix_rgba {
 #define GET_B(value) ((unsigned int)value &0xff0000) >> 16
 #define GET_A(value) ((unsigned int)value &0xff000000) >> 24
 
+
 /*
 A pixel buffer is an array of pixels.
 
@@ -32,13 +33,20 @@ height - number of pixels high
 pitch - number of bytes between rows
 */
 
+// pixel buffer rectangle
+typedef struct _pb_rect {
+	unsigned int x, y, width, height;
+} pb_rect;
+
 typedef struct _pb_rgba {
 	unsigned char *		data;
-	int					pformat;
-	unsigned int		width;
-	unsigned int		height;
-	unsigned int		pitch;
+	unsigned int		pixelpitch;
+	int					owndata;
+	pb_rect				frame;
 } pb_rgba;
+
+
+
 
 
 
@@ -46,8 +54,13 @@ typedef struct _pb_rgba {
 extern "C" {
 #endif
 
-int pb_rgba_init(pb_rgba *fb, const int width, const int height);
-int pb_rgba_free(pb_rgba *fb);
+int pb_rgba_init(pb_rgba *pb, const unsigned int width, const unsigned int height);
+int pb_rgba_free(pb_rgba *pb);
+
+int pb_rgba_get_frame(pb_rgba *pb, const unsigned int x, const unsigned int y, const unsigned int width, const unsigned int height, pb_rgba *pf);
+
+#define pb_rect_contains(rect, x, y) ((x>=(rect)->x && x<= (rect)->x+(rect)->width) && ((y>=(rect)->y) && (y<=(rect)->y+(rect)->height)))
+#define pb_rect_clear(rect) memset((rect), 0, sizeof(pb_rect))
 
 #ifdef __cplusplus
 }
