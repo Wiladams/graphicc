@@ -18,6 +18,10 @@ void render_rgba_line(pb_rgba *pb, unsigned int x1, unsigned int y1, unsigned in
 
 void render_rgba_rect_fill(pb_rgba *pb, unsigned int x1, unsigned int y1, unsigned int width, unsigned int height, int value);
 
+// Remaining
+// render_rgba_triangle_fill
+// render_rgba_ellipse_fill
+// render_rgba_polygon_fill
 #ifdef __cplusplus
 }
 #endif

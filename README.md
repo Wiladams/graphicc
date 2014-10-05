@@ -22,7 +22,22 @@ limited to desktop operating systems.
 These might not be the fastest routines on the planet, but they
 should be correct, and fairly compact.
 
+The render_rgba routines are meant to be base drawing routines.  
+set_pixel, get_pixel, hline, vline, rect_fill, triangle_fill, ellipse, roundedrect
+And that's it.  Things such as polygons are meant to be broken down into these various
+primitives.  Multi-line drawing, curves, etc.
+
+In addition, there will be various forms of pixel blit.
+
+These routines will come in two flavors.  The 'solid' version, which are the defaults, 
+have an alpha copy routine of SRCOVER, which means there is no alpha blending.  Second
+forms will include basic alpha blending.
+
+The 3D rendering routines will make heavy usage of the triangle rendering primitive.
+
 Interesting libraries
 =====================
 LibGD - http://libgd.bitbucket.org/
 Netpbm - http://netpbm.sourceforge.net/
+AntiGrain - http://antigrain.com/
+
