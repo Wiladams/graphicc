@@ -1,28 +1,16 @@
 #include <math.h>
 #include "render_rgba.h"
 
-/*
-int render_rgba_get_pixel(pb_rgba *fb, unsigned int x, unsigned int y, unsigned int *value)
-{
-	unsigned int * data = (unsigned int *)&fb->data[y*fb->pitch];
-	*value = data[x];
-
-	return 0;
-}
-*/
-/*
-void render_rgba_set_pixel(pb_rgba *fb, unsigned int x, unsigned int y, unsigned int value)
-{
-	((unsigned int *)&fb->data[y*fb->pitch])[x] = value;
-}
-*/
 
 
 int render_rgba_hline(pb_rgba *pb, unsigned int x, unsigned int y, unsigned int length, int value)
 {
-	for (size_t offset = x; offset < x + length; offset++)
-	{
-		render_rgba_set_pixel(pb, x + offset, y, value);
+	unsigned int * data = &((unsigned int *)pb->data)[y*pb->width+x];
+	size_t count = 1;
+	while (count < length) {
+		*data = value;
+		data++;
+		count++;
 	}
 
 	return 0;
@@ -30,8 +18,12 @@ int render_rgba_hline(pb_rgba *pb, unsigned int x, unsigned int y, unsigned int 
 
 int render_rgba_vline(pb_rgba *pb, unsigned int x, unsigned int y, unsigned int length, int value)
 {
-	for (size_t offset = 0; offset < y + length; offset++) {
-		render_rgba_set_pixel(pb, x, y + offset, value);
+	unsigned int * data = &((unsigned int *)pb->data)[y*pb->width + x];
+	size_t count = 1;
+	while (count < length) {
+		*data = value;
+		data += pb->width;
+		count++;
 	}
 
 	return 0;
@@ -87,5 +79,14 @@ void render_rgba_line(pb_rgba *pb, unsigned int x1, unsigned int y1, unsigned in
 			py += sdy;
 			render_rgba_set_pixel(pb, px, py, color);
 		}
+	}
+}
+
+void render_rgba_rect_fill(pb_rgba *pb, unsigned int x1, unsigned int y1, unsigned int width, unsigned int height, int value)
+{
+	size_t counter = 1;
+	while (counter < height) {
+		render_rgba_hline(pb, x1, y1 + counter - 1, width, value);
+		counter++;
 	}
 }

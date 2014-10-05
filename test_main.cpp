@@ -97,6 +97,7 @@ void test_writebitmap()
 	unsigned int pGreen = RGBA(0, 255, 0, 255);
 	unsigned int pYellow = RGBA(255, 255, 0, 255);
 	unsigned int pTurquoise = RGBA(0, 255, 255, 255);
+	unsigned int pLightGray = RGBA(163, 163, 163, 255);
 
 	// draw horizontal lines top and bottom
 	render_rgba_hline(&pb, 0, 0, width-1, pWhite);
@@ -106,8 +107,13 @@ void test_writebitmap()
 	render_rgba_vline(&pb, 0, 0, height - 1, pGreen);
 	render_rgba_vline(&pb, width - 1, 0, height - 1, pTurquoise);
 
+	// draw criss cross lines
 	render_rgba_line(&pb, 0, 0, width - 1, height - 1, pRed);
 	render_rgba_line(&pb, width - 1, 0, 0, height - 1, pYellow);
+
+	// draw a couple of rectangles
+	render_rgba_rect_fill(&pb, 5, 5, 60, 60, pLightGray);
+	render_rgba_rect_fill(&pb, width - 65, height - 65, 60, 60, pLightGray);
 
 	// Now we have a simple image, so write it to a file
 	int err = write_PPM("test.ppm", &pb);
@@ -117,9 +123,9 @@ void test_writebitmap()
 int main(int argc, char **argv)
 {
 	//test_arithmetic();
-	//test_writebitmap();
+	test_writebitmap();
 	//test_drawpixels();
-	test_pixelvalues();
+	//test_pixelvalues();
 
 	return 0;
 }
