@@ -6,11 +6,11 @@ graphics library in C
 This library is an experiment in compactful usefulness.  I want
 to create a library that satisfies a few criteria.
 
-1) Works well enough for embedded devices
-2) Can interact with higher level acceleration
-3) Can be used for basic 2D drawing
-4) Can be used for basic 3D rendering
-5) Can work well with scripting languages
+1. Works well enough for embedded devices
+2. Can interact with higher level acceleration
+3. Can be used for basic 2D drawing
+4. Can be used for basic 3D rendering
+5. Can work well with scripting languages
 
 The library sticks with the most basic of C interfaces.  There
 is no usage of C++ constructs such as classes, templates, overloading
@@ -37,7 +37,8 @@ The 3D rendering routines will make heavy usage of the triangle rendering primit
 
 Interesting libraries
 =====================
-LibGD - http://libgd.bitbucket.org/
-Netpbm - http://netpbm.sourceforge.net/
-AntiGrain - http://antigrain.com/
+**LibGD** - http://libgd.bitbucket.org/
+**Netpbm** - http://netpbm.sourceforge.net/
+**AntiGrain** - http://antigrain.com/
 
+Paul Heckbert's **Zoom** - http://user.xmission.com/~legalize/zoom.html

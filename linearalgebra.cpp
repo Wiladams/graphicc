@@ -4,7 +4,7 @@
 #include <string.h>
 
 // general methods
-void realn_add(const int dim, REAL *c, const REAL *a, const REAL *b)
+void realn_add(const int dim, REAL * c, const REAL * a, const REAL *b)
 {
 	for (int i = 0; i < dim; i++)
 	{
@@ -42,7 +42,7 @@ void realn_neg(const int dim, REAL *c, const REAL *a)
 }
 
 // Linear algebra
-REAL realn_dot(const int dim, const real3 a, const real3 b)
+REAL realn_dot(const int dim, const REAL * a, const REAL * b)
 {
 	REAL c = 0;
 	for (int i = 0; i < dim; i++)
@@ -53,13 +53,13 @@ REAL realn_dot(const int dim, const real3 a, const real3 b)
 	return c;
 }
 
-REAL realn_mag(const int dim, const real3 a)
+REAL realn_mag(const int dim, const REAL * a)
 {
 	REAL lsquared = realn_dot(dim, a, a);
 	return sqrt(lsquared);
 }
 
-void realn_normalize(const int dim, real3 c, const real3 a)
+void realn_normalize(const int dim, REAL * c, const REAL * a)
 {
 	REAL mag = realn_mag(dim, a);
 	realn_div_scalar(dim, c, a, mag);
@@ -168,63 +168,57 @@ void mat2_set_ident(mat2 c)
 
 void mat3_neg(mat3 c, const mat3 a)
 {
-	// Unrolled
 	// row 1
-	c.row1[0] = -a.row1[0];
-	c.row1[1] = -a.row1[1];
-	c.row1[2] = -a.row1[2];
+	c.m11 = -a.m11;
+	c.m12 = -a.m12;
+	c.m13 = -a.m13;
 
 	// row 2
-	c.row2[0] = -a.row2[0];
-	c.row2[1] = -a.row2[1];
-	c.row2[2] = -a.row2[2];
+	c.m21 = -a.m21;
+	c.m22 = -a.m22;
+	c.m23 = -a.m23;
 
-	// row3
-	c.row3[0] = -a.row3[0];
-	c.row3[1] = -a.row3[1];
-	c.row3[2] = -a.row3[2];
+	// row 3
+	c.m31 = -a.m31;
+	c.m32 = -a.m32;
+	c.m33 = -a.m33;
 }
 
 void mat3_add(mat3 c, const mat3 a, const mat3 b)
 {
-	// row1
-	for (int column = 0; column < 3; column++)
-	{
-		c.row1[column] = a.row1[column] + b.row1[column];
-	}
+	// row 1
+	c.m11 = a.m11 + b.m11;
+	c.m12 = a.m12 + b.m12;
+	c.m13 = a.m13 + b.m13;
 
-	// row2
-	for (int column = 0; column < 3; column++)
-	{
-		c.row2[column] = a.row2[column] + b.row2[column];
-	}
+	// row 2
+	c.m21 = a.m21 + b.m21;
+	c.m22 = a.m22 + b.m22;
+	c.m23 = a.m23 + b.m23;
 
-	// row3
-	for (int column = 0; column < 3; column++)
-	{
-		c.row3[column] = a.row3[column] + b.row3[column];
-	}
+	// row 3
+	c.m31 = a.m31 + b.m31;
+	c.m32 = a.m32 + b.m32;
+	c.m33 = a.m33 + b.m33;
 }
 
 void mat3_sub(mat3 c, const mat3 a, const mat3 b)
 {
-	// row1
-	for (int column = 0; column < 3; column++)
-	{
-		c.row1[column] = a.row1[column] - b.row1[column];
-	}
+	// row 1
+	c.m11 = a.m11 - b.m11;
+	c.m12 = a.m12 - b.m12;
+	c.m13 = a.m13 - b.m13;
 
-	// row2
-	for (int column = 0; column < 3; column++)
-	{
-		c.row2[column] = a.row2[column] -b.row2[column];
-	}
+	// row 2
+	c.m21 = a.m21 - b.m21;
+	c.m22 = a.m22 - b.m22;
+	c.m23 = a.m23 - b.m23;
 
-	// row3
-	for (int column = 0; column < 3; column++)
-	{
-		c.row3[column] = a.row3[column] -b.row3[column];
-	}
+	// row 3
+	c.m31 = a.m31 - b.m31;
+	c.m32 = a.m32 - b.m32;
+	c.m33 = a.m33 - b.m33;
+
 
 	// Another way, if function calls are cheap
 	//real3x3_neg(c, b);
@@ -234,23 +228,21 @@ void mat3_sub(mat3 c, const mat3 a, const mat3 b)
 
 void mat3_mul_scalar(mat3 c, const mat3 a, const REAL scalar)
 {
-	// row1
-	for (int column = 0; column < 3; column++) 
-	{
-		c.row1[column] = a.row1[column] * scalar;
-	}
+	// row 1
+	c.m11 = a.m11 * scalar;
+	c.m12 = a.m12 * scalar;
+	c.m13 = a.m13 * scalar;
 
-	// row2
-	for (int column = 0; column < 3; column++)
-	{
-		c.row2[column] = a.row2[column] * scalar;
-	}
+	// row 2
+	c.m21 = a.m21 * scalar;
+	c.m22 = a.m22 * scalar;
+	c.m23 = a.m23 * scalar;
 
-	// row3
-	for (int column = 0; column < 3; column++)
-	{
-		c.row3[column] = a.row3[column] * scalar;
-	}
+	// row 3
+	c.m31 = a.m31 * scalar;
+	c.m32 = a.m32 * scalar;
+	c.m33 = a.m33 * scalar;
+
 }
 
 void mat3_div_scalar(mat3 c, const mat3 a, const REAL scalar)
@@ -267,51 +259,38 @@ void mat3_div_scalar(mat3 c, const mat3 a, const REAL scalar)
 REAL mat3_det(const mat3 a)
 {
 	// (aei +bfg + cdh) - (ceg + bdi + afh)
-	REAL part1 = a.row1[0] * a.row2[1] * a.row3[2];
-	part1 += a.row1[1] * a.row2[2] * a.row3[0];
-	part1 += a.row1[2] * a.row2[0] * a.row3[1];
-
-	REAL part2 = a.row1[2] * a.row2[1] * a.row3[0];
-	part2 += a.row1[1] * a.row2[0] * a.row3[2];
-	part2 += a.row1[0] * a.row2[2] * a.row3[1];
+	REAL part1 = a.m11*a.m22*a.m33 + a.m12*a.m23*a.m31 + a.m13*a.m21*a.m32;
+	REAL part2 = a.m13*a.m22*a.m31 + a.m12*a.m21*a.m33 + a.m11*a.m23*a.m32;
 
 	return part1 - part2;
 }
 
 REAL mat3_trace(const mat3 a)
 {
-	return (a.row1[0] + a.row2[1]+a.row3[2]);
+	return (a.m11 + a.m22 + a.m33);
 }
 
 // Assume c and a do NOT occupy the same data space
 void mat3_trans(mat3 c, mat3 a)
 {
-	c.row1[0] = a.row1[0];
-	c.row1[1] = a.row2[0];
-	c.row1[2] = a.row3[0];
+	c.m11 = a.m11;
+	c.m12 = a.m21;
+	c.m13 = a.m31;
 
-	c.row2[0] = a.row1[1];
-	c.row2[1] = a.row2[1];
-	c.row2[2] = a.row3[1];
+	c.m21 = a.m12;
+	c.m22 = a.m22;
+	c.m23 = a.m32;
 
-	c.row3[0] = a.row1[2];
-	c.row3[1] = a.row2[2];
-	c.row3[2] = a.row3[2];
+	c.m31 = a.m13;
+	c.m32 = a.m23;
+	c.m33 = a.m33;
 }
 
 void mat3_set_ident(mat3 c)
 {
 	memset((void *)&c, 0, sizeof(c));
 
-	c.row1[0] = 1;
-	//c.row1[1] = 0;
-	//c.row1[2] = 0;
-
-	//c.row2[0] = 0;
-	c.row2[1] = 1;
-	//c.row2[2] = 0;
-
-	//c.row3[0] = 0;
-	//c.row3[1] = 0;
-	c.row3[2] = 1;
+	c.m11 = 1;
+	c.m22 = 1;
+	c.m33 = 1;
 }

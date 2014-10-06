@@ -9,16 +9,16 @@ extern "C" {
 #endif
 
 // Basic geometric vector type routines
-void realn_add(const int dim, real3 c, const real3 a, const real3 b);
-void realn_sub(const int dim, real3 c, const real3 a, const real3 b);
-void realn_mul_scalar(const int dim, real3 c, const real3 a, const REAL scalar);
-void realn_div_scalar(const int dim, real3 c, const real3 a, const REAL scalar);
-void realn_neg(const int dim, real3 c, const real3 a);
+void realn_add(const int dim, REAL * c, const REAL * a, const REAL * b);
+void realn_sub(const int dim, REAL * c, const REAL * a, const REAL * b);
+void realn_mul_scalar(const int dim, REAL * c, const REAL * a, const REAL scalar);
+void realn_div_scalar(const int dim, REAL * c, const REAL * a, const REAL scalar);
+void realn_neg(const int dim, REAL * c, const REAL * a);
 
 // Linear Algebra
-REAL realn_dot(const int dim, const real3 a, const real3 b);
-REAL realn_mag(const int dim, const real3 c);	// magnitude of vector
-void realn_normalize(const int dim, real3 c, const real3 a);
+REAL realn_dot(const int dim, const REAL * a, const REAL * b);
+REAL realn_mag(const int dim, const REAL * c);	// magnitude of vector
+void realn_normalize(const int dim, REAL * c, const REAL * a);
 
 // Specific to 1x3
 void real3_set(real3 c, REAL x, REAL y, REAL z);
