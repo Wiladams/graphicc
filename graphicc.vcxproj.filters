@@ -30,7 +30,7 @@
     <ClInclude Include="pixelbuffer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="render_rgba.h">
+    <ClInclude Include="raster_rgba.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -47,7 +47,7 @@
     <ClCompile Include="pixelbuffer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="render_rgba.cpp">
+    <ClCompile Include="raster_rgba.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
