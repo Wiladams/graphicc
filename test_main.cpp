@@ -5,6 +5,16 @@
 
 #include <stdio.h>
 
+static unsigned int pRed = RGBA(255, 0, 0, 255);
+static unsigned int pGreen = RGBA(0, 255, 0, 255);
+static unsigned int pBlue = RGBA(0, 0, 255, 255);
+
+static unsigned int pWhite = RGBA(255, 255, 255, 255);
+static unsigned int pYellow = RGBA(255, 255, 0, 255);
+static unsigned int pTurquoise = RGBA(0, 255, 255, 255);
+static unsigned int pLightGray = RGBA(163, 163, 163, 255);
+
+
 void real3_write_array(const real3 c)
 {
 	printf("[%f, %f, %f]", c[0], c[1], c[2]);
@@ -92,14 +102,6 @@ void test_writebitmap()
 	pb_rgba pb;
 	pb_rgba_init(&pb, width, height);
 
-	unsigned int pRed = RGBA(255, 0, 0, 255);
-	unsigned int pGreen = RGBA(0, 255, 0, 255);
-	unsigned int pBlue = RGBA(0, 0, 255, 255);
-
-	unsigned int pWhite = RGBA(255, 255, 255, 255);
-	unsigned int pYellow = RGBA(255, 255, 0, 255);
-	unsigned int pTurquoise = RGBA(0, 255, 255, 255);
-	unsigned int pLightGray = RGBA(163, 163, 163, 255);
 
 	// draw horizontal lines top and bottom
 	raster_rgba_hline(&pb, 0, 0, width-1, pWhite);
@@ -127,12 +129,35 @@ void test_writebitmap()
 
 }
 
+void test_blit()
+{
+	size_t width = 640;
+	size_t height = 480;
+
+	pb_rgba pb;
+	pb_rgba_init(&pb, width, height);
+
+	pb_rgba fpb;
+	pb_rgba_get_frame(&pb, 0, 0, width/2, height/2, &fpb);
+
+	// draw into primary pixel buffer
+	raster_rgba_rect_fill(&pb, 10, 10, (width/2) - 20, (height/2) - 20, pBlue);
+
+	// draw the frame in another location
+	raster_rgba_blit(&pb, width / 2, height / 2, &fpb);
+
+	// Now we have a simple image, so write it to a file
+	int err = write_PPM("test_blit.ppm", &pb);
+
+}
+
 int main(int argc, char **argv)
 {
 	//test_arithmetic();
-	test_writebitmap();
+	//test_writebitmap();
 	//test_drawpixels();
 	//test_pixelvalues();
+	test_blit();
 
 	return 0;
 }
