@@ -30,15 +30,14 @@ primitives.  Multi-line drawing, curves, etc.
 In addition, there will be various forms of pixel blit.
 
 These routines will come in two flavors.  The 'solid' version, which are the defaults, 
-have an alpha copy routine of SRCOVER, which means there is no alpha blending.  Second
+have an alpha copy routine of SRCOPY, which means there is no alpha blending.  Second
 forms will include basic alpha blending.
 
 The 3D rendering routines will make heavy usage of the triangle rendering primitive.
 
 Interesting libraries
 =====================
-**LibGD** - http://libgd.bitbucket.org/
-**Netpbm** - http://netpbm.sourceforge.net/
-**AntiGrain** - http://antigrain.com/
-
-Paul Heckbert's **Zoom** - http://user.xmission.com/~legalize/zoom.html
+1. **LibGD** - http://libgd.bitbucket.org/
+2. **Netpbm** - http://netpbm.sourceforge.net/
+3. **AntiGrain** - http://antigrain.com/
+4. Paul Heckbert's **Zoom** - http://user.xmission.com/~legalize/zoom.html
