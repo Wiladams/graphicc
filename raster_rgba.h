@@ -9,11 +9,18 @@
 extern "C" {
 #endif
 
+	void raster_rgba_draw_span(pb_rgba *pb, int x1, int color1, int x2, int color2, int y);
+
 int raster_rgba_hline(pb_rgba *pb, unsigned int x, unsigned int y, unsigned int length, int value);
 int raster_rgba_vline(pb_rgba *pb, unsigned int x, unsigned int y, unsigned int length, int value);
 void raster_rgba_line(pb_rgba *pb, unsigned int x1, unsigned int y1, unsigned int x2, unsigned int y2, int value);
 
 void raster_rgba_rect_fill(pb_rgba *pb, unsigned int x1, unsigned int y1, unsigned int width, unsigned int height, int value);
+void raster_rgba_triangle_fill(pb_rgba *pb,
+	const unsigned int x1, const unsigned int  y1,
+	const unsigned int  x2, const unsigned int  y2,
+	const unsigned int  x3, const unsigned int  y3,
+	int color);
 
 void raster_rgba_blit(pb_rgba *pb, unsigned int x, unsigned int y, pb_rgba *src);
 

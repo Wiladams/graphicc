@@ -124,10 +124,14 @@ void test_writebitmap()
 	pb_rgba_get_frame(&pb, (width / 2) - 100, (height / 2) - 100, 200, 200, &fpb);
 	raster_rgba_rect_fill(&fpb, 0, 0, 200, 200, pBlue);
 
+	// Draw triangle 
+	raster_rgba_triangle_fill(&pb, 0, height - 10, 0, 10, (width/2)-10, height / 2, pGreen);
+
 	// Now we have a simple image, so write it to a file
-	int err = write_PPM("test.ppm", &pb);
+	int err = write_PPM("test_writebitmap.ppm", &pb);
 
 }
+
 
 void test_blit()
 {
@@ -154,10 +158,10 @@ void test_blit()
 int main(int argc, char **argv)
 {
 	//test_arithmetic();
-	//test_writebitmap();
+	test_writebitmap();
 	//test_drawpixels();
 	//test_pixelvalues();
-	test_blit();
+	//test_blit();
 
 	return 0;
 }

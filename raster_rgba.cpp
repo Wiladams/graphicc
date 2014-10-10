@@ -3,14 +3,63 @@
 #include <string.h>
 #include <stdlib.h>
 
+void raster_rgba_draw_span(pb_rgba *pb, int x1, int color1, int x2, int color2, int y)
+{
+	int xdiff = x2 - x1;
+	if (xdiff == 0)
+		return;
+
+	int colordiff = color2 - color1;
+
+	float factor = 0.0f;
+	float factorStep = 1.0f / (float)xdiff;
+
+	// draw each pixel in the span
+	for (int x = x1; x < x2; x++) {
+		pb_rgba_set_pixel(pb, x, y, color1 + (colordiff * factor));
+		factor += factorStep;
+	}
+}
+
 int raster_rgba_hline(pb_rgba *pb, unsigned int x, unsigned int y, unsigned int length, int value)
 {
+	size_t terminus = x + length;
+	x = x < 0 ? 0 : x;
+	terminus = terminus - x;
+
 	unsigned int * data = &((unsigned int *)pb->data)[y*pb->pixelpitch+x];
 	size_t count = 1;
-	while (count < length) {
+	for (size_t idx = 0; idx < terminus; idx++)
+	{
 		*data = value;
 		data++;
-		count++;
+	}
+
+	return 0;
+}
+
+#define blend_component(d, s, a) (s*a+d*~a) >> 8
+
+#define blend_color(d, s) RGBA(						\
+	blend_component(GET_R(d), GET_R(s), GET_A(s)),	\
+	blend_component(GET_G(d), GET_G(s), GET_A(s)),		\
+	blend_component(GET_B(d), GET_B(s), GET_A(s)),		\
+	255)
+
+
+int raster_rgba_hline_blend(pb_rgba *pb, unsigned int x, unsigned int y, unsigned int length, int value)
+{
+	size_t terminus = x + length;
+	x = x < 0 ? 0 : x;
+	terminus = terminus - x;
+
+	unsigned int * data = &((unsigned int *)pb->data)[y*pb->pixelpitch + x];
+	size_t count = 1;
+	for (size_t idx = 0; idx < terminus; idx++)
+	{
+		int dst = *data;
+		*data = blend_color(dst, value);
+		data++;
 	}
 
 	return 0;
@@ -20,7 +69,7 @@ int raster_rgba_vline(pb_rgba *pb, unsigned int x, unsigned int y, unsigned int 
 {
 	unsigned int * data = &((unsigned int *)pb->data)[y*pb->frame.width + x];
 	size_t count = 1;
-	while (count < length) {
+	while (count <= length) {
 		*data = value;
 		data += pb->pixelpitch;
 		count++;

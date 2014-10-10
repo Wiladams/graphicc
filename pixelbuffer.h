@@ -13,6 +13,11 @@ typedef struct _pix_rgba {
 } pix_rgba;
 
 // On a little endian machine
+// Stuff it such that 
+// byte 0 == red
+// byte 1 == green
+// byte 2 == blue
+// byte 3 == alpha
 #define RGBA(r,g,b,a) ((unsigned int)(a<<24|b<<16|g<<8|r))
 #define GET_R(value) (unsigned int)value &0xff
 #define GET_G(value) ((unsigned int)value &0xff00) >> 8

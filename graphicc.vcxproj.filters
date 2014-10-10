@@ -50,5 +50,8 @@
     <ClCompile Include="raster_rgba.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="raster_rgba_triangle.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
