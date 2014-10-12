@@ -31,6 +31,11 @@ typedef struct _mat4 {
 	REAL m31, m32, m33;
 } mat4;
 
+enum pixellayouts {
+	rgba
+};
+
+
 #ifdef _MSC_VER
 #pragma warning(pop)
 #endif

@@ -3,20 +3,68 @@
 #include <string.h>
 #include <stdlib.h>
 
-void raster_rgba_draw_span(pb_rgba *pb, int x1, int color1, int x2, int color2, int y)
+void raster_rgba_hline_span(pb_rgba *pb, int x1, int color1, int x2, int color2, int y)
 {
 	int xdiff = x2 - x1;
 	if (xdiff == 0)
 		return;
 
-	int colordiff = color2 - color1;
+	int c1rd = GET_R(color1);
+	int c1gr = GET_G(color1);
+	int c1bl = GET_B(color1);
+
+	int c2rd = GET_R(color2);
+	int c2gr = GET_G(color2);
+	int c2bl = GET_B(color2);
+
+	int rdx = c2rd - c1rd;
+	int gdx = c2gr - c1gr;
+	int bdx = c2bl - c1bl;
 
 	float factor = 0.0f;
 	float factorStep = 1.0f / (float)xdiff;
 
 	// draw each pixel in the span
 	for (int x = x1; x < x2; x++) {
-		pb_rgba_set_pixel(pb, x, y, color1 + (colordiff * factor));
+		int rd = c1rd + (rdx*factor);
+		int gr = c1gr + (gdx*factor);
+		int bl = c1bl + (bdx*factor);
+		int fg = RGBA(rd, gr, bl, 255);
+		pb_rgba_set_pixel(pb, x, y, fg);
+
+		factor += factorStep;
+	}
+}
+
+void raster_rgba_vline_span(pb_rgba *pb, int y1, int color1, int y2, int color2, int x)
+{
+	int ydiff = y2 - y1;
+	if (ydiff == 0)
+		return;
+
+	int c1rd = GET_R(color1);
+	int c1gr = GET_G(color1);
+	int c1bl = GET_B(color1);
+
+	int c2rd = GET_R(color2);
+	int c2gr = GET_G(color2);
+	int c2bl = GET_B(color2);
+
+	int rdx = c2rd - c1rd;
+	int gdx = c2gr - c1gr;
+	int bdx = c2bl - c1bl;
+
+	float factor = 0.0f;
+	float factorStep = 1.0f / (float)ydiff;
+
+	// draw each pixel in the span
+	for (int y = y1; y < y2; y++) {
+		int rd = c1rd + (rdx*factor);
+		int gr = c1gr + (gdx*factor);
+		int bl = c1bl + (bdx*factor);
+		int fg = RGBA(rd, gr, bl, 255);
+		pb_rgba_set_pixel(pb, x, y, fg);
+
 		factor += factorStep;
 	}
 }

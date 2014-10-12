@@ -3,10 +3,9 @@
 #ifndef PIXELBUFFER_H
 #define PIXELBUFFER_H
 
+#include "grc_types.h"
 
-enum pixellayouts {
-	rgba
-};
+
 
 typedef struct _pix_rgba {
 	unsigned char r, g, b, a;
@@ -19,10 +18,10 @@ typedef struct _pix_rgba {
 // byte 2 == blue
 // byte 3 == alpha
 #define RGBA(r,g,b,a) ((unsigned int)(a<<24|b<<16|g<<8|r))
-#define GET_R(value) (unsigned int)value &0xff
-#define GET_G(value) ((unsigned int)value &0xff00) >> 8
-#define GET_B(value) ((unsigned int)value &0xff0000) >> 16
-#define GET_A(value) ((unsigned int)value &0xff000000) >> 24
+#define GET_R(value) ((unsigned int)value &0xff)
+#define GET_G(value) (((unsigned int)value &0xff00) >> 8)
+#define GET_B(value) (((unsigned int)value &0xff0000) >> 16)
+#define GET_A(value) (((unsigned int)value &0xff000000) >> 24)
 
 
 /*

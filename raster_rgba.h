@@ -9,8 +9,10 @@
 extern "C" {
 #endif
 
-	void raster_rgba_draw_span(pb_rgba *pb, int x1, int color1, int x2, int color2, int y);
+void raster_rgba_hline_span(pb_rgba *pb, int x1, int color1, int x2, int color2, int y);
+void raster_rgba_vline_span(pb_rgba *pb, int y1, int color1, int y2, int color2, int x);
 
+int raster_rgba_hline_blend(pb_rgba *pb, unsigned int x, unsigned int y, unsigned int length, int value);
 int raster_rgba_hline(pb_rgba *pb, unsigned int x, unsigned int y, unsigned int length, int value);
 int raster_rgba_vline(pb_rgba *pb, unsigned int x, unsigned int y, unsigned int length, int value);
 void raster_rgba_line(pb_rgba *pb, unsigned int x1, unsigned int y1, unsigned int x2, unsigned int y2, int value);

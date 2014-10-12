@@ -9,9 +9,11 @@ static unsigned int pRed = RGBA(255, 0, 0, 255);
 static unsigned int pGreen = RGBA(0, 255, 0, 255);
 static unsigned int pBlue = RGBA(0, 0, 255, 255);
 
+static unsigned int pBlack = RGBA(0, 0, 0, 255);
 static unsigned int pWhite = RGBA(255, 255, 255, 255);
 static unsigned int pYellow = RGBA(255, 255, 0, 255);
 static unsigned int pTurquoise = RGBA(0, 255, 255, 255);
+static unsigned int pDarkGray = RGBA(93, 93, 93, 255);
 static unsigned int pLightGray = RGBA(163, 163, 163, 255);
 
 
@@ -132,6 +134,46 @@ void test_writebitmap()
 
 }
 
+void test_linespan()
+{
+	size_t width = 320;
+	size_t height = 240;
+	pb_rgba pb;
+	pb_rgba_init(&pb, width, height);
+
+
+	// Set a white background
+	raster_rgba_rect_fill(&pb, 0, 0, width, height, pWhite);
+
+	// do a horizontal fade
+	int color1 = RGBA(127, 102, 0, 255);
+	int color2 = RGBA(0, 127, 212, 255);
+
+	for (size_t row = 0; row < 10; row++) {
+		int x1 = 0;
+		int x2 = width - 1;
+		raster_rgba_hline_span(&pb, x1, color1, x2, color2, row);
+	}
+
+	// Draw a button looking thing
+	// black
+	raster_rgba_hline(&pb, 20, 20, 80, pBlack);
+	raster_rgba_hline(&pb, 20, 21, 80, pDarkGray);
+	raster_rgba_hline(&pb, 20, 22, 80, pLightGray);
+
+
+	// light gray rect
+	raster_rgba_rect_fill(&pb, 20, 23, 80, 24, pLightGray);
+
+	// fade to black
+	for (size_t col = 20; col < 100; col++) {
+		raster_rgba_vline_span(&pb, 46, pLightGray, 77, pBlack, col);
+	}
+
+	// Now we have a simple image, so write it to a file
+	int err = write_PPM("test_linespan.ppm", &pb);
+
+}
 
 void test_blit()
 {
@@ -158,10 +200,11 @@ void test_blit()
 int main(int argc, char **argv)
 {
 	//test_arithmetic();
-	test_writebitmap();
+	//test_writebitmap();
 	//test_drawpixels();
 	//test_pixelvalues();
 	//test_blit();
+	test_linespan();
 
 	return 0;
 }
