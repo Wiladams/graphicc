@@ -86,13 +86,12 @@ int raster_rgba_hline(pb_rgba *pb, unsigned int x, unsigned int y, unsigned int 
 	return 0;
 }
 
-#define blend_component(d, s, a) (s*a+d*~a) >> 8
+#define blender(bg, fg, a) ((uint8_t)((fg*a+bg*(255-a)) / 255))
 
-#define blend_color(d, s) RGBA(						\
-	blend_component(GET_R(d), GET_R(s), GET_A(s)),	\
-	blend_component(GET_G(d), GET_G(s), GET_A(s)),		\
-	blend_component(GET_B(d), GET_B(s), GET_A(s)),		\
-	255)
+#define blend_color(bg, fg) RGBA(				\
+	blender(GET_R(bg), GET_R(fg), GET_A(fg)),	\
+	blender(GET_G(bg), GET_G(fg), GET_A(fg)),	\
+	blender(GET_B(bg), GET_B(fg), GET_A(fg)),	255)
 
 
 int raster_rgba_hline_blend(pb_rgba *pb, unsigned int x, unsigned int y, unsigned int length, int value)
@@ -105,8 +104,10 @@ int raster_rgba_hline_blend(pb_rgba *pb, unsigned int x, unsigned int y, unsigne
 	size_t count = 1;
 	for (size_t idx = 0; idx < terminus; idx++)
 	{
-		int dst = *data;
-		*data = blend_color(dst, value);
+		int bg = *data;
+		int fg = value;
+
+		*data = blend_color(bg, fg);
 		data++;
 	}
 
@@ -179,14 +180,6 @@ void raster_rgba_line(pb_rgba *pb, unsigned int x1, unsigned int y1, unsigned in
 	}
 }
 
-void raster_rgba_rect_fill(pb_rgba *pb, unsigned int x1, unsigned int y1, unsigned int width, unsigned int height, int value)
-{
-	size_t counter = 1;
-	while (counter < height) {
-		raster_rgba_hline(pb, x1, y1 + counter - 1, width, value);
-		counter++;
-	}
-}
 
 void raster_rgba_blit(pb_rgba *pb, unsigned int x, unsigned int y, pb_rgba *src)
 {
