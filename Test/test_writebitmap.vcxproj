@@ -11,12 +11,12 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{5856A423-63AB-4119-A3B7-0ED0CF7B61FE}</ProjectGuid>
-    <RootNamespace>graphicc</RootNamespace>
+    <ProjectGuid>{44922E45-9992-4FF6-841F-5B8A34E3963E}</ProjectGuid>
+    <RootNamespace>test_writebitmap</RootNamespace>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
-    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v120</PlatformToolset>
     <CharacterSet>MultiByte</CharacterSet>
@@ -39,7 +39,10 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>..\;$(IncludePath)</IncludePath>
+    <IncludePath>..\..\graphicc;$(IncludePath)</IncludePath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <IncludePath>C:\repos\graphicc;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -66,19 +69,12 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="grc_types.h" />
-    <ClInclude Include="grc_config.h" />
-    <ClInclude Include="linearalgebra.h" />
-    <ClInclude Include="pbm.h" />
-    <ClInclude Include="pixelbuffer.h" />
-    <ClInclude Include="raster_rgba.h" />
+    <ClCompile Include="test_writebitmap.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="linearalgebra.cpp" />
-    <ClCompile Include="pbm.cpp" />
-    <ClCompile Include="pixelbuffer.cpp" />
-    <ClCompile Include="raster_rgba.cpp" />
-    <ClCompile Include="raster_rgba_triangle.cpp" />
+    <ProjectReference Include="..\graphicc.vcxproj">
+      <Project>{5856a423-63ab-4119-a3b7-0ed0cf7b61fe}</Project>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

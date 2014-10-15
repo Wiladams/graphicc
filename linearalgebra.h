@@ -1,4 +1,5 @@
 #pragma once
+
 #ifndef linearalgebra_h
 #define linearalgebra_h
 
@@ -23,16 +24,6 @@ void realn_normalize(const int dim, REAL * c, const REAL * a);
 // Specific to 1x3
 void real3_set(real3 c, REAL x, REAL y, REAL z);
 
-// Simple arithmetic
-#define real3_add(c, a, b) realn_add(3, c, a, b)
-#define real3_sub(c, a, b) realn_sub(3, c, a, b)
-#define real3_mul_scalar(c, a, scalar) realn_mul_scalar(3, c, a, scalar)
-#define real3_div_scalar(c, a, scalar) realn_div_scalar(3, c, a, scalar)
-#define real3_neg(c, a) realn_neg(3, c, a)
-
-#define  real3_dot(a, b) realn_dot(3, a, b)
-#define  real3_mag(c) realn_mag(3, c)
-#define  real3_normalize(c, a) realn_normalize(3, c, a)
 
 void real3_cross(real3 c, const real3 a, const real3 b);
 REAL real3_distance(const real3 a, const real3 b);
@@ -59,5 +50,18 @@ void mat3_set_ident(mat3 c);
 #ifdef __cplusplus
 }
 #endif
+
+
+// Simple arithmetic
+#define real3_add(c, a, b) realn_add(3, c, a, b)
+#define real3_sub(c, a, b) realn_sub(3, c, a, b)
+#define real3_mul_scalar(c, a, scalar) realn_mul_scalar(3, c, a, scalar)
+#define real3_div_scalar(c, a, scalar) realn_div_scalar(3, c, a, scalar)
+#define real3_neg(c, a) realn_neg(3, c, a)
+
+#define  real3_dot(a, b) realn_dot(3, a, b)
+#define  real3_mag(c) realn_mag(3, c)
+#define  real3_normalize(c, a) realn_normalize(3, c, a)
+
 
 #endif

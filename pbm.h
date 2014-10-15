@@ -1,7 +1,7 @@
 #pragma once
 
-#ifndef PPM_H
-#define PPM_H
+#ifndef PBM_H
+#define PBM_H
 
 #include "pixelbuffer.h"
 

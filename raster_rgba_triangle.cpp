@@ -45,7 +45,7 @@ int FindTopmostPolyVertex(const point2d *poly, const size_t nelems)
 	int ymin = INT32_MAX;
 	int vmin = 0;
 
-	int idx = 0;
+	size_t idx = 0;
 	while (idx < nelems) {
 		if (poly[idx].y < ymin) {
 			ymin = poly[idx].y;
@@ -59,8 +59,8 @@ int FindTopmostPolyVertex(const point2d *poly, const size_t nelems)
 
 void RotateVertices(point2d *res, point2d *poly, const size_t nelems, const int starting)
 {
-	int offset = starting;
-	int idx = 0;
+	size_t offset = starting;
+	size_t idx = 0;
 	while (idx < nelems) {
 		res[idx].x = poly[offset].x;
 		res[idx].y = poly[offset].y;

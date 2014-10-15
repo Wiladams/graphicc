@@ -1,5 +1,7 @@
-#ifndef geomtypes_h
-#define geomtypes_h
+#pragma once
+
+#ifndef grctypes_h
+#define grctypes_h
 
 #include "grc_config.h"
 

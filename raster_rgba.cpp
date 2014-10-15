@@ -26,9 +26,9 @@ void raster_rgba_hline_span(pb_rgba *pb, int x1, int color1, int x2, int color2,
 
 	// draw each pixel in the span
 	for (int x = x1; x < x2; x++) {
-		int rd = c1rd + (rdx*factor);
-		int gr = c1gr + (gdx*factor);
-		int bl = c1bl + (bdx*factor);
+		int rd = c1rd + (int)(rdx*factor);
+		int gr = c1gr + (int)(gdx*factor);
+		int bl = c1bl + (int)(bdx*factor);
 		int fg = RGBA(rd, gr, bl, 255);
 		pb_rgba_set_pixel(pb, x, y, fg);
 
@@ -59,9 +59,9 @@ void raster_rgba_vline_span(pb_rgba *pb, int y1, int color1, int y2, int color2,
 
 	// draw each pixel in the span
 	for (int y = y1; y < y2; y++) {
-		int rd = c1rd + (rdx*factor);
-		int gr = c1gr + (gdx*factor);
-		int bl = c1bl + (bdx*factor);
+		int rd = c1rd + (int)(rdx*factor);
+		int gr = c1gr + (int)(gdx*factor);
+		int bl = c1bl + (int)(bdx*factor);
 		int fg = RGBA(rd, gr, bl, 255);
 		pb_rgba_set_pixel(pb, x, y, fg);
 
@@ -133,7 +133,8 @@ int raster_rgba_vline(pb_rgba *pb, unsigned int x, unsigned int y, unsigned int 
 // Bresenham simple line drawing
 void raster_rgba_line(pb_rgba *pb, unsigned int x1, unsigned int y1, unsigned int x2, unsigned int y2, int color)
 {
-	int i, dx, dy;
+	int dx, dy;
+	int i;
 	int sdx, sdy, dxabs, dyabs;
 	unsigned int x, y, px, py;
 
@@ -155,7 +156,7 @@ void raster_rgba_line(pb_rgba *pb, unsigned int x1, unsigned int y1, unsigned in
 		for (i = 0; i<dxabs; i++)
 		{
 			y += dyabs;
-			if (y >= dxabs)
+			if (y >= (unsigned int)dxabs)
 			{
 				y -= dxabs;
 				py += sdy;
@@ -169,7 +170,7 @@ void raster_rgba_line(pb_rgba *pb, unsigned int x1, unsigned int y1, unsigned in
 		for (i = 0; i<dyabs; i++)
 		{
 			x += dxabs;
-			if (x >= dyabs)
+			if (x >= (unsigned int)dyabs)
 			{
 				x -= dyabs;
 				px += sdx;
