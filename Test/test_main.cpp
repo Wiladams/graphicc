@@ -77,147 +77,16 @@ void test_pixelvalues()
 		GET_R(value), GET_G(value), GET_B(value), GET_A(value));
 }
 
-void test_drawpixels()
-{
-	size_t width = 256;
-	size_t height = 256;
-	pb_rgba pb;
-	pb_rgba_init(&pb, width, height);
-
-	for (size_t row = 0; row < height; row++) {
-		for (size_t col = 0; col < width; col++) {
-			int value = RGBA(row, col, 255, 255);
-			//((unsigned int *)(&pb)->data)[(row*(&pb)->width) + col] = value;
-			pb_rgba_set_pixel(&pb, col, row, value);
-		}
-	}
-
-	// Now we have a simple image, so write it to a file
-	int err = write_PPM("test_drawpixel.ppm", &pb);
-
-}
 
 
-void test_linespan()
-{
-	size_t width = 320;
-	size_t height = 240;
-	pb_rgba pb;
-	pb_rgba_init(&pb, width, height);
 
 
-	// Set a white background
-	raster_rgba_rect_fill(&pb, 0, 0, width, height, pWhite);
-
-	// do a horizontal fade
-	int color1 = RGBA(127, 102, 0, 255);
-	int color2 = RGBA(0, 127, 212, 255);
-
-	for (size_t row = 0; row < 100; row++) {
-		int x1 = 0;
-		int x2 = width - 1;
-		raster_rgba_hline_span(&pb, x1, color1, x2, color2, row);
-	}
-
-	// Draw a button looking thing
-	// black
-	raster_rgba_hline(&pb, 20, 20, 80, pBlack);
-	raster_rgba_hline(&pb, 20, 21, 80, pDarkGray);
-	raster_rgba_hline(&pb, 20, 22, 80, pLightGray);
-
-
-	// light gray rect
-	raster_rgba_rect_fill(&pb, 20, 23, 80, 24, pLightGray);
-
-	// fade to black
-	for (size_t col = 20; col < 100; col++) {
-		raster_rgba_vline_span(&pb, 46, pLightGray, 77, pBlack, col);
-	}
-
-	// Draw some blended lines atop the whole
-	for (size_t row = 35; row < 120; row++){
-		raster_rgba_hline_blend(&pb, 45, row, 100, RGBA(0, 153, 153, 255));
-	}
-
-	// Now we have a simple image, so write it to a file
-	int err = write_PPM("test_linespan.ppm", &pb);
-
-}
-
-void test_blit()
-{
-	size_t width = 640;
-	size_t height = 480;
-
-	pb_rgba pb;
-	pb_rgba_init(&pb, width, height);
-
-	pb_rgba fpb;
-	pb_rgba_get_frame(&pb, 0, 0, width/2, height/2, &fpb);
-
-	// draw into primary pixel buffer
-	raster_rgba_rect_fill(&pb, 10, 10, (width/2) - 20, (height/2) - 20, pBlue);
-
-	// draw the frame in another location
-	raster_rgba_blit(&pb, width / 2, height / 2, &fpb);
-
-	// Now we have a simple image, so write it to a file
-	int err = write_PPM("test_blit.ppm", &pb);
-
-}
-
-void checkerboard(pb_rgba *pb, const size_t cols, const size_t rows, const size_t width, const size_t height, int color1, int color2)
-{
-	size_t tilewidth = width / cols;
-	size_t tileheight = (height / rows);
-
-	for (size_t c = 0; c < cols; c++){
-		for (size_t r = 0; r < rows; r++){
-			raster_rgba_rect_fill(pb, c*tilewidth, r*tileheight, tilewidth / 2, tileheight / 2, color1);
-			raster_rgba_rect_fill(pb, (c*tilewidth) + tilewidth / 2, r*tileheight, tilewidth / 2, tileheight / 2, color2);
-			raster_rgba_rect_fill(pb, c*tilewidth, (r*tileheight)+tileheight / 2, tilewidth / 2, tileheight / 2, color2);
-			raster_rgba_rect_fill(pb, (c*tilewidth) + tilewidth / 2, (r*tileheight)+tileheight / 2, tilewidth / 2, tileheight / 2, color1);
-		}
-	}
-}
-
-void test_blender()
-{
-	size_t width = 800;
-	size_t height = 600;
-
-	pb_rgba pb;
-	pb_rgba_init(&pb, width, height);
-
-	// Red background
-	raster_rgba_rect_fill(&pb, 0, 0, width, height, pRed);
-
-	// create checkerboard background
-	checkerboard(&pb, 16, 16, width, height, pLightGray, pYellow);
-
-	// Draw some blended rectangles atop the whole
-	for (int offset = 10; offset < 400; offset += 40) {
-		float factor = offset / 400.0f;
-		int alpha = (int)(factor * 255);
-		//printf("factor: %f alpha: %d\n", factor, alpha);
-
-		int fgColor = RGBA(0, 255, 255,alpha);
-		raster_rgba_rect_fill_blend(&pb, offset, offset, 100, 100, fgColor);
-	}
-
-
-	// Now we have a simple image, so write it to a file
-	int err = write_PPM("test_blender.ppm", &pb);
-}
 
 int main(int argc, char **argv)
 {
 	//test_arithmetic();
-	//test_drawpixels();
+	test_drawpixels();
 	//test_pixelvalues();
-	//test_blit();
-	//test_linespan();
-	test_blender();
 
 	return 0;
 }
