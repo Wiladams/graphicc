@@ -1,4 +1,5 @@
 #include "raster_rgba.h"
+
 #include <math.h>
 #include <string.h>
 #include <stdlib.h>

@@ -3,7 +3,7 @@
 #ifndef PIXELBUFFER_H
 #define PIXELBUFFER_H
 
-#include "grc_types.h"
+#include "graphicc.h"
 
 
 

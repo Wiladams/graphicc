@@ -3,7 +3,7 @@
 #ifndef linearalgebra_h
 #define linearalgebra_h
 
-#include "grc_types.h"
+#include "graphicc.h"
 
 #ifdef __cplusplus
 extern "C" {

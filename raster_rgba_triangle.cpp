@@ -4,7 +4,6 @@
 */
 
 #include "raster_rgba.h"
-#include <stdint.h>
 
 #define swap16(a, b) { int16_t t = a; a = b; b = t; }
 

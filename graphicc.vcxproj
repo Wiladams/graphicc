@@ -66,6 +66,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="graphicc.h" />
     <ClInclude Include="grc_types.h" />
     <ClInclude Include="grc_config.h" />
     <ClInclude Include="linearalgebra.h" />
