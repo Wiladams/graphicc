@@ -15,12 +15,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="grc_types.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="grc_config.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="pbm.h">
       <Filter>Header Files</Filter>
     </ClInclude>
