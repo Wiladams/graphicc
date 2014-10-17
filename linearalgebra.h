@@ -52,7 +52,7 @@ void row3_mul_mat3(real3 c, const real3 a, const mat3 m);
 void row4_mul_mat4(real4 c, const real4 a, const mat4 m);
 
 void mat2_mul_mat2(mat2 *c, const mat2 a, const mat2 b);
-void mat3_mul_mat3(mat3 c, const mat3 a, const mat3 b);
+void mat3_mul_mat3(mat3 *c, const mat3 a, const mat3 b);
 void mat4_mul_mat4(mat4 c, const mat4 a, const mat4 b);
 
 #ifdef __cplusplus

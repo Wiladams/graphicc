@@ -325,9 +325,19 @@ void mat2_mul_mat2(mat2 *c, const mat2 a, const mat2 b)
 }
 
 // c = mat3 * mat3
-void mat3_mul_mat3(mat3 c, const mat3 a, const mat3 b)
+void mat3_mul_mat3(mat3 *c, const mat3 a, const mat3 b)
 {
+	c->m11 = a.m11*b.m11 + a.m12*b.m21 + a.m13*b.m31;
+	c->m12 = a.m11*b.m12 + a.m12*b.m22 + a.m13*b.m32;
+	c->m13 = a.m11*b.m13 + a.m12*b.m23 + a.m13*b.m33;
 
+	c->m21 = a.m21*b.m11 + a.m22*b.m21 + a.m23*b.m31;
+	c->m22 = a.m21*b.m12 + a.m22*b.m22 + a.m23*b.m32;
+	c->m23 = a.m21*b.m13 + a.m22*b.m23 + a.m23*b.m33;
+
+	c->m31 = a.m31*b.m11 + a.m32*b.m21 + a.m33*b.m31;
+	c->m32 = a.m31*b.m12 + a.m32*b.m22 + a.m33*b.m32;
+	c->m33 = a.m31*b.m13 + a.m32*b.m23 + a.m33*b.m33;
 }
 
 // c = mat4 * mat4

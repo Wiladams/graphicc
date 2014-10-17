@@ -93,10 +93,35 @@ void test_mat2_mul()
 	realn_write_array(2, &c.m21);
 }
 
+void test_mat3_mul()
+{
+	mat3 c;
+	mat3 a = {
+		1, -5, 3,
+		0, -2, 6,
+		7, 2, -4
+	};
+	mat3 b = {
+		-8, 6, 1,
+		7, 0, -3,
+		2, 4, 5
+	};
+
+	mat3_mul_mat3(&c, a, b);
+
+	realn_write_array(3, &c.m11);
+	printf("\n");
+	realn_write_array(3, &c.m21);
+	printf("\n");
+	realn_write_array(3, &c.m31);
+	printf("\n");
+}
+
 int main(int argc, char **argv)
 {
-	test_mat4_transform();
-	test_mat2_mul();
+	//test_mat4_transform();
+	//test_mat2_mul();
+	test_mat3_mul();
 
 	return 0;
 }
