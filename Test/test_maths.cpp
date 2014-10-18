@@ -1,3 +1,9 @@
+/*
+References:
+For verifying results
+http://www.calcul.com/show/calculator/matrix-multiplication_;4;4;4;4?matrix1=[["10","20","30","40"],["-230","10","17","20"],["0","0","10","0"],["0","0","0","10"]]&matrix2=[["5","0","0","0"],["0","10","0","0"],["0","0","15","0"],["0","0","0","1"]]&operator=*
+*/
+
 #include "test_common.h"
 
 void realn_write_array(const size_t nelems, const REAL *c)
@@ -77,6 +83,8 @@ void test_mat4_transform()
 
 void test_mat2_mul()
 {
+	puts("==== test_mat2_mul() ====");
+
 	mat2 c;
 	mat2 a = {
 		-3, 0,
@@ -86,15 +94,19 @@ void test_mat2_mul()
 		-7, 2,
 		4, 6 };
 
-	mat2_mul_mat2(&c, a, b);
+	mat2_mul_mat2(c, a, b);
 
 	realn_write_array(2, &c.m11);
 	printf("\n");
 	realn_write_array(2, &c.m21);
+
+	printf("\n");
 }
 
 void test_mat3_mul()
 {
+	puts("==== test_mat3_mul() ====");
+
 	mat3 c;
 	mat3 a = {
 		1, -5, 3,
@@ -114,14 +126,47 @@ void test_mat3_mul()
 	realn_write_array(3, &c.m21);
 	printf("\n");
 	realn_write_array(3, &c.m31);
+	
+	printf("\n");
+}
+
+void test_mat4_mul()
+{
+	puts("==== test_mat4_mul() ====");
+
+	mat4 c;
+	mat4 a = {
+		10, 20, 30, 40,
+		-230, 10, 17, 20,
+		0, 0, 10,0,
+		0,0,0,10
+	};
+	mat4 b = {
+		5,0,0,0,
+		0,10,0,0,
+		0, 0, 15,0,
+		0,0,0,1
+	};
+
+	mat4_mul_mat4(&c, a, b);
+
+	realn_write_array(4, &c.m11);
+	printf("\n");
+	realn_write_array(4, &c.m21);
+	printf("\n");
+	realn_write_array(4, &c.m31);
+	printf("\n");
+	realn_write_array(4, &c.m41);
+
 	printf("\n");
 }
 
 int main(int argc, char **argv)
 {
 	//test_mat4_transform();
-	//test_mat2_mul();
-	test_mat3_mul();
+	test_mat2_mul();
+	//test_mat3_mul();
+	test_mat4_mul();
 
 	return 0;
 }

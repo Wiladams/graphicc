@@ -1,3 +1,5 @@
+
+
 #include "linearalgebra.h"
 
 #include <math.h>
@@ -117,7 +119,7 @@ REAL real3_radians_between(const real3 a, const real3 b)
 	Matrix routines
 */
 // 2 X 2 Matrix
-void mat2_neg(mat2 c, const mat2 a)
+void mat2_neg(mat2 &c, const mat2 &a)
 {
 	c.m11 = -a.m11;
 	c.m12 = -a.m12;
@@ -126,18 +128,18 @@ void mat2_neg(mat2 c, const mat2 a)
 	c.m22 = -a.m22;
 }
 
-REAL mat2_det(const mat2 a)
+REAL mat2_det(const mat2 &a)
 {
 	return (a.m11 * a.m22) - (a.m12 * a.m21);
 }
 
-REAL mat2_trace(const mat2 a)
+REAL mat2_trace(const mat2 &a)
 {
 	return a.m11 + a.m22;
 }
 
 // Assume c and a do NOT occupy the same data space
-void mat2_trans(mat2 c, mat2 a)
+void mat2_trans(mat2 &c, const mat2 &a)
 {
 	c.m11 = a.m11;
 	c.m12 = a.m21;
@@ -146,7 +148,7 @@ void mat2_trans(mat2 c, mat2 a)
 	c.m22 = a.m22;
 }
 
-void mat2_set_ident(mat2 c)
+void mat2_set_ident(mat2 &c)
 {
 	// memset to zero
 	c.m12 = 0;
@@ -167,7 +169,7 @@ void mat2_set_ident(mat2 c)
 //
 
 
-void mat3_neg(mat3 c, const mat3 a)
+void mat3_neg(mat3 &c, const mat3 &a)
 {
 	// row 1
 	c.m11 = -a.m11;
@@ -185,7 +187,7 @@ void mat3_neg(mat3 c, const mat3 a)
 	c.m33 = -a.m33;
 }
 
-void mat3_add(mat3 c, const mat3 a, const mat3 b)
+void mat3_add(mat3 &c, const mat3 &a, const mat3 &b)
 {
 	// row 1
 	c.m11 = a.m11 + b.m11;
@@ -203,7 +205,7 @@ void mat3_add(mat3 c, const mat3 a, const mat3 b)
 	c.m33 = a.m33 + b.m33;
 }
 
-void mat3_sub(mat3 c, const mat3 a, const mat3 b)
+void mat3_sub(mat3 &c, const mat3 &a, const mat3 &b)
 {
 	// row 1
 	c.m11 = a.m11 - b.m11;
@@ -219,15 +221,9 @@ void mat3_sub(mat3 c, const mat3 a, const mat3 b)
 	c.m31 = a.m31 - b.m31;
 	c.m32 = a.m32 - b.m32;
 	c.m33 = a.m33 - b.m33;
-
-
-	// Another way, if function calls are cheap
-	//real3x3_neg(c, b);
-	//real3x3_add(c, a, c);
-
 }
 
-void mat3_mul_scalar(mat3 c, const mat3 a, const REAL scalar)
+void mat3_mul_scalar(mat3 &c, const mat3 &a, const REAL scalar)
 {
 	// row 1
 	c.m11 = a.m11 * scalar;
@@ -246,7 +242,7 @@ void mat3_mul_scalar(mat3 c, const mat3 a, const REAL scalar)
 
 }
 
-void mat3_div_scalar(mat3 c, const mat3 a, const REAL scalar)
+void mat3_div_scalar(mat3 &c, const mat3 &a, const REAL scalar)
 {
 	REAL fac = 1 / scalar;
 	mat3_mul_scalar(c, a, fac);
@@ -257,7 +253,7 @@ void mat3_div_scalar(mat3 c, const mat3 a, const REAL scalar)
 //  d  e  f
 //  g  h  i
 //
-REAL mat3_det(const mat3 a)
+REAL mat3_det(const mat3 &a)
 {
 	// (aei +bfg + cdh) - (ceg + bdi + afh)
 	REAL part1 = a.m11*a.m22*a.m33 + a.m12*a.m23*a.m31 + a.m13*a.m21*a.m32;
@@ -266,13 +262,13 @@ REAL mat3_det(const mat3 a)
 	return part1 - part2;
 }
 
-REAL mat3_trace(const mat3 a)
+REAL mat3_trace(const mat3 &a)
 {
 	return (a.m11 + a.m22 + a.m33);
 }
 
 // Assume c and a do NOT occupy the same data space
-void mat3_trans(mat3 c, mat3 a)
+void mat3_trans(mat3 &c, const mat3 &a)
 {
 	c.m11 = a.m11;
 	c.m12 = a.m21;
@@ -287,9 +283,9 @@ void mat3_trans(mat3 c, mat3 a)
 	c.m33 = a.m33;
 }
 
-void mat3_set_ident(mat3 c)
+void mat3_set_ident(mat3 &c)
 {
-	memset((void *)&c, 0, sizeof(c));
+	memset(&c, 0, sizeof(mat3));
 
 	c.m11 = 1;
 	c.m22 = 1;
@@ -297,7 +293,7 @@ void mat3_set_ident(mat3 c)
 }
 
 // c = vec3 * mat3
-void row3_mul_mat3(real3 c, const real3 a, const mat3 m)
+void row3_mul_mat3(real3 c, const real3 a, const mat3 &m)
 {
 	c[0] = a[0] * m.m11 + a[1] * m.m21 + a[2] * m.m31;
 	c[1] = a[0] * m.m12 + a[1] * m.m22 + a[2] * m.m32;
@@ -305,7 +301,7 @@ void row3_mul_mat3(real3 c, const real3 a, const mat3 m)
 }
 
 // c = vec4 * mat4
-void row4_mul_mat4(real4 c, const real4 a, const mat4 m)
+void row4_mul_mat4(real4 c, const real4 a, const mat4 &m)
 {
 	c[0] = a[0] * m.m11 + a[1] * m.m21 + a[2] * m.m31 + a[3]*m.m41;
 	c[1] = a[0] * m.m12 + a[1] * m.m22 + a[2] * m.m32+a[3]*m.m42;
@@ -315,33 +311,52 @@ void row4_mul_mat4(real4 c, const real4 a, const mat4 m)
 
 
 // c = mat2 * mat2
-void mat2_mul_mat2(mat2 *c, const mat2 a, const mat2 b)
+void mat2_mul_mat2(mat2 &c, const mat2 &a, const mat2 &b)
 {
-	c->m11 = a.m11*b.m11 + a.m12*b.m21;
-	c->m12 = a.m11*b.m12 + a.m12*b.m22;
+	c.m11 = a.m11*b.m11 + a.m12*b.m21;
+	c.m12 = a.m11*b.m12 + a.m12*b.m22;
 
-	c->m21 = a.m21*b.m11 + a.m22*b.m21;
-	c->m22 = a.m21*b.m12 + a.m22*b.m22;
+	c.m21 = a.m21*b.m11 + a.m22*b.m21;
+	c.m22 = a.m21*b.m12 + a.m22*b.m22;
 }
 
 // c = mat3 * mat3
-void mat3_mul_mat3(mat3 *c, const mat3 a, const mat3 b)
+void mat3_mul_mat3(mat3 &c, const mat3 &a, const mat3 &b)
 {
-	c->m11 = a.m11*b.m11 + a.m12*b.m21 + a.m13*b.m31;
-	c->m12 = a.m11*b.m12 + a.m12*b.m22 + a.m13*b.m32;
-	c->m13 = a.m11*b.m13 + a.m12*b.m23 + a.m13*b.m33;
+	c.m11 = a.m11*b.m11 + a.m12*b.m21 + a.m13*b.m31;
+	c.m12 = a.m11*b.m12 + a.m12*b.m22 + a.m13*b.m32;
+	c.m13 = a.m11*b.m13 + a.m12*b.m23 + a.m13*b.m33;
 
-	c->m21 = a.m21*b.m11 + a.m22*b.m21 + a.m23*b.m31;
-	c->m22 = a.m21*b.m12 + a.m22*b.m22 + a.m23*b.m32;
-	c->m23 = a.m21*b.m13 + a.m22*b.m23 + a.m23*b.m33;
+	c.m21 = a.m21*b.m11 + a.m22*b.m21 + a.m23*b.m31;
+	c.m22 = a.m21*b.m12 + a.m22*b.m22 + a.m23*b.m32;
+	c.m23 = a.m21*b.m13 + a.m22*b.m23 + a.m23*b.m33;
 
-	c->m31 = a.m31*b.m11 + a.m32*b.m21 + a.m33*b.m31;
-	c->m32 = a.m31*b.m12 + a.m32*b.m22 + a.m33*b.m32;
-	c->m33 = a.m31*b.m13 + a.m32*b.m23 + a.m33*b.m33;
+	c.m31 = a.m31*b.m11 + a.m32*b.m21 + a.m33*b.m31;
+	c.m32 = a.m31*b.m12 + a.m32*b.m22 + a.m33*b.m32;
+	c.m33 = a.m31*b.m13 + a.m32*b.m23 + a.m33*b.m33;
 }
 
 // c = mat4 * mat4
-void mat4_mul_mat4(mat4 c, const mat4 a, const mat4 b)
+void mat4_mul_mat4(mat4 &c, const mat4 &a, const mat4 &b)
 {
+	c.m11 = a.m11*b.m11 + a.m12*b.m21 + a.m13*b.m31 + a.m14*b.m41;
+	c.m12 = a.m11*b.m12 + a.m12*b.m22 + a.m13*b.m32 + a.m14*b.m42;
+	c.m13 = a.m11*b.m13 + a.m12*b.m23 + a.m13*b.m33 + a.m14*b.m43;
+	c.m14 = a.m11*b.m14 + a.m12*b.m24 + a.m13*b.m34 + a.m14*b.m44;
+
+	c.m21 = a.m21*b.m11 + a.m22*b.m21 + a.m23*b.m31 + a.m24*b.m41;
+	c.m22 = a.m21*b.m12 + a.m22*b.m22 + a.m23*b.m32 + a.m24*b.m42;
+	c.m23 = a.m21*b.m13 + a.m22*b.m23 + a.m23*b.m33 + a.m24*b.m43;
+	c.m24 = a.m21*b.m14 + a.m22*b.m24 + a.m23*b.m34 + a.m24*b.m44;
+
+	c.m31 = a.m31*b.m11 + a.m32*b.m21 + a.m33*b.m31 + a.m34*b.m41;
+	c.m32 = a.m31*b.m12 + a.m32*b.m22 + a.m33*b.m32 + a.m34*b.m42;
+	c.m33 = a.m31*b.m13 + a.m32*b.m23 + a.m33*b.m33 + a.m34*b.m43;
+	c.m34 = a.m31*b.m14 + a.m32*b.m24 + a.m33*b.m34 + a.m34*b.m44;
+
+	c.m41 = a.m41*b.m11 + a.m42*b.m21 + a.m43*b.m31 + a.m44*b.m41;
+	c.m42 = a.m41*b.m12 + a.m42*b.m22 + a.m43*b.m32 + a.m44*b.m42;
+	c.m43 = a.m41*b.m13 + a.m42*b.m23 + a.m43*b.m33 + a.m44*b.m43;
+	c.m44 = a.m41*b.m14 + a.m42*b.m24 + a.m43*b.m34 + a.m44*b.m44;
 
 }

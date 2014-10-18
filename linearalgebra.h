@@ -32,28 +32,29 @@ REAL real3_radians_between(const real3 a, const real3 b);
 
 
 // matrix 2X2
-void mat2_neg(mat2 c, const mat2 a);
-REAL mat2_det(const mat2 a);
-REAL mat2_trace(const mat2 a);
-void mat2_trans(const mat2 c, mat2 a);
-void mat2_set_ident(mat2 c);
+void mat2_neg(mat2 &c, const mat2 &a);
+REAL mat2_det(const mat2 &a);
+REAL mat2_trace(const mat2 &a);
+void mat2_trans(const mat2 &c, const mat2 &a);
+void mat2_set_ident(mat2 &c);
 
 // Matrix 3X3
-void mat3_add(mat3 c, const mat3 a, const mat3 b);
-void mat3_sub(mat3 c, const mat3 a, const mat3 b);
-void mat3_mul_scalar(mat3 c, const mat3 a, const REAL scalar);
-void mat3_div_scalar(mat3 c, const mat3 a, const REAL scalar);
-REAL mat3_det(const mat3 a);
-REAL mat3_trace(const mat3);
-void mat3_set_ident(mat3 c);
+void mat3_add(mat3 &c, const mat3 &a, const mat3 &b);
+void mat3_sub(mat3 &c, const mat3 &a, const mat3 &b);
+void mat3_mul_scalar(mat3 &c, const mat3 &a, const REAL scalar);
+void mat3_div_scalar(mat3 &c, const mat3 &a, const REAL scalar);
+REAL mat3_det(const mat3 &a);
+REAL mat3_trace(const mat3 &a);
+void mat3_trans(mat3 &c, const mat3 &a);
+void mat3_set_ident(mat3 &c);
 
 // Some common matrix operations
-void row3_mul_mat3(real3 c, const real3 a, const mat3 m);
-void row4_mul_mat4(real4 c, const real4 a, const mat4 m);
+void row3_mul_mat3(real3 c, const real3 a, const mat3 &m);
+void row4_mul_mat4(real4 c, const real4 a, const mat4 &m);
 
-void mat2_mul_mat2(mat2 *c, const mat2 a, const mat2 b);
-void mat3_mul_mat3(mat3 *c, const mat3 a, const mat3 b);
-void mat4_mul_mat4(mat4 c, const mat4 a, const mat4 b);
+void mat2_mul_mat2(mat2 &c, const mat2 &a, const mat2 &b);
+void mat3_mul_mat3(mat3 &c, const mat3 &a, const mat3 &b);
+void mat4_mul_mat4(mat4 &c, const mat4 &a, const mat4 &b);
 
 #ifdef __cplusplus
 }
