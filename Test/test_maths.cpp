@@ -164,10 +164,13 @@ void test_mat4_mul()
 
 void test_screen_transform()
 {
+	// x := -1 (left), 1 (right)
+	// y := -1 (bottom), 1 (top)
+	//
 	REAL screenx;
 	REAL screeny;
-	REAL clipx = 10;
-	REAL clipy=10;
+	REAL clipx = 1.0f;
+	REAL clipy=0.0f;
 	REAL clipw=1;
 	REAL winResx = 1280;
 	REAL winResy = 1024;

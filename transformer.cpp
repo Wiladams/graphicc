@@ -123,6 +123,10 @@ void trans3d_clip_orthographic(mat4 &c, const REAL zoomx, const REAL zoomy, cons
 	c.m44 = 1;
 }
 
+// receives normalized coords
+// x := -1 (left), 1 (right)
+// y := -1 (bottom), 1 (top)
+//
 void trans3d_map_to_window(REAL &screenx, REAL &screeny, 
 	const REAL clipx, const REAL clipy, const REAL clipw, 
 	const REAL winResx, const REAL winResy, 

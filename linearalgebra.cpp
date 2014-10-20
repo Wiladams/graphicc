@@ -390,7 +390,7 @@ void mat4_mul_mat4(mat4 &c, const mat4 &a, const mat4 &b)
 }
 
 // c = vec4 * mat4
-void row4_mul_mat4(real4 c, const real4 a, const mat4 &m)
+void row4_mul_mat4(real4 c, const REAL *a, const mat4 &m)
 {
 	c[0] = a[0] * m.m11 + a[1] * m.m21 + a[2] * m.m31 + a[3] * m.m41;
 	c[1] = a[0] * m.m12 + a[1] * m.m22 + a[2] * m.m32 + a[3] * m.m42;

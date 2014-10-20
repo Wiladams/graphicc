@@ -58,7 +58,7 @@ void row3_mul_mat3(real3 c, const real3 a, const mat3 &m);
 void mat4_trans(mat4 &c, const mat4 &a);
 void mat4_set_ident(mat4 &c);
 void mat4_mul_mat4(mat4 &c, const mat4 &a, const mat4 &b);
-void row4_mul_mat4(real4 c, const real4 a, const mat4 &m);
+void row4_mul_mat4(real4 c, const REAL *a, const mat4 &m);
 
 
 
