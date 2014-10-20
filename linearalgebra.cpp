@@ -159,6 +159,16 @@ void mat2_set_ident(mat2 &c)
 	c.m22 = 1;
 }
 
+// c = mat2 * mat2
+void mat2_mul_mat2(mat2 &c, const mat2 &a, const mat2 &b)
+{
+	c.m11 = a.m11*b.m11 + a.m12*b.m21;
+	c.m12 = a.m11*b.m12 + a.m12*b.m22;
+
+	c.m21 = a.m21*b.m11 + a.m22*b.m21;
+	c.m22 = a.m21*b.m12 + a.m22*b.m22;
+}
+
 
 // 3 X 3 Matrix
 
@@ -292,34 +302,6 @@ void mat3_set_ident(mat3 &c)
 	c.m33 = 1;
 }
 
-// c = vec3 * mat3
-void row3_mul_mat3(real3 c, const real3 a, const mat3 &m)
-{
-	c[0] = a[0] * m.m11 + a[1] * m.m21 + a[2] * m.m31;
-	c[1] = a[0] * m.m12 + a[1] * m.m22 + a[2] * m.m32;
-	c[2] = a[0] * m.m13 + a[1] * m.m23 + a[2] * m.m33;
-}
-
-// c = vec4 * mat4
-void row4_mul_mat4(real4 c, const real4 a, const mat4 &m)
-{
-	c[0] = a[0] * m.m11 + a[1] * m.m21 + a[2] * m.m31 + a[3]*m.m41;
-	c[1] = a[0] * m.m12 + a[1] * m.m22 + a[2] * m.m32+a[3]*m.m42;
-	c[2] = a[0] * m.m13 + a[1] * m.m23 + a[2] * m.m33+a[3]*m.m43;
-	c[3] = a[0] * m.m14 + a[1] * m.m24 + a[2] * m.m34+a[3]*m.m44;
-}
-
-
-// c = mat2 * mat2
-void mat2_mul_mat2(mat2 &c, const mat2 &a, const mat2 &b)
-{
-	c.m11 = a.m11*b.m11 + a.m12*b.m21;
-	c.m12 = a.m11*b.m12 + a.m12*b.m22;
-
-	c.m21 = a.m21*b.m11 + a.m22*b.m21;
-	c.m22 = a.m21*b.m12 + a.m22*b.m22;
-}
-
 // c = mat3 * mat3
 void mat3_mul_mat3(mat3 &c, const mat3 &a, const mat3 &b)
 {
@@ -335,6 +317,52 @@ void mat3_mul_mat3(mat3 &c, const mat3 &a, const mat3 &b)
 	c.m32 = a.m31*b.m12 + a.m32*b.m22 + a.m33*b.m32;
 	c.m33 = a.m31*b.m13 + a.m32*b.m23 + a.m33*b.m33;
 }
+
+// c = vec3 * mat3
+void row3_mul_mat3(real3 c, const real3 a, const mat3 &m)
+{
+	c[0] = a[0] * m.m11 + a[1] * m.m21 + a[2] * m.m31;
+	c[1] = a[0] * m.m12 + a[1] * m.m22 + a[2] * m.m32;
+	c[2] = a[0] * m.m13 + a[1] * m.m23 + a[2] * m.m33;
+}
+
+/*
+	Matrix 4x4
+*/
+
+void mat4_set_ident(mat4 &c)
+{
+	memset(&c, 0, sizeof(mat4));
+
+	c.m11 = 1;
+	c.m22 = 1;
+	c.m33 = 1;
+	c.m44 = 1;
+}
+
+void mat4_trans(mat4 &c, const mat4 &a)
+{
+	c.m11 = a.m11;
+	c.m12 = a.m21;
+	c.m13 = a.m31;
+	c.m14 = a.m41;
+
+	c.m21 = a.m12;
+	c.m22 = a.m22;
+	c.m23 = a.m32;
+	c.m24 = a.m42;
+
+	c.m31 = a.m13;
+	c.m32 = a.m23;
+	c.m33 = a.m33;
+	c.m34 = a.m43;
+
+	c.m41 = a.m14;
+	c.m42 = a.m24;
+	c.m43 = a.m34;
+	c.m44 = a.m44;
+}
+
 
 // c = mat4 * mat4
 void mat4_mul_mat4(mat4 &c, const mat4 &a, const mat4 &b)
@@ -359,4 +387,13 @@ void mat4_mul_mat4(mat4 &c, const mat4 &a, const mat4 &b)
 	c.m43 = a.m41*b.m13 + a.m42*b.m23 + a.m43*b.m33 + a.m44*b.m43;
 	c.m44 = a.m41*b.m14 + a.m42*b.m24 + a.m43*b.m34 + a.m44*b.m44;
 
+}
+
+// c = vec4 * mat4
+void row4_mul_mat4(real4 c, const real4 a, const mat4 &m)
+{
+	c[0] = a[0] * m.m11 + a[1] * m.m21 + a[2] * m.m31 + a[3] * m.m41;
+	c[1] = a[0] * m.m12 + a[1] * m.m22 + a[2] * m.m32 + a[3] * m.m42;
+	c[2] = a[0] * m.m13 + a[1] * m.m23 + a[2] * m.m33 + a[3] * m.m43;
+	c[3] = a[0] * m.m14 + a[1] * m.m24 + a[2] * m.m34 + a[3] * m.m44;
 }

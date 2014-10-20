@@ -71,6 +71,7 @@
     <ClInclude Include="pbm.h" />
     <ClInclude Include="pixelbuffer.h" />
     <ClInclude Include="raster_rgba.h" />
+    <ClInclude Include="transformer.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="linearalgebra.cpp" />
@@ -78,6 +79,7 @@
     <ClCompile Include="pixelbuffer.cpp" />
     <ClCompile Include="raster_rgba.cpp" />
     <ClCompile Include="raster_rgba_triangle.cpp" />
+    <ClCompile Include="transformer.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

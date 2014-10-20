@@ -5,6 +5,7 @@ http://www.calcul.com/show/calculator/matrix-multiplication_;4;4;4;4?matrix1=[["
 */
 
 #include "test_common.h"
+#include "transformer.h"
 
 void realn_write_array(const size_t nelems, const REAL *c)
 {
@@ -119,7 +120,7 @@ void test_mat3_mul()
 		2, 4, 5
 	};
 
-	mat3_mul_mat3(&c, a, b);
+	mat3_mul_mat3(c, a, b);
 
 	realn_write_array(3, &c.m11);
 	printf("\n");
@@ -148,7 +149,7 @@ void test_mat4_mul()
 		0,0,0,1
 	};
 
-	mat4_mul_mat4(&c, a, b);
+	mat4_mul_mat4(c, a, b);
 
 	realn_write_array(4, &c.m11);
 	printf("\n");
@@ -161,12 +162,35 @@ void test_mat4_mul()
 	printf("\n");
 }
 
+void test_screen_transform()
+{
+	REAL screenx;
+	REAL screeny;
+	REAL clipx = 10;
+	REAL clipy=10;
+	REAL clipw=1;
+	REAL winResx = 1280;
+	REAL winResy = 1024;
+	REAL winCenterx = 640;
+	REAL winCentery = 512;
+
+	trans3d_map_to_window(screenx, screeny,
+		clipx, clipy, clipw,
+		winResx, winResy,
+		winCenterx, winCentery);
+
+	printf("  clip: %4.3f, %4.3f, %4.3f\n", clipx, clipy, clipw);
+	printf("screen: %4.3f, %4.3f\n", screenx, screeny);
+}
+
 int main(int argc, char **argv)
 {
 	//test_mat4_transform();
-	test_mat2_mul();
+	//test_mat2_mul();
 	//test_mat3_mul();
-	test_mat4_mul();
+	//test_mat4_mul();
+	
+	test_screen_transform();
 
 	return 0;
 }

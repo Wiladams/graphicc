@@ -7,6 +7,12 @@
 
 typedef double REAL;
 
+// Some useful constants
+#define M_PI 3.14159
+
+#define DEGREES(r) ((180 / M_PI) * r)
+#define RADIANS(d) ((M_PI/180)*d)
+
 
 #ifdef _MSC_VER
 #pragma warning(push)
