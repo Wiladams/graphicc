@@ -10,11 +10,13 @@ extern "C" {
 #endif
 
 // Basic geometric vector type routines
+void realn_assign(const size_t dim, REAL *c, const REAL *a);
 void realn_add(const int dim, REAL * c, const REAL * a, const REAL * b);
 void realn_sub(const int dim, REAL * c, const REAL * a, const REAL * b);
 void realn_mul_scalar(const int dim, REAL * c, const REAL * a, const REAL scalar);
 void realn_div_scalar(const int dim, REAL * c, const REAL * a, const REAL scalar);
 void realn_neg(const int dim, REAL * c, const REAL * a);
+void realn_mul_realn(const size_t dim, REAL *c, const REAL *a, const REAL *b);
 
 // Linear Algebra
 REAL realn_dot(const int dim, const REAL * a, const REAL * b);
@@ -49,13 +51,14 @@ void mat3_div_scalar(mat3 &c, const mat3 &a, const REAL scalar);
 REAL mat3_det(const mat3 &a);
 REAL mat3_trace(const mat3 &a);
 void mat3_trans(mat3 &c, const mat3 &a);
-void mat3_set_ident(mat3 &c);
 void mat3_mul_mat3(mat3 &c, const mat3 &a, const mat3 &b);
 void row3_mul_mat3(real3 c, const real3 a, const mat3 &m);
 
+void mat3_set_ident(mat3 &c);
+void mat3_set_columns(mat3 &rotation, const real3 col1, const real3 col2, const real3 col3);
 
 // Matrix 4x4
-void mat4_trans(mat4 &c, const mat4 &a);
+void mat4_transpose(mat4 &c, const mat4 &a);
 void mat4_set_ident(mat4 &c);
 void mat4_mul_mat4(mat4 &c, const mat4 &a, const mat4 &b);
 void row4_mul_mat4(real4 c, const REAL *a, const mat4 &m);
@@ -72,6 +75,7 @@ void row4_mul_mat4(real4 c, const REAL *a, const mat4 &m);
 #define real3_add(c, a, b) realn_add(3, c, a, b)
 #define real3_sub(c, a, b) realn_sub(3, c, a, b)
 #define real3_mul_scalar(c, a, scalar) realn_mul_scalar(3, c, a, scalar)
+#define real3_mul_real3(c, a, b) realn_mul_realn(3, c, a, b)
 #define real3_div_scalar(c, a, scalar) realn_div_scalar(3, c, a, scalar)
 #define real3_neg(c, a) realn_neg(3, c, a)
 

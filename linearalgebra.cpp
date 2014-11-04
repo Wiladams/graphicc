@@ -7,6 +7,15 @@
 #include <string.h>
 
 // general methods
+// copy 
+// c = a
+void realn_assign(const size_t dim, REAL *c, const REAL *a)
+{
+	for (size_t idx = 0; idx < dim; idx++) {
+		c[idx] = a[idx];
+	}
+}
+
 void realn_add(const int dim, REAL * c, const REAL * a, const REAL *b)
 {
 	for (int i = 0; i < dim; i++)
@@ -30,6 +39,14 @@ void realn_mul_scalar(const int dim, REAL *c, const REAL *a, const REAL scalar)
 		c[i] = a[i] * scalar;
 	}
 }
+
+void realn_mul_realn(const size_t dim, REAL *c, const REAL *a, const REAL *b)
+{
+	for (size_t idx = 0; idx < dim; idx++) {
+		c[idx] = a[idx] * b[idx];
+	}
+}
+
 
 void realn_div_scalar(const int dim, REAL *c, const REAL *a, const REAL scalar)
 {
@@ -272,6 +289,7 @@ REAL mat3_det(const mat3 &a)
 	return part1 - part2;
 }
 
+// a + e + i
 REAL mat3_trace(const mat3 &a)
 {
 	return (a.m11 + a.m22 + a.m33);
@@ -300,6 +318,21 @@ void mat3_set_ident(mat3 &c)
 	c.m11 = 1;
 	c.m22 = 1;
 	c.m33 = 1;
+}
+
+void mat3_set_columns(mat3 &c, const real3 col1, const real3 col2, const real3 col3)
+{
+	c.m11 = col1[0];
+	c.m21 = col1[1];
+	c.m31 = col1[2];
+
+	c.m12 = col2[0];
+	c.m22 = col2[1];
+	c.m32 = col2[2];
+
+	c.m13 = col3[0];
+	c.m23 = col3[1];
+	c.m33 = col3[2];
 }
 
 // c = mat3 * mat3
@@ -340,7 +373,7 @@ void mat4_set_ident(mat4 &c)
 	c.m44 = 1;
 }
 
-void mat4_trans(mat4 &c, const mat4 &a)
+void mat4_transpose(mat4 &c, const mat4 &a)
 {
 	c.m11 = a.m11;
 	c.m12 = a.m21;

@@ -162,38 +162,14 @@ void test_mat4_mul()
 	printf("\n");
 }
 
-void test_screen_transform()
-{
-	// x := -1 (left), 1 (right)
-	// y := -1 (bottom), 1 (top)
-	//
-	REAL screenx;
-	REAL screeny;
-	REAL clipx = 1.0f;
-	REAL clipy=0.0f;
-	REAL clipw=1;
-	REAL winResx = 1280;
-	REAL winResy = 1024;
-	REAL winCenterx = 640;
-	REAL winCentery = 512;
 
-	trans3d_map_to_window(screenx, screeny,
-		clipx, clipy, clipw,
-		winResx, winResy,
-		winCenterx, winCentery);
-
-	printf("  clip: %4.3f, %4.3f, %4.3f\n", clipx, clipy, clipw);
-	printf("screen: %4.3f, %4.3f\n", screenx, screeny);
-}
 
 int main(int argc, char **argv)
 {
 	//test_mat4_transform();
 	//test_mat2_mul();
 	//test_mat3_mul();
-	//test_mat4_mul();
-	
-	test_screen_transform();
+	test_mat4_mul();
 
 	return 0;
 }
