@@ -9,13 +9,19 @@
 extern "C" {
 #endif
 
-void raster_rgba_hline_span(pb_rgba *pb, int x1, int color1, int x2, int color2, int y);
-void raster_rgba_vline_span(pb_rgba *pb, int y1, int color1, int y2, int color2, int x);
+void raster_rgba_span(pb_rgba *pb, const uint32_t x, const uint32_t y, const size_t len, const uint32_t *data);
 
-int raster_rgba_hline_blend(pb_rgba *pb, unsigned int x, unsigned int y, unsigned int length, int value);
+// SRCCOPY
 int raster_rgba_hline(pb_rgba *pb, unsigned int x, unsigned int y, unsigned int length, int value);
 int raster_rgba_vline(pb_rgba *pb, unsigned int x, unsigned int y, unsigned int length, int value);
 void raster_rgba_line(pb_rgba *pb, unsigned int x1, unsigned int y1, unsigned int x2, unsigned int y2, int value);
+
+void raster_rgba_hline_fade(pb_rgba *pb, int x1, int color1, int x2, int color2, int y);
+void raster_rgba_vline_fade(pb_rgba *pb, int y1, int color1, int y2, int color2, int x);
+
+// SRCOVER
+int raster_rgba_hline_blend(pb_rgba *pb, unsigned int x, unsigned int y, unsigned int length, int value);
+
 
 
 void raster_rgba_triangle_fill(pb_rgba *pb,

@@ -1,22 +1,4 @@
-/*
-#include "linearalgebra.h"
-#include "pixelbuffer.h"
-#include "raster_rgba.h"
-#include "pbm.h"
 
-#include <stdio.h>
-
-static unsigned int pRed = RGBA(255, 0, 0, 255);
-static unsigned int pGreen = RGBA(0, 255, 0, 255);
-static unsigned int pBlue = RGBA(0, 0, 255, 255);
-
-static unsigned int pBlack = RGBA(0, 0, 0, 255);
-static unsigned int pWhite = RGBA(255, 255, 255, 255);
-static unsigned int pYellow = RGBA(255, 255, 0, 255);
-static unsigned int pTurquoise = RGBA(0, 255, 255, 255);
-static unsigned int pDarkGray = RGBA(93, 93, 93, 255);
-static unsigned int pLightGray = RGBA(163, 163, 163, 255); 
-*/
 
 #include "test_common.h"
 

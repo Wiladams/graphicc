@@ -34,7 +34,7 @@ data - pointer to the beginning of the data
 pformat - some indication of the pixel layout
 width - number of pixels wide
 height - number of pixels high
-pitch - number of bytes between rows
+pixelpitch - number of pixels between rows
 */
 
 // pixel buffer rectangle

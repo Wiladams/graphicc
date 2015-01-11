@@ -4,7 +4,38 @@
 #include <string.h>
 #include <stdlib.h>
 
-void raster_rgba_hline_span(pb_rgba *pb, int x1, int color1, int x2, int color2, int y)
+
+// Some helpful macros
+static const float oneover255 = 1.0f / 255;
+
+//#define blender(bg, fg, a) ((uint8_t)((fg*a+bg*(255-a)) / 255))
+#define blender(bg, fg, a) ((uint8_t)((fg*a+bg*(255-a)) * oneover255))
+
+#define blend_color(bg, fg) RGBA(				\
+	blender(GET_R(bg), GET_R(fg), GET_A(fg)), \
+	blender(GET_G(bg), GET_G(fg), GET_A(fg)), \
+	blender(GET_B(bg), GET_B(fg), GET_A(fg)), 255)
+
+
+
+// Draw a span of pixels
+// This is basically a SRCCOPY
+void raster_rgba_span(pb_rgba *pb, const uint32_t x, const uint32_t y, const size_t len, const uint32_t *data)
+{
+	// get the pointer to the beginning of the row
+	// in the destination
+	uint32_t *dstPtr = &((uint32_t *)pb->data)[y*pb->pixelpitch + x];
+	
+	// Just loop over pointers doing basic copies
+	int idx;
+	for (idx = 0; idx < len; idx++)
+	{
+		*dstPtr = data[idx];
+		dstPtr++;
+	}
+}
+
+void raster_rgba_hline_fade(pb_rgba *pb, int x1, int color1, int x2, int color2, int y)
 {
 	int xdiff = x2 - x1;
 	if (xdiff == 0)
@@ -37,7 +68,7 @@ void raster_rgba_hline_span(pb_rgba *pb, int x1, int color1, int x2, int color2,
 	}
 }
 
-void raster_rgba_vline_span(pb_rgba *pb, int y1, int color1, int y2, int color2, int x)
+void raster_rgba_vline_fade(pb_rgba *pb, int y1, int color1, int y2, int color2, int x)
 {
 	int ydiff = y2 - y1;
 	if (ydiff == 0)
@@ -87,12 +118,6 @@ int raster_rgba_hline(pb_rgba *pb, unsigned int x, unsigned int y, unsigned int 
 	return 0;
 }
 
-#define blender(bg, fg, a) ((uint8_t)((fg*a+bg*(255-a)) / 255))
-
-#define blend_color(bg, fg) RGBA(				\
-	blender(GET_R(bg), GET_R(fg), GET_A(fg)),	\
-	blender(GET_G(bg), GET_G(fg), GET_A(fg)),	\
-	blender(GET_B(bg), GET_B(fg), GET_A(fg)),	255)
 
 
 int raster_rgba_hline_blend(pb_rgba *pb, unsigned int x, unsigned int y, unsigned int length, int value)
@@ -185,10 +210,13 @@ void raster_rgba_line(pb_rgba *pb, unsigned int x1, unsigned int y1, unsigned in
 
 void raster_rgba_blit(pb_rgba *pb, unsigned int x, unsigned int y, pb_rgba *src)
 {
-	unsigned int *dstPtr = (unsigned int *)pb->data;
-	unsigned int *srcPtr = (unsigned int *)src->data;
+	uint32_t *dstPtr = (uint32_t *)pb->data;
+	uint32_t *srcPtr = (uint32_t *)src->data;
 
 	dstPtr += y*pb->pixelpitch + x;
+
+	// IMPROVE
+	// use _span
 
 	for (size_t srcrow = 0; srcrow < src->frame.height; srcrow++)
 	{
