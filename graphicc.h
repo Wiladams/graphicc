@@ -18,12 +18,16 @@ typedef double REAL;
 #define M_E				2.71828182845904523536
 #define M_EULER			0.577215664901532860606
 
+#endif	// M_PI
+
 #define M_GOLDEN_RATIO	1.61803398874989484820458683436563811
-
-#endif
-
 #define DEGREES(radians) ((180 / M_PI) * radians)
 #define RADIANS(degrees) ((M_PI/180)*degrees)
+
+// turn a division by 255 into something 
+// much cheaper to calculate
+// for values between 0 and 65534
+#define div255(num) ((num + (num >> 8)) >> 8)
 
 
 #ifdef _MSC_VER

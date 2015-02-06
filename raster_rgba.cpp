@@ -6,15 +6,12 @@
 
 
 // Some helpful macros
-static const float oneover255 = 1.0f / 255;
-
-//#define blender(bg, fg, a) ((uint8_t)((fg*a+bg*(255-a)) / 255))
-#define blender(bg, fg, a) ((uint8_t)((fg*a+bg*(255-a)) * oneover255))
+#define lerp255(bg, fg, a) ((uint8_t)div255((fg*a+bg*(255-a))))
 
 #define blend_color(bg, fg) RGBA(				\
-	blender(GET_R(bg), GET_R(fg), GET_A(fg)), \
-	blender(GET_G(bg), GET_G(fg), GET_A(fg)), \
-	blender(GET_B(bg), GET_B(fg), GET_A(fg)), 255)
+	lerp255(GET_R(bg), GET_R(fg), GET_A(fg)), \
+	lerp255(GET_G(bg), GET_G(fg), GET_A(fg)), \
+	lerp255(GET_B(bg), GET_B(fg), GET_A(fg)), 255)
 
 
 

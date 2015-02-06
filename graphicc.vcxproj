@@ -67,7 +67,6 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="graphicc.h" />
-    <ClInclude Include="Header.h" />
     <ClInclude Include="linearalgebra.h" />
     <ClInclude Include="pbm.h" />
     <ClInclude Include="pixelbuffer.h" />
