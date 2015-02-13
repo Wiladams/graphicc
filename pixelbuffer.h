@@ -8,7 +8,7 @@
 
 
 typedef struct _pix_rgba {
-	unsigned char r, g, b, a;
+	uint8_t r, g, b, a;
 } pix_rgba;
 
 // On a little endian machine

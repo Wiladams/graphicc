@@ -5,6 +5,12 @@
 
 #include "pixelbuffer.h"
 
+// turn a division by 255 into something 
+// much cheaper to calculate
+// for values between 0 and 65534
+#define div255(num) ((num + (num >> 8)) >> 8)
+
+
 #ifdef __cplusplus
 extern "C" {
 #endif
