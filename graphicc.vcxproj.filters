@@ -33,6 +33,9 @@
     <ClInclude Include="transformer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="bezier.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="linearalgebra.cpp">
@@ -51,6 +54,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="transformer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="bezier.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
