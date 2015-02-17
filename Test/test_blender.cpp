@@ -66,21 +66,35 @@ void test_bezier()
 	pb_rgba_init(&pb, width, height);
 
 	// background color
-	raster_rgba_rect_fill(&pb, 0, 0, width, height, pLightGray);
+	raster_rgba_rect_fill(&pb, 0, 0, width, height, cornsilk);
 
+	// One curve drooping down
 	Pt3 controls[4] = { { centerx - xsize, centery, 0 }, { centerx, centery + ysize, 0 }, { centerx, centery + ysize, 0 }, { centerx + xsize, centery, 0 } };
 	int nControls = 4;
-	int m = 60;
-	Pt3 curve[100];
-	bezier(controls, nControls, m, curve);
+	int m = 100;
+	Pt3 curve[200];
+	bezier4(controls, m, curve);
 	polyline(&pb, curve, m, pGreen);
 
-	// Several curves
+	// Several curves going up
 	for (int offset = 0; offset < ysize; offset += 5) {
 		Pt3 ctrls2[4] = { { centerx - xsize, centery, 0 }, { centerx, centery - offset, 0 }, { centerx, centery - offset, 0 }, { centerx + xsize, centery, 0 } };
-		bezier(ctrls2, nControls, m, curve);
+		//bezier(ctrls2, nControls, m, curve);
+		bezier4(ctrls2, m, curve);
 		polyline(&pb, curve, m, pBlue);
 	}
+
+	// One loop
+	int nctrls = 5;
+	Pt3 ctrls1[5] = { { centerx - xsize, centery, 0 }, { centerx, centery - ysize, 0 }, { centerx + xsize, centery, 0 }, { centerx, centery + ysize, 0 }, { centerx - xsize, centery, 0 } };
+	bezier(ctrls1, nctrls, m, curve);
+	polyline(&pb, curve, m, pBlack);
+
+
+	// one double peak through the middle
+	Pt3 ctrls3[5] = { { centerx - xsize, centery, 0 }, { centerx-(xsize*0.3f), centery + ysize, 0 }, { centerx, centery - ysize, 0 }, { centerx+(xsize*0.3f), centery + ysize, 0 }, { centerx + xsize, centery, 0 } };
+	bezier(ctrls3, nctrls, m, curve);
+	polyline(&pb, curve, m, pRed);
 
 	// Now we have a simple image, so write it to a file
 	int err = write_PPM("test_bezier.ppm", &pb);

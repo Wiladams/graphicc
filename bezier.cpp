@@ -35,7 +35,7 @@ void computeCoefficients(const int n, int * c)
 	}
 }
 
-void computePoint(const float u, Pt3 * pt, const int nControls, const Pt3 *controls, const int * c)
+void bezierPoint(const float u, Pt3 * pt, const int nControls, const Pt3 *controls, const int * c)
 {
 	int k;
 	int n = nControls - 1;
@@ -62,7 +62,46 @@ void bezier(const Pt3 *controls, const int nControls, const int m, Pt3 * curve)
 
 	computeCoefficients(nControls - 1, c);
 	for (i = 0; i <= m; i++) {
-		computePoint(i / (float)m, &curve[i], nControls, controls, c);
+		bezierPoint(i / (float)m, &curve[i], nControls, controls, c);
 	}
 	free(c);	
+}
+
+
+
+void bezier4(const Pt3 *controls, const int m, Pt3 * curve)
+{
+	int nControls = 4;
+	int i = 0;
+
+	for (i = 0; i <= m; i++) {
+		float u = i / (float)m;
+		float oneminusu = 1 - u;
+		float BEZ03 = powf(oneminusu, 3);				// (1-u)^3
+		float BEZ13 = 3 * u*(oneminusu * oneminusu);	// 3u(1-u)^2
+		float BEZ23 = 3 * u*u * oneminusu;				// 3u^2(1-u)
+		float BEZ33 = u*u*u;							// u^3
+
+		curve[i].x = 0.0;	// x
+		curve[i].y = 0.0;	// y
+		curve[i].z = 0.0;	// z
+
+		//computeBezierCubicPoint(u, &curve[i], controls);
+		// Add in influence of each control point
+		curve[i].x += controls[0].x * BEZ03;
+		curve[i].y += controls[0].y * BEZ03;
+		curve[i].z += controls[0].z * BEZ03;
+
+		curve[i].x += controls[1].x * BEZ13;
+		curve[i].y += controls[1].y * BEZ13;
+		curve[i].z += controls[1].z * BEZ13;
+
+		curve[i].x += controls[2].x * BEZ23;
+		curve[i].y += controls[2].y * BEZ23;
+		curve[i].z += controls[2].z * BEZ23;
+
+		curve[i].x += controls[3].x * BEZ33;
+		curve[i].y += controls[3].y * BEZ33;
+		curve[i].z += controls[3].z * BEZ33;
+	}
 }
