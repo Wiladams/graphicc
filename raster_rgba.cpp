@@ -24,7 +24,7 @@ void raster_rgba_span(pb_rgba *pb, const uint32_t x, const uint32_t y, const siz
 	uint32_t *dstPtr = &((uint32_t *)pb->data)[y*pb->pixelpitch + x];
 	
 	// Just loop over pointers doing basic copies
-	int idx;
+	size_t idx;
 	for (idx = 0; idx < len; idx++)
 	{
 		*dstPtr = data[idx];

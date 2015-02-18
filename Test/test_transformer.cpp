@@ -49,6 +49,20 @@ void test_scale()
 	print_rows(nrows, res);
 }
 
+void test_translate()
+{
+	real4 pt1 = { 1, 2, 3, 1 };
+	real4 c;
+	mat4 m;
+
+	puts("==== test_translate ====");
+
+	trans3d_translate(m, -2, 2, 4);
+	row4_mul_mat4(c, pt1, m);
+
+	realn_write_array(4, c);
+}
+
 void test_screen_transform()
 {
 	// x := -1 (left), 1 (right)
@@ -95,5 +109,6 @@ int main(int argc, char **argv)
 {
 	//test_scale();
 	//test_screen_transform();
-	test_model_view_transform();
+	//test_model_view_transform();
+	test_translate();
 }

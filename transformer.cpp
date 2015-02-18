@@ -4,6 +4,31 @@
 #include <string.h>
 #include <math.h>
 
+// translation
+void trans3d_translate(mat4 &c, const REAL dx, const REAL dy, const REAL dz)
+{
+	memset(&c, 0, sizeof(mat4));
+	c.m11 = 1;
+	c.m22 = 1;
+	c.m33 = 1;
+	c.m44 = 1;
+
+	c.m41 = dx;
+	c.m42 = dy;
+	c.m43 = dz;
+}
+
+// Create a scaling matrix using all 3 axis
+void trans3d_scale(mat4 &c, const REAL sx, const REAL sy, const REAL sz)
+{
+	memset(&c, 0, sizeof(mat4));
+
+	c.m11 = sx;
+	c.m22 = sy;
+	c.m33 = sz;
+	c.m44 = 1;
+}
+
 // rotate around x axis
 void trans3d_rotatex(mat4 &c, const REAL radians)
 {
@@ -84,16 +109,7 @@ void trans3d_rotate_around_axis(mat4 &c, const real3 n, const REAL radians)
 }
 
 
-// Create a scaling matrix using all 3 axis
-void trans3d_scale(mat4 &c, const REAL sx, const REAL sy, const REAL sz)
-{
-	memset(&c, 0, sizeof(mat4));
 
-	c.m11 = sx;
-	c.m22 = sy;
-	c.m33 = sz;
-	c.m44 = 1;
-}
 
 void trans3d_set_rotation(mat4 &c, const mat3 &rot)
 {

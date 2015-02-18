@@ -61,6 +61,8 @@ void mat3_set_columns(mat3 &rotation, const real3 col1, const real3 col2, const 
 void mat4_transpose(mat4 &c, const mat4 &a);
 void mat4_set_ident(mat4 &c);
 void mat4_mul_mat4(mat4 &c, const mat4 &a, const mat4 &b);
+
+// assuming row vectors, multiply with matrix on the right
 void row4_mul_mat4(real4 c, const REAL *a, const mat4 &m);
 
 

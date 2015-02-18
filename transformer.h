@@ -12,6 +12,8 @@ extern "C" {
 
 void trans3d_transform_rows(const size_t nrows, REAL *res, const REAL *inpts, mat4 &tmat);
 
+void trans3d_translate(mat4 &c, const REAL dx, const REAL dy, const REAL dz);
+
 void trans3d_rotatex(mat4 &c, const REAL radians);
 void trans3d_rotatey(mat4 &c, const REAL radians);
 void trans3d_rotatez(mat4 &c, const REAL radians);
