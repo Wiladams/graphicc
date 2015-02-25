@@ -100,7 +100,7 @@ void real3_set(real3 c, REAL x, REAL y, REAL z)
 
 
 // c = a cross b
-void real3_cross(real3 c, const real3 a, const real3 b)
+void real3_cross(real3 &c, const real3 &a, const real3 &b)
 {
 	c[0] = (a[1] * b[2]) - (a[2] * b[1]);
 	c[1] = (a[2] * b[0]) - (a[0] * b[2]);
@@ -136,6 +136,17 @@ REAL real3_radians_between(const real3 a, const real3 b)
 	Matrix routines
 */
 // 2 X 2 Matrix
+void mat2_mul_scalar(mat2 &c, const mat2 &a, const REAL scalar)
+{
+	// row 1
+	c.m11 = a.m11 * scalar;
+	c.m12 = a.m12 * scalar;
+
+	// row 2
+	c.m21 = a.m21 * scalar;
+	c.m22 = a.m22 * scalar;
+}
+
 void mat2_neg(mat2 &c, const mat2 &a)
 {
 	c.m11 = -a.m11;
@@ -145,9 +156,26 @@ void mat2_neg(mat2 &c, const mat2 &a)
 	c.m22 = -a.m22;
 }
 
-REAL mat2_det(const mat2 &a)
+REAL mat2_determinant(const mat2 &a)
 {
 	return (a.m11 * a.m22) - (a.m12 * a.m21);
+}
+
+int mat2_inverse(mat2 &c, const mat2 &a)
+{
+	REAL det = (a.m11 * a.m22) - (a.m12 * a.m21);
+	if (det == 0) {
+		return 0;
+	}
+	
+	REAL oneoverdet = 1.0f / det;
+	// temp matrix used to do final calculation
+	mat2 mattmp;
+	mattmp.m11 = a.m22;
+	mattmp.m12 = -a.m12;
+	mattmp.m21 = -a.m21;
+	mattmp.m22 = a.m11;
+	mat2_mul_scalar(c, mattmp, oneoverdet);
 }
 
 REAL mat2_trace(const mat2 &a)
@@ -280,7 +308,7 @@ void mat3_div_scalar(mat3 &c, const mat3 &a, const REAL scalar)
 //  d  e  f
 //  g  h  i
 //
-REAL mat3_det(const mat3 &a)
+REAL mat3_determinant(const mat3 &a)
 {
 	// (aei +bfg + cdh) - (ceg + bdi + afh)
 	REAL part1 = a.m11*a.m22*a.m33 + a.m12*a.m23*a.m31 + a.m13*a.m21*a.m32;
@@ -373,6 +401,33 @@ void mat4_set_ident(mat4 &c)
 	c.m44 = 1;
 }
 
+void mat4_mul_scalar(mat4 &c, const mat4 &a, const REAL scalar)
+{
+	// row 1
+	c.m11 = a.m11 * scalar;
+	c.m12 = a.m12 * scalar;
+	c.m13 = a.m13 * scalar;
+	c.m14 = a.m14 * scalar;
+
+	// row 2
+	c.m21 = a.m21 * scalar;
+	c.m22 = a.m22 * scalar;
+	c.m23 = a.m23 * scalar;
+	c.m24 = a.m24 * scalar;
+
+	// row 3
+	c.m31 = a.m31 * scalar;
+	c.m32 = a.m32 * scalar;
+	c.m33 = a.m33 * scalar;
+	c.m34 = a.m34 * scalar;
+
+	// row 4
+	c.m41 = a.m41 * scalar;
+	c.m42 = a.m42 * scalar;
+	c.m43 = a.m43 * scalar;
+	c.m44 = a.m44 * scalar;
+}
+
 void mat4_transpose(mat4 &c, const mat4 &a)
 {
 	c.m11 = a.m11;
@@ -429,4 +484,12 @@ void row4_mul_mat4(real4 c, const REAL *a, const mat4 &m)
 	c[1] = a[0] * m.m12 + a[1] * m.m22 + a[2] * m.m32 + a[3] * m.m42;
 	c[2] = a[0] * m.m13 + a[1] * m.m23 + a[2] * m.m33 + a[3] * m.m43;
 	c[3] = a[0] * m.m14 + a[1] * m.m24 + a[2] * m.m34 + a[3] * m.m44;
+}
+
+void mat4_mul_col4(real4 c, const mat4 &m, const REAL *a)
+{
+	c[0] = m.m11*a[0] + m.m12 *a[1] + m.m13*a[2] + m.m14*a[3];
+	c[1] = m.m21*a[0] + m.m22*a[1] + m.m23*a[2] + m.m24*a[3];
+	c[2] = m.m31*a[0] + m.m32*a[1] + m.m33*a[2] + m.m34*a[3];
+	c[3] = m.m41*a[0] + m.m42*a[1] + m.m43*a[2] + m.m44*a[3];
 }
