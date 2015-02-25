@@ -135,6 +135,24 @@ REAL real3_radians_between(const real3 a, const real3 b)
 /*
 	Matrix routines
 */
+// general matrix routines
+
+// in-place transpose
+void matn_transpose(const size_t dim, REAL **a)
+{
+	int i, j;
+	REAL tmp;
+
+	for (i = 1; i<dim; i++) {
+		for (j = 0; j<i; j++) {
+			tmp = a[i][j];
+			a[i][j] = a[j][i];
+			a[j][i] = tmp;
+		}
+	}
+}
+
+
 // 2 X 2 Matrix
 void mat2_mul_scalar(mat2 &c, const mat2 &a, const REAL scalar)
 {
@@ -324,7 +342,7 @@ REAL mat3_trace(const mat3 &a)
 }
 
 // Assume c and a do NOT occupy the same data space
-void mat3_trans(mat3 &c, const mat3 &a)
+void mat3_transpose(mat3 &c, const mat3 &a)
 {
 	c.m11 = a.m11;
 	c.m12 = a.m21;
@@ -451,6 +469,19 @@ void mat4_transpose(mat4 &c, const mat4 &a)
 	c.m44 = a.m44;
 }
 
+REAL mat4_determinant(const mat4 &m) 
+{
+	double value;
+	value =
+		m.m14 * m.m23 * m.m32 * m.m41 - m.m13 * m.m24 * m.m32 * m.m41 - m.m14 * m.m22 * m.m33 * m.m41 + m.m12 * m.m24 * m.m33 * m.m41 +
+		m.m13 * m.m22 * m.m34 * m.m41 - m.m12 * m.m23 * m.m34 * m.m41 - m.m14 * m.m23 * m.m31 * m.m42 + m.m13 * m.m24 * m.m31 * m.m42 +
+		m.m14 * m.m21 * m.m33 * m.m42 - m.m11 * m.m24 * m.m33 * m.m42 - m.m13 * m.m21 * m.m34 * m.m42 + m.m11 * m.m23 * m.m34 * m.m42 +
+		m.m14 * m.m22 * m.m31 * m.m43 - m.m12 * m.m24 * m.m31 * m.m43 - m.m14 * m.m21 * m.m32 * m.m43 + m.m11 * m.m24 * m.m32 * m.m43 +
+		m.m12 * m.m21 * m.m34 * m.m43 - m.m11 * m.m22 * m.m34 * m.m43 - m.m13 * m.m22 * m.m31 * m.m44 + m.m12 * m.m23 * m.m31 * m.m44 +
+		m.m13 * m.m21 * m.m32 * m.m44 - m.m11 * m.m23 * m.m32 * m.m44 - m.m12 * m.m21 * m.m33 * m.m44 + m.m11 * m.m22 * m.m33 * m.m44;
+	
+	return value;
+}
 
 // c = mat4 * mat4
 void mat4_mul_mat4(mat4 &c, const mat4 &a, const mat4 &b)
