@@ -33,6 +33,9 @@ REAL real3_radians_between_units(const real3 a, const real3 b);
 REAL real3_radians_between(const real3 a, const real3 b);
 
 
+// generic matrix routines
+void matn_transpose(const size_t dim, REAL **a);
+
 // matrix 2X2
 void mat2_mul_scalar(mat2 &c, const mat2 &a, const REAL scalar);
 void mat2_neg(mat2 &c, const mat2 &a);
@@ -66,6 +69,7 @@ void mat4_transpose(mat4 &c, const mat4 &a);
 // identity, also Kronecker delta
 void mat4_set_identity(mat4 &c);
 void mat4_mul_scalar(mat4 &c, const mat4 &a, const REAL scalar);
+REAL mat4_determinant(const mat4 &m);
 void mat4_mul_mat4(mat4 &c, const mat4 &a, const mat4 &b);
 
 // assuming row vectors, multiply with matrix on the right

@@ -72,10 +72,10 @@ void DETVAL(const mat3 &DI, REAL &VAL);
 // LNLN
 // LNSRF
 
-// MATINV
+// MATINV	Calculate inverse of 4x4 matrix
 void MATINV(const mat4 &MI, const mat4 &MO);
 
-// MATRNS - 4x4 matrix transpose
+// MATRNS - Calculate transpose of 4x4 matrix
 void MATRNS(const mat4 &MI, mat4 &MO);
 
 // MIDCRV

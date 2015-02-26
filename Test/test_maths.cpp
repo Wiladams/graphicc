@@ -82,6 +82,23 @@ void test_mat4_transform()
 	realn_print(4, c, "c = real4*mat4");
 }
 
+void test_matn_transpose()
+{
+	mat4x4 m = {
+		1, 2, 3, 4,
+		5, 6, 7, 8,
+		9, 10, 11, 12,
+		13, 14, 15, 16
+	};
+
+	matn_transpose(4, m);
+
+	realn_write_array(4, (REAL *)&m[0]);
+	printf("\n");
+	realn_write_array(4, (REAL *)&m[1]);
+
+}
+
 void test_mat2_mul()
 {
 	puts("==== test_mat2_mul() ====");
@@ -169,7 +186,8 @@ int main(int argc, char **argv)
 	//test_mat4_transform();
 	//test_mat2_mul();
 	//test_mat3_mul();
-	test_mat4_mul();
-
+	//test_mat4_mul();
+	test_matn_transpose();
+	
 	return 0;
 }

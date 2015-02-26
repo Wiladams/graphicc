@@ -55,12 +55,16 @@ typedef struct _mat3 {
 	REAL m31, m32, m33;
 } mat3;
 
+
 typedef struct _mat4 {
 	REAL m11, m12, m13, m14;
 	REAL m21, m22, m23, m24;
 	REAL m31, m32, m33, m34;
 	REAL m41, m42, m43, m44;
 } mat4;
+
+typedef REAL mat4x4[4][4];
+
 
 enum pixellayouts {
 	rgba
