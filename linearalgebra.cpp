@@ -161,6 +161,8 @@ REAL mat2_determinant(const mat2 &a)
 	return (a.m11 * a.m22) - (a.m12 * a.m21);
 }
 
+// Calculate inverse of 2x2 matrix
+// c = inverse(a)
 int mat2_inverse(mat2 &c, const mat2 &a)
 {
 	REAL det = (a.m11 * a.m22) - (a.m12 * a.m21);
@@ -178,13 +180,16 @@ int mat2_inverse(mat2 &c, const mat2 &a)
 	mat2_mul_scalar(c, mattmp, oneoverdet);
 }
 
+// Calculate trace of 2x2 matrix
+// trace is the sum of the diagonal elements
 REAL mat2_trace(const mat2 &a)
 {
 	return a.m11 + a.m22;
 }
 
+// Create transpose of 2x2 matrix
 // Assume c and a do NOT occupy the same data space
-void mat2_trans(mat2 &c, const mat2 &a)
+void mat2_transpose(mat2 &c, const mat2 &a)
 {
 	c.m11 = a.m11;
 	c.m12 = a.m21;

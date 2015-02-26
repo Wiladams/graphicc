@@ -39,8 +39,8 @@ void mat2_neg(mat2 &c, const mat2 &a);
 REAL mat2_determinant(const mat2 &a);
 int mat2_inverse(mat2 &c, const mat2 &a);
 REAL mat2_trace(const mat2 &a);
-void mat2_trans(const mat2 &c, const mat2 &a);
-void mat2_set_ident(mat2 &c);
+void mat2_transpose(const mat2 &c, const mat2 &a);
+void mat2_set_identity(mat2 &c);
 void mat2_mul_mat2(mat2 &c, const mat2 &a, const mat2 &b);
 void mat2_get_row_order(REAL *c);
 void mat2_get_col_order(REAL *c);
@@ -52,11 +52,11 @@ void mat3_mul_scalar(mat3 &c, const mat3 &a, const REAL scalar);
 void mat3_div_scalar(mat3 &c, const mat3 &a, const REAL scalar);
 REAL mat3_determinant(const mat3 &a);
 REAL mat3_trace(const mat3 &a);
-void mat3_trans(mat3 &c, const mat3 &a);
+void mat3_transpose(mat3 &c, const mat3 &a);
 void mat3_mul_mat3(mat3 &c, const mat3 &a, const mat3 &b);
 void row3_mul_mat3(real3 c, const real3 a, const mat3 &m);
 
-void mat3_set_ident(mat3 &c);
+void mat3_set_identity(mat3 &c);
 void mat3_set_columns(mat3 &rotation, const real3 col1, const real3 col2, const real3 col3);
 
 // Matrix 4x4
@@ -64,7 +64,7 @@ void mat3_set_columns(mat3 &rotation, const real3 col1, const real3 col2, const 
 void mat4_transpose(mat4 &c, const mat4 &a);
 
 // identity, also Kronecker delta
-void mat4_set_ident(mat4 &c);
+void mat4_set_identity(mat4 &c);
 void mat4_mul_scalar(mat4 &c, const mat4 &a, const REAL scalar);
 void mat4_mul_mat4(mat4 &c, const mat4 &a, const mat4 &b);
 
