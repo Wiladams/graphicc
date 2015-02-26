@@ -140,7 +140,7 @@ REAL real3_radians_between(const real3 a, const real3 b)
 // in-place transpose
 void matn_transpose(const size_t dim, REAL **a)
 {
-	int i, j;
+	size_t i, j;
 	REAL tmp;
 
 	for (i = 1; i<dim; i++) {
@@ -165,6 +165,18 @@ void mat2_mul_scalar(mat2 &c, const mat2 &a, const REAL scalar)
 	c.m22 = a.m22 * scalar;
 }
 
+void mat2_div_scalar(mat2 &c, const mat2 &a, const REAL scalar)
+{
+	REAL oneover = 1.0f / scalar;
+	// row 1
+	c.m11 = a.m11 * oneover;
+	c.m12 = a.m12 * oneover;
+
+	// row 2
+	c.m21 = a.m21 * oneover;
+	c.m22 = a.m22 * oneover;
+}
+
 void mat2_neg(mat2 &c, const mat2 &a)
 {
 	c.m11 = -a.m11;
@@ -185,17 +197,20 @@ int mat2_inverse(mat2 &c, const mat2 &a)
 {
 	REAL det = (a.m11 * a.m22) - (a.m12 * a.m21);
 	if (det == 0) {
-		return 0;
+		// error when determinant == 0
+		// cannot calculate inverse
+		return -1;
 	}
 	
-	REAL oneoverdet = 1.0f / det;
 	// temp matrix used to do final calculation
 	mat2 mattmp;
 	mattmp.m11 = a.m22;
 	mattmp.m12 = -a.m12;
 	mattmp.m21 = -a.m21;
 	mattmp.m22 = a.m11;
-	mat2_mul_scalar(c, mattmp, oneoverdet);
+	mat2_div_scalar(c, mattmp, det);
+
+	return 0;
 }
 
 // Calculate trace of 2x2 matrix
@@ -216,7 +231,7 @@ void mat2_transpose(mat2 &c, const mat2 &a)
 	c.m22 = a.m22;
 }
 
-void mat2_set_ident(mat2 &c)
+void mat2_set_identity(mat2 &c)
 {
 	// memset to zero
 	c.m12 = 0;
@@ -362,7 +377,7 @@ void mat3_transpose(mat3 &c, const mat3 &a)
 	c.m33 = a.m33;
 }
 
-void mat3_set_ident(mat3 &c)
+void mat3_set_identity(mat3 &c)
 {
 	memset(&c, 0, sizeof(mat3));
 
@@ -414,7 +429,7 @@ void row3_mul_mat3(real3 c, const real3 a, const mat3 &m)
 	Matrix 4x4
 */
 
-void mat4_set_ident(mat4 &c)
+void mat4_set_identity(mat4 &c)
 {
 	memset(&c, 0, sizeof(mat4));
 
@@ -449,6 +464,11 @@ void mat4_mul_scalar(mat4 &c, const mat4 &a, const REAL scalar)
 	c.m42 = a.m42 * scalar;
 	c.m43 = a.m43 * scalar;
 	c.m44 = a.m44 * scalar;
+}
+
+void mat4_div_scalar(mat4 &c, const mat4&a, const REAL scalar)
+{
+	mat4_mul_scalar(c, a, 1.0f / scalar);
 }
 
 void mat4_transpose(mat4 &c, const mat4 &a)
@@ -486,6 +506,151 @@ REAL mat4_determinant(const mat4 &m)
 		m.m13 * m.m21 * m.m32 * m.m44 - m.m11 * m.m23 * m.m32 * m.m44 - m.m12 * m.m21 * m.m33 * m.m44 + m.m11 * m.m22 * m.m33 * m.m44;
 	
 	return value;
+}
+
+// Create the 4x4 adjoint matrix 
+/*
+How do you find the adjoint of a 4x4 matrix?
+
+Find the cofactor (determinant of the signed minor) of each entry, keeping in mind the sign array
+(starting with + in the upper left corner):
+[+ - + -]
+[- + - +]
+[+ - + -]
+[- + - +]
+
+//
+//	11  12  13  14
+//  21  22  23  24
+//  31  32  33  34
+//  41  42  43  44
+//
+
+// c = adjoint(a)
+*/
+void mat4_adjoint(mat4 &c, const mat4 &a)
+{
+	mat3 m3;
+	mat4 m4;
+
+	// Create matrix of minors
+	// Apply +- pattern to create matrix of cofactors
+	// 11
+	m3.m11 = a.m22; m3.m12 = a.m23; m3.m13 = a.m24;
+	m3.m21 = a.m32; m3.m22 = a.m33; m3.m23 = a.m34;
+	m3.m31 = a.m42; m3.m32 = a.m43; m3.m33 = a.m44;
+	m4.m11 = mat3_determinant(m3);
+
+	// 12
+	m3.m11 = a.m21; m3.m12 = a.m23; m3.m13 = a.m24;
+	m3.m21 = a.m31; m3.m22 = a.m33; m3.m23 = a.m34;
+	m3.m31 = a.m41; m3.m32 = a.m43; m3.m33 = a.m44;
+	m4.m12 = -mat3_determinant(m3);
+
+	// 13
+	m3.m11 = a.m21; m3.m12 = a.m22; m3.m13 = a.m24;
+	m3.m21 = a.m31; m3.m22 = a.m32; m3.m23 = a.m34;
+	m3.m31 = a.m41; m3.m32 = a.m42; m3.m33 = a.m44;
+	m4.m13 = mat3_determinant(m3);
+
+	// 14
+	m3.m11 = a.m21; m3.m12 = a.m22; m3.m13 = a.m23;
+	m3.m21 = a.m31; m3.m22 = a.m32; m3.m23 = a.m33;
+	m3.m31 = a.m41; m3.m32 = a.m42; m3.m33 = a.m43;
+	m4.m14 = -mat3_determinant(m3);
+
+	// 21
+	m3.m11 = a.m12; m3.m12 = a.m13; m3.m13 = a.m14;
+	m3.m21 = a.m32; m3.m22 = a.m33; m3.m23 = a.m34;
+	m3.m31 = a.m42; m3.m32 = a.m43; m3.m33 = a.m44;
+	m4.m21 = -mat3_determinant(m3);
+
+	// 22
+	m3.m11 = a.m11; m3.m12 = a.m13; m3.m13 = a.m14;
+	m3.m21 = a.m31; m3.m22 = a.m33; m3.m23 = a.m34;
+	m3.m31 = a.m41; m3.m32 = a.m43; m3.m33 = a.m44;
+	m4.m22 = mat3_determinant(m3);
+
+	// 23
+	m3.m11 = a.m11; m3.m12 = a.m12; m3.m13 = a.m14;
+	m3.m21 = a.m31; m3.m22 = a.m32; m3.m23 = a.m34;
+	m3.m31 = a.m41; m3.m32 = a.m42; m3.m33 = a.m44;
+	m4.m23 = -mat3_determinant(m3);
+
+	// 24
+	m3.m11 = a.m11; m3.m12 = a.m12; m3.m13 = a.m13;
+	m3.m21 = a.m31; m3.m22 = a.m32; m3.m23 = a.m33;
+	m3.m31 = a.m41; m3.m32 = a.m42; m3.m33 = a.m43;
+	m4.m24 = mat3_determinant(m3);
+
+
+	// 31
+	m3.m11 = a.m12; m3.m12 = a.m13; m3.m13 = a.m14;
+	m3.m21 = a.m22; m3.m22 = a.m23; m3.m23 = a.m24;
+	m3.m31 = a.m42; m3.m32 = a.m43; m3.m33 = a.m44;
+	m4.m31 = mat3_determinant(m3);
+
+	// 32
+	m3.m11 = a.m11; m3.m12 = a.m13; m3.m13 = a.m14;
+	m3.m21 = a.m21; m3.m22 = a.m23; m3.m23 = a.m24;
+	m3.m31 = a.m41; m3.m32 = a.m43; m3.m33 = a.m44;
+	m4.m32 = -mat3_determinant(m3);
+
+	// 33
+	m3.m11 = a.m11; m3.m12 = a.m12; m3.m13 = a.m14;
+	m3.m21 = a.m21; m3.m22 = a.m22; m3.m23 = a.m24;
+	m3.m31 = a.m41; m3.m32 = a.m42; m3.m33 = a.m44;
+	m4.m33 = mat3_determinant(m3);
+
+	// 34
+	m3.m11 = a.m11; m3.m12 = a.m12; m3.m13 = a.m13;
+	m3.m21 = a.m21; m3.m22 = a.m22; m3.m23 = a.m23;
+	m3.m31 = a.m41; m3.m32 = a.m42; m3.m33 = a.m43;
+	m4.m34 = -mat3_determinant(m3);
+
+
+	// 41
+	m3.m11 = a.m12; m3.m12 = a.m13; m3.m13 = a.m14;
+	m3.m21 = a.m22; m3.m22 = a.m23; m3.m23 = a.m24;
+	m3.m31 = a.m32; m3.m32 = a.m33; m3.m33 = a.m34;
+	m4.m41 = -mat3_determinant(m3);
+
+	// 42
+	m3.m11 = a.m11; m3.m12 = a.m13; m3.m13 = a.m14;
+	m3.m21 = a.m21; m3.m22 = a.m23; m3.m23 = a.m24;
+	m3.m31 = a.m31; m3.m32 = a.m33; m3.m33 = a.m34;
+	m4.m42 = mat3_determinant(m3);
+
+	// 43
+	m3.m11 = a.m11; m3.m12 = a.m12; m3.m13 = a.m14;
+	m3.m21 = a.m21; m3.m22 = a.m22; m3.m23 = a.m24;
+	m3.m31 = a.m31; m3.m32 = a.m32; m3.m33 = a.m34;
+	m4.m43 = -mat3_determinant(m3);
+
+	// 44
+	m3.m11 = a.m11; m3.m12 = a.m12; m3.m13 = a.m13;
+	m3.m21 = a.m21; m3.m22 = a.m22; m3.m23 = a.m23;
+	m3.m31 = a.m31; m3.m32 = a.m32; m3.m33 = a.m33;
+	m4.m44 = mat3_determinant(m3);
+
+
+	// create adjoint by transposing
+	mat4_transpose(c, m4);
+}
+
+int mat4_inverse(mat4 &c, const mat4 &a)
+{
+	REAL determinant = mat4_determinant(a);
+	if (determinant == 0) {
+		return -1;
+	}
+
+	mat4 adjoint;
+	mat4_adjoint(adjoint, a);
+
+	mat4_div_scalar(c, adjoint, determinant);
+
+	return 0;
 }
 
 // c = mat4 * mat4
@@ -529,3 +694,5 @@ void mat4_mul_col4(real4 c, const mat4 &m, const REAL *a)
 	c[2] = m.m31*a[0] + m.m32*a[1] + m.m33*a[2] + m.m34*a[3];
 	c[3] = m.m41*a[0] + m.m42*a[1] + m.m43*a[2] + m.m44*a[3];
 }
+
+

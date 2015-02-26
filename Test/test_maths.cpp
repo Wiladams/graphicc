@@ -20,6 +20,19 @@ void realn_write_array(const size_t nelems, const REAL *c)
 	printf("]");
 }
 
+void write_mat4(const mat4 &c)
+{
+	realn_write_array(4, &c.m11);
+	printf("\n");
+	realn_write_array(4, &c.m21);
+	printf("\n");
+	realn_write_array(4, &c.m31);
+	printf("\n");
+	realn_write_array(4, &c.m41);
+
+	printf("\n");
+}
+
 void realn_print(const size_t nelems, const REAL *c, const char *caption)
 {
 	printf("%s ==> ", caption);
@@ -91,7 +104,7 @@ void test_matn_transpose()
 		13, 14, 15, 16
 	};
 
-	matn_transpose(4, m);
+	//matn_transpose(4, m);
 
 	realn_write_array(4, (REAL *)&m[0]);
 	printf("\n");
@@ -179,7 +192,38 @@ void test_mat4_mul()
 	printf("\n");
 }
 
+void test_adjoint()
+{
+	mat4 a = {
+		5, -2, 2, 7,
+		1, 0, 0, 3,
+		-3, 1, 5, 0,
+		3, -1, -9, 4
+	};
+	mat4 c;
 
+	mat4_adjoint(c, a);
+
+	printf("==== Adjoint ====\n");
+	write_mat4(c);
+}
+
+void test_inverse()
+{
+	mat4 a = {
+		1, 0, 0, 0, 
+		0,1, 0, 0,
+		0, 0, 1, 0, 
+		13, 14, 15, 1
+	};
+
+	mat4 c;
+
+	int err = mat4_inverse(c, a);
+
+	printf("==== Inverse (%d) ====\n", err);
+	write_mat4(c);
+}
 
 int main(int argc, char **argv)
 {
@@ -187,7 +231,9 @@ int main(int argc, char **argv)
 	//test_mat2_mul();
 	//test_mat3_mul();
 	//test_mat4_mul();
-	test_matn_transpose();
-	
+	//test_matn_transpose();
+	//test_adjoint();
+	test_inverse();
+
 	return 0;
 }

@@ -158,12 +158,19 @@ void SPROD(const real3 &V1, const real3 &V2, REAL &S);
 // TWSTV
 // UNV		
 // VANG		Compute the angle between two vectors
+void VANG(const real3 &V1, const real3 &V2, REAL &A);
+
 // VMAG		Compute the magnitude of a vector
+void VMAG(const real3 V, REAL MAG);
+
 // VPROD	Compute the vector product of two vectors (cross product)
 void VPROD(const real3 &V1, const real3 &V2, real3 &V3);
 
 // VSUM	- Compute the sum of two vectors
+void VSUM(const real3 &V1, const real3 &V2, real3 &V3);
+
 // VUNIT - Compute unit vector of a vector
+void VUNIT(const real3 &V, real3 &U);
 
 #ifdef __cplusplus
 }
