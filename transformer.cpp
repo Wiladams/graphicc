@@ -132,6 +132,7 @@ void trans3d_set_rotation(mat4 &c, const mat3 &rot)
 // view > camera
 // camera -> perspective
 // perspective -> screen
+/*
 void trans3d_lookat(mat4 &c, const real3 eye, const real3 lookAt, const real3 up)
 {
 	real3 tmp1Real3;
@@ -156,6 +157,24 @@ void trans3d_lookat(mat4 &c, const real3 eye, const real3 lookAt, const real3 up
 
 	// final translation
 	M.m41 = -eye[0]; M.m42 = -eye[1]; M.m43 = -eye[2]; M.m44 = 1;
+}
+*/
+
+void trans3d_lookat(mat4 &c, const real3 eye, const real3 lookAt, const real3 up)
+{
+	// X - axis maps to Right Vector (R)
+	// Y - axis maps to Up Vector (U)
+	// Z - axis maps to Back Vector (B)
+	// Origin maps to eye position (E)
+	// Rx Ry Rz Rw
+	// Ux Uy Uz Uw
+	// Bx By Bz Bw
+	// Ex Ey Ez Ew
+	mat4 Ti = {
+	};
+
+	// Invert matrix to get T
+	mat4_inverse(c, Ti);
 }
 
 /*

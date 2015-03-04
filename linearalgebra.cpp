@@ -428,6 +428,22 @@ void row3_mul_mat3(real3 c, const real3 a, const mat3 &m)
 /*
 	Matrix 4x4
 */
+static const int m411 = 0;
+static const int m412 = 1;
+static const int m413 = 2;
+static const int m414 = 3;
+static const int m421 = 4;
+static const int m422 = 5;
+static const int m423 = 6;
+static const int m424 = 7;
+static const int m431 = 8;
+static const int m432 = 9;
+static const int m433 = 10;
+static const int m434 = 11;
+static const int m441 = 12;
+static const int m442 = 13;
+static const int m443 = 14;
+static const int m444 = 15;
 
 void mat4_set_identity(mat4 &c)
 {

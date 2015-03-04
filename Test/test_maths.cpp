@@ -225,6 +225,41 @@ void test_inverse()
 	write_mat4(c);
 }
 
+void test_rotation()
+{
+	REAL X[] = {
+		0, 0, 1, 1,
+		3, 0, 1, 1,
+		3, 2, 1, 1,
+		0, 2, 1, 1,
+		0, 0, 0, 1,
+		3, 0, 0, 1,
+		3, 2, 0, 1,
+		0, 2, 0, 1
+	};
+
+	mat4 T = {
+		1, 0, 0, 0,
+		0, 0, -1, 0,
+		0, 1, 0, 0,
+		0, 0, 0, 1
+	};
+
+	size_t nRows = sizeof(X) / sizeof(X[0]) / 4;
+	printf("SIZEOF X: %d\n", sizeof(X));
+	printf("ROWS: %d\n", nRows);
+
+	// transform each row through the matrix
+	real4 res;
+	REAL *rowPtr = nullptr;
+
+	for (int row = 0; row < nRows; row++) {
+		rowPtr = &X[row * 4];
+		row4_mul_mat4(res, rowPtr, T);
+		realn_print(4, res, "");
+	}
+}
+
 int main(int argc, char **argv)
 {
 	//test_mat4_transform();
@@ -233,7 +268,8 @@ int main(int argc, char **argv)
 	//test_mat4_mul();
 	//test_matn_transpose();
 	//test_adjoint();
-	test_inverse();
+	//test_inverse();
+	test_rotation();
 
 	return 0;
 }
