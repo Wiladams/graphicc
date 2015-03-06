@@ -41,3 +41,11 @@ Interesting libraries
 2. **Netpbm** - http://netpbm.sourceforge.net/
 3. **AntiGrain** - http://antigrain.com/
 4. Paul Heckbert's **Zoom** - http://user.xmission.com/~legalize/zoom.html
+
+Books
+==================
+1. **Geometric Modeling** - Micahel E Mortenson
+2. **Computer Graphics - C Version** - Donald Hearn, M. Pauline Baker
+3. **Mathematical Elements for Computer Graphics, Second Edition** - David F. Rogers, J Alan Adams
+4. **3D Math Primer for Graphics and Game Development, Second Edition** - Fletcher Dunn, Ian Parberry
+
