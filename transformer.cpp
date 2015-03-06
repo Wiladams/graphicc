@@ -19,6 +19,7 @@ void trans3d_translate(mat4 &c, const REAL dx, const REAL dy, const REAL dz)
 }
 
 // Create a scaling matrix using all 3 axis
+// scales along each of the axis from the origin
 void trans3d_scale(mat4 &c, const REAL sx, const REAL sy, const REAL sz)
 {
 	memset(&c, 0, sizeof(mat4));
@@ -75,6 +76,8 @@ void trans3d_rotatez(mat4 &c, const REAL radians)
 }
 
 // Rotate around an arbitrary axis
+// rotate around an axis with its center
+// at the origin
 void trans3d_rotate_around_axis(mat4 &c, const real3 n, const REAL radians)
 {
 	REAL nx = n[0];
