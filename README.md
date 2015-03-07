@@ -48,4 +48,5 @@ Books
 2. **Computer Graphics - C Version** - Donald Hearn, M. Pauline Baker
 3. **Mathematical Elements for Computer Graphics, Second Edition** - David F. Rogers, J Alan Adams
 4. **3D Math Primer for Graphics and Game Development, Second Edition** - Fletcher Dunn, Ian Parberry
+5. **Jim Blinn's Corner - Dirty Pixels** - Jim Blinn
 
