@@ -1,11 +1,22 @@
-#include "transformer.h"
+#include "pipeline_opengl.h"
 #include "linearalgebra.h"
 
 #include <string.h>
 #include <math.h>
 
+// convenience
+// Multiply rows against transformation matrix
+// assume columnar vectors on the right of the matrix
+void ogl_transform_rows(const size_t nrows, REAL *res, const REAL *inpts, const mat4 &tmat)
+{
+	for (size_t idx = 0; idx < nrows; idx++)
+	{
+		mat4_mul_col4(&res[idx * 4], tmat, &inpts[idx * 4]);
+	}
+}
+
 // translation
-void trans3d_translate(mat4 &c, const REAL dx, const REAL dy, const REAL dz)
+void ogl_translate(mat4 &c, const REAL dx, const REAL dy, const REAL dz)
 {
 	memset(&c, 0, sizeof(mat4));
 	c.m11 = 1;
@@ -20,7 +31,7 @@ void trans3d_translate(mat4 &c, const REAL dx, const REAL dy, const REAL dz)
 
 // Create a scaling matrix using all 3 axis
 // scales along each of the axis from the origin
-void trans3d_scale(mat4 &c, const REAL sx, const REAL sy, const REAL sz)
+void ogl_scale(mat4 &c, const REAL sx, const REAL sy, const REAL sz)
 {
 	memset(&c, 0, sizeof(mat4));
 
@@ -31,7 +42,7 @@ void trans3d_scale(mat4 &c, const REAL sx, const REAL sy, const REAL sz)
 }
 
 // rotate around x axis
-void trans3d_rotatex(mat4 &c, const REAL radians)
+void ogl_rotatex(mat4 &c, const REAL radians)
 {
 	memset(&c, 0, sizeof(mat4));
 
@@ -46,7 +57,7 @@ void trans3d_rotatex(mat4 &c, const REAL radians)
 }
 
 // rotate around y axis
-void trans3d_rotatey(mat4 &c, const REAL radians)
+void ogl_rotatey(mat4 &c, const REAL radians)
 {
 	memset(&c, 0, sizeof(mat4));
 	
@@ -61,7 +72,7 @@ void trans3d_rotatey(mat4 &c, const REAL radians)
 }
 
 // rotate around z axis
-void trans3d_rotatez(mat4 &c, const REAL radians)
+void ogl_rotatez(mat4 &c, const REAL radians)
 {
 	memset(&c, 0, sizeof(mat4));
 
@@ -78,7 +89,7 @@ void trans3d_rotatez(mat4 &c, const REAL radians)
 // Rotate around an arbitrary axis
 // rotate around an axis with its center
 // at the origin
-void trans3d_rotate_around_axis(mat4 &c, const real3 n, const REAL radians)
+void ogl_rotate_around_axis(mat4 &c, const real3 n, const REAL radians)
 {
 	REAL nx = n[0];
 	REAL ny = n[1];
@@ -114,7 +125,7 @@ void trans3d_rotate_around_axis(mat4 &c, const real3 n, const REAL radians)
 
 
 
-void trans3d_set_rotation(mat4 &c, const mat3 &rot)
+void ogl_set_rotation(mat4 &c, const mat3 &rot)
 {
 	c.m11 = rot.m11; 
 	c.m12 = rot.m12;
@@ -130,13 +141,50 @@ void trans3d_set_rotation(mat4 &c, const mat3 &rot)
 
 }
 
-// For the render pipeline
-// model -> view
-// view > camera
-// camera -> perspective
-// perspective -> screen
+void ogl_lookat(mat4 &mat, const real3 eyexyz, const real3 atxyz,
+	float upx, float upy, float upz)
+{
+	REAL * m = (REAL*)&mat;
+	REAL *xaxis = &m[0];
+	REAL *up = &m[4];
+	REAL *at = &m[8];
+	real3 tmpreal3;
+
+	// Compute our new look at vector, which will be
+	//   the new negative Z axis of our transformed object.
+	real3_sub(tmpreal3, atxyz, eyexyz);
+	real3_normalize(at, tmpreal3);
+
+	// Make a useable copy of the current up vector.
+	up[0] = upx; up[1] = upy; up[2] = upz;
+
+	// Cross product of the new look at vector and the current
+	//   up vector will produce a vector which is the new
+	//   positive X axis of our transformed object.
+	real3_cross(tmpreal3, at, up);
+	real3_normalize(xaxis, tmpreal3);
+
+	// Calculate the new up vector, which will be the
+	//   positive Y axis of our transformed object. Note
+	//   that it will lie in the same plane as the new
+	//   look at vector and the old up vector.
+	real3_cross(up, xaxis, at);
+
+	// Account for the fact that the geometry will be defined to
+	//   point along the negative Z axis.
+	//scale(at, -1.f);
+	real3_mul_scalar(at, at, -1);
+
+	// Fill out the rest of the 4x4 matrix
+	m[3] = 0.f;     // xaxis is m[0..2]
+	m[7] = 0.f;     // up is m[4..6]
+	m[11] = 0.f;    // -at is m[8..10]
+	m[12] = eyexyz[0]; m[13] = eyexyz[1]; m[14] = eyexyz[2];
+	m[15] = 1.0f;
+}
+
 /*
-void trans3d_lookat(mat4 &c, const real3 eye, const real3 lookAt, const real3 up)
+void ogl_lookat(mat4 &c, const real3 eye, const real3 lookAt, const real3 up)
 {
 	real3 tmp1Real3;
 
@@ -163,25 +211,9 @@ void trans3d_lookat(mat4 &c, const real3 eye, const real3 lookAt, const real3 up
 }
 */
 
-void trans3d_lookat(mat4 &c, const real3 eye, const real3 lookAt, const real3 up)
-{
-	// X - axis maps to Right Vector (R)
-	// Y - axis maps to Up Vector (U)
-	// Z - axis maps to Back Vector (B)
-	// Origin maps to eye position (E)
-	// Rx Ry Rz Rw
-	// Ux Uy Uz Uw
-	// Bx By Bz Bw
-	// Ex Ey Ez Ew
-	mat4 Ti = {
-	};
-
-	// Invert matrix to get T
-	mat4_inverse(c, Ti);
-}
 
 /*
-void trans3d_lookat(mat4 &c, const real3 eye, const real3 lookAt, const real3 up)
+void ogl_lookat(mat4 &c, const real3 eye, const real3 lookAt, const real3 up)
 {
 	real3 tmp1Real3;
 	real3 tmp2Real3;
@@ -228,7 +260,7 @@ void trans3d_lookat(mat4 &c, const real3 eye, const real3 lookAt, const real3 up
 */
 
 // Render pipeline transformation matrices
-void trans3d_clip_perspective(mat4 &c, const REAL zoomx, const REAL zoomy, const REAL near, const REAL far)
+void ogl_clip_perspective(mat4 &c, const REAL zoomx, const REAL zoomy, const REAL near, const REAL far)
 {
 	memset(&c, 0, sizeof(mat4));
 
@@ -241,7 +273,7 @@ void trans3d_clip_perspective(mat4 &c, const REAL zoomx, const REAL zoomy, const
 }
 
 
-void trans3d_clip_orthographic(mat4 &c, const REAL zoomx, const REAL zoomy, const REAL near, const REAL far)
+void ogl_clip_orthographic(mat4 &c, const REAL zoomx, const REAL zoomy, const REAL near, const REAL far)
 {
 	memset(&c, 0, sizeof(mat4));
 
@@ -257,7 +289,7 @@ void trans3d_clip_orthographic(mat4 &c, const REAL zoomx, const REAL zoomy, cons
 // x := -1 (left), 1 (right)
 // y := -1 (bottom), 1 (top)
 //
-void trans3d_map_to_window(REAL &screenx, REAL &screeny, 
+void ogl_map_to_window(REAL &screenx, REAL &screeny, 
 	const REAL clipx, const REAL clipy, const REAL clipw, 
 	const REAL winResx, const REAL winResy, 
 	const REAL winCenterx, const REAL winCentery)
@@ -266,13 +298,6 @@ void trans3d_map_to_window(REAL &screenx, REAL &screeny,
 	screeny = ((clipy*winResy) / (2 * clipw)) + winCentery;
 }
 
-// convenience
-void trans3d_transform_rows(const size_t nrows, REAL *res, const REAL *inpts, const mat4 &tmat)
-{
-	for (size_t idx = 0; idx < nrows; idx++)
-	{
-		row4_mul_mat4(&res[idx * 4], &inpts[idx * 4], tmat);
-	}
-}
+
 
 

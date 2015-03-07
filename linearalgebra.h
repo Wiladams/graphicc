@@ -43,7 +43,7 @@ void realn_normalize(const int dim, REAL * c, const REAL * a);
 void real3_set(real3 c, REAL x, REAL y, REAL z);
 
 
-void real3_cross(real3 &c, const real3 &a, const real3 &b);
+void real3_cross(real3 c, const real3 a, const real3 b);
 REAL real3_distance(const real3 a, const real3 b);
 REAL real3_radians_between_units(const real3 a, const real3 b);
 REAL real3_radians_between(const real3 a, const real3 b);

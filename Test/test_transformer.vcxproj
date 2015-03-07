@@ -69,12 +69,16 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="pipeline_opengl.cpp" />
     <ClCompile Include="test_transformer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\graphicc.vcxproj">
       <Project>{5856a423-63ab-4119-a3b7-0ed0cf7b61fe}</Project>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="pipeline_opengl.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

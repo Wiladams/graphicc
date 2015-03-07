@@ -1,4 +1,5 @@
 #include "test_common.h"
+#include "pipeline_opengl.h"
 
 REAL pts1[] = {
 	0,0,1,1,
@@ -40,11 +41,11 @@ void test_scale()
 	REAL res[32];
 
 	mat4 scalemat;
-	trans3d_scale(scalemat, 1.0 / 2.0f, 1.0 / 3.0f, 1.0f);
+	ogl_scale(scalemat, 1.0 / 2.0f, 1.0 / 3.0f, 1.0f);
 
 	size_t nrows = sizeof(pts1) / sizeof(REAL) / 4;
 
-	trans3d_transform_rows(nrows, res, pts1, scalemat);
+	ogl_transform_rows(nrows, res, pts1, scalemat);
 
 	print_rows(nrows, res);
 }
@@ -57,7 +58,7 @@ void test_translate()
 
 	puts("==== test_translate ====");
 
-	trans3d_translate(m, -2, 2, 4);
+	ogl_translate(m, -2, 2, 4);
 	row4_mul_mat4(c, pt1, m);
 
 	realn_write_array(4, c);
@@ -78,7 +79,7 @@ void test_screen_transform()
 	REAL winCenterx = 640;
 	REAL winCentery = 512;
 
-	trans3d_map_to_window(screenx, screeny,
+	ogl_map_to_window(screenx, screeny,
 		clipx, clipy, clipw,
 		winResx, winResy,
 		winCenterx, winCentery);
@@ -98,9 +99,9 @@ void test_model_view_transform()
 
 	size_t nrows = sizeof(pts1) / sizeof(REAL) / 4;
 
-	trans3d_lookat(mviewmat, eye, lookAt, up);
+	ogl_lookat(mviewmat, eye, lookAt, up);
 
-	trans3d_transform_rows(nrows, res, pts1, mviewmat);
+	ogl_transform_rows(nrows, res, pts1, mviewmat);
 
 	print_rows(nrows, res);
 }

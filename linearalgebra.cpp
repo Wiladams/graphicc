@@ -100,7 +100,7 @@ void real3_set(real3 c, REAL x, REAL y, REAL z)
 
 
 // c = a cross b
-void real3_cross(real3 &c, const real3 &a, const real3 &b)
+void real3_cross(real3 c, const real3 a, const real3 b)
 {
 	c[0] = (a[1] * b[2]) - (a[2] * b[1]);
 	c[1] = (a[2] * b[0]) - (a[0] * b[2]);
