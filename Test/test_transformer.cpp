@@ -39,9 +39,10 @@ void print_rows(const size_t nrows, const REAL *res)
 void test_scale()
 {
 	REAL res[32];
+	real3 sxyz = { 1.0 / 2.0f, 1.0 / 3.0f, 1.0f };
 
 	mat4 scalemat;
-	ogl_scale(scalemat, 1.0 / 2.0f, 1.0 / 3.0f, 1.0f);
+	ogl_scale(scalemat, sxyz);
 
 	size_t nrows = sizeof(pts1) / sizeof(REAL) / 4;
 
@@ -109,7 +110,7 @@ void test_model_view_transform()
 int main(int argc, char **argv)
 {
 	//test_scale();
-	//test_screen_transform();
+	test_screen_transform();
 	//test_model_view_transform();
-	test_translate();
+	//test_translate();
 }

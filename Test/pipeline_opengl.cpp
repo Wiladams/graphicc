@@ -31,13 +31,13 @@ void ogl_translate(mat4 &c, const REAL dx, const REAL dy, const REAL dz)
 
 // Create a scaling matrix using all 3 axis
 // scales along each of the axis from the origin
-void ogl_scale(mat4 &c, const REAL sx, const REAL sy, const REAL sz)
+void ogl_scale(mat4 &c, const real3 sxyz)
 {
 	memset(&c, 0, sizeof(mat4));
 
-	c.m11 = sx;
-	c.m22 = sy;
-	c.m33 = sz;
+	c.m11 = sxyz[0];
+	c.m22 = sxyz[1];
+	c.m33 = sxyz[2];
 	c.m44 = 1;
 }
 
@@ -141,8 +141,7 @@ void ogl_set_rotation(mat4 &c, const mat3 &rot)
 
 }
 
-void ogl_lookat(mat4 &mat, const real3 eyexyz, const real3 atxyz,
-	float upx, float upy, float upz)
+void ogl_lookat(mat4 &mat, const real3 eyexyz, const real3 atxyz, const real3 upxyz)
 {
 	REAL * m = (REAL*)&mat;
 	REAL *xaxis = &m[0];
@@ -156,7 +155,7 @@ void ogl_lookat(mat4 &mat, const real3 eyexyz, const real3 atxyz,
 	real3_normalize(at, tmpreal3);
 
 	// Make a useable copy of the current up vector.
-	up[0] = upx; up[1] = upy; up[2] = upz;
+	up[0] = upxyz[0]; up[1] = upxyz[1]; up[2] = upxyz[2];
 
 	// Cross product of the new look at vector and the current
 	//   up vector will produce a vector which is the new
@@ -212,75 +211,29 @@ void ogl_lookat(mat4 &c, const real3 eye, const real3 lookAt, const real3 up)
 */
 
 
-/*
-void ogl_lookat(mat4 &c, const real3 eye, const real3 lookAt, const real3 up)
-{
-	real3 tmp1Real3;
-	real3 tmp2Real3;
-	real3 tmp3Real3;
-
-	real3 viewDir;
-	real3 viewSide;
-	real3 viewUp;
-
-	// viewDir = normalize(lookat - eye)
-	// This is the translation portion of the matrix
-	real3_sub(tmp1Real3, lookAt, eye);
-	real3_normalize(viewDir, tmp1Real3);
-
-	// viewUp = up - up.Dot(viewDir)*viewDir
-	real3_dot(tmp1Real3, up, viewDir);
-	real3_mul_real3(tmp2Real3, tmp1Real3, viewDir);
-	real3_sub(tmp3Real3, up, tmp2Real3);
-
-	// viewUp.normalize();
-	real3_normalize(viewUp, tmp3Real3);
-
-	// viewSide = viewDir.Cross(viewUp)
-	real3_cross(viewSide, viewDir, viewUp);
-
-	// build transposed rotation matrix
-	mat3 rotation;
-	// rotate.SetRows(viewSide, viewUp, -viewDir);
-	real3_neg(tmp1Real3, viewDir);
-	mat3_set_columns(rotation, viewSide, viewUp, tmp1Real3);
-
-	// transform translation
-	// eyeInv = -(rotate*eye)
-	real3 eyeInv;
-	row3_mul_mat3(tmp1Real3, eye, rotation);
-	real3_neg(eyeInv, tmp1Real3);
-
-	// build 4x4 matrix
-	trans3d_set_rotation(c, rotation);
-	c.m41 = eyeInv[0];
-	c.m42 = eyeInv[1];
-	c.m43 = eyeInv[2];
-}
-*/
 
 // Render pipeline transformation matrices
-void ogl_clip_perspective(mat4 &c, const REAL zoomx, const REAL zoomy, const REAL near, const REAL far)
+void ogl_perspective(mat4 &c, const REAL zoomx, const REAL zoomy, const REAL near, const REAL far)
 {
 	memset(&c, 0, sizeof(mat4));
 
-	c.m34 = 1;
 
 	c.m11 = zoomx;
 	c.m22 = zoomy;
-	c.m33 = (far + near) / (far - near);
-	c.m43 = (-1 * near*far) / (far - near);
+	c.m33 = -(far + near) / (far - near);
+	c.m43 = (-2 * near*far) / (far - near);
+	c.m34 = -1;
 }
 
 
-void ogl_clip_orthographic(mat4 &c, const REAL zoomx, const REAL zoomy, const REAL near, const REAL far)
+void ogl_orthographic(mat4 &c, const REAL zoomx, const REAL zoomy, const REAL near, const REAL far)
 {
 	memset(&c, 0, sizeof(mat4));
 
 
 	c.m11 = zoomx;
 	c.m22 = zoomy;
-	c.m33 = (2) / (far - near);
+	c.m33 = -(2) / (far - near);
 	c.m43 = -((far+near) / (far - near));
 	c.m44 = 1;
 }
