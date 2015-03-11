@@ -40,6 +40,8 @@ typedef double REAL;
 #define DEGREES(radians) ((180 / M_PI) * radians)
 #define RADIANS(degrees) ((M_PI/180)*degrees)
 
+// map a value (a) from between rlo <= rlo <= rhi to  shi <= b <= slo
+#define MAP(a, rlo, rhi, slo, shi) (slo + ((a - rlo) / (rhi - rlo) * (shi - slo)))
 
 
 #ifdef _MSC_VER

@@ -80,13 +80,39 @@ void test_screen_transform()
 	REAL winCenterx = 640;
 	REAL winCentery = 512;
 
-	ogl_map_to_window(screenx, screeny,
-		clipx, clipy, clipw,
-		winResx, winResy,
-		winCenterx, winCentery);
+	// setup the pixel buffer
+	pb_rgba pb;
+	pb_rgba_init(&pb, winResx, winResy);
+	raster_rgba_rect_fill(&pb, 0, 0, winResx, winResy, cornsilk);
 
-	printf("  clip: %4.3f, %4.3f, %4.3f\n", clipx, clipy, clipw);
-	printf("screen: %4.3f, %4.3f\n", screenx, screeny);
+	// Do some mapping
+	// draw four rectangles in the given space
+	REAL centerX = winResx / 4;
+	REAL centerY = winResy / 4;
+	REAL rectWidth = winResx / 4;
+	REAL rectHeight = winResy / 4;
+
+	ogl_map_to_window(screenx, screeny, -1, 1, clipw, winResx, winResy, centerX,centerY);
+	raster_rgba_rect_fill(&pb, screenx, screeny, rectWidth, rectHeight, pRed);
+	raster_rgba_rect_fill(&pb, screenx+rectWidth, screeny, rectWidth, rectHeight, pGreen);
+	raster_rgba_rect_fill(&pb, screenx, screeny+rectHeight, rectWidth, rectHeight, pBlue);
+	raster_rgba_rect_fill(&pb, screenx + rectWidth, screeny + rectHeight, rectWidth, rectHeight, pDarkGray);
+
+/*
+	ogl_map_to_window(screenx, screeny, 0, 1, clipw, winResx, winResy, centerX, centerY);
+	raster_rgba_rect_fill(&pb, screenx, screeny, rectWidth, rectHeight, pGreen);
+
+	ogl_map_to_window(screenx, screeny, -1, 0, clipw, winResx, winResy, centerX, centerY);
+	raster_rgba_rect_fill(&pb, screenx, screeny, rectWidth, rectHeight, pBlue);
+
+	ogl_map_to_window(screenx, screeny, 0, 0, clipw, winResx, winResy, centerX, centerY);
+	raster_rgba_rect_fill(&pb, screenx, screeny, rectWidth, rectHeight, pDarkGray);
+*/
+	//printf("  clip: %4.3f, %4.3f, %4.3f\n", clipx, clipy, clipw);
+	//printf("screen: %4.3f, %4.3f\n", screenx, screeny);
+
+	// write color buffer to file
+	int err = write_PPM("test_screentransform.ppm", &pb);
 }
 
 void test_model_view_transform()

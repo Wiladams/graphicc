@@ -53,6 +53,9 @@ void ogl_map_to_window(REAL &screenx, REAL &screeny,
 	const REAL winResx, const REAL winResy,
 	const REAL winCenterx, const REAL winCentery);
 
+void ogl_create_ndc_to_window(const REAL Ds,
+	const REAL winResx, const REAL winResy,
+	const REAL Sx, const REAL Sy);
 
 #ifdef __cplusplus
 }

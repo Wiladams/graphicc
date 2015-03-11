@@ -248,9 +248,26 @@ void ogl_map_to_window(REAL &screenx, REAL &screeny,
 	const REAL winCenterx, const REAL winCentery)
 {
 	screenx = ((clipx*winResx) / (2 * clipw)) + winCenterx;
-	screeny = ((clipy*winResy) / (2 * clipw)) + winCentery;
+	screeny = -((clipy*winResy) / (2 * clipw)) + winCentery;
+
 }
 
+void ogl_create_ndc_to_window(const REAL Ds,
+	const REAL winResx, const REAL winResy,
+	const REAL Sx, const REAL Sy)
+{
+	REAL Wshalf = winResx / 2.0f;
+	REAL Hshalf = winResy / 2.0f;
+	REAL Dshalf = Ds / 2.0f;
+
+	mat4 m = {
+		Wshalf, 0, 0, 0,
+		0, -Hshalf, 0, 0,
+		0, 0, Dshalf, 0,
+		Wshalf + Sx, Hshalf + Sy, Dshalf, 1
+	};
+
+}
 
 
 
