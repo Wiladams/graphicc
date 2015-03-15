@@ -40,9 +40,13 @@ typedef double REAL;
 #define DEGREES(radians) ((180 / M_PI) * radians)
 #define RADIANS(degrees) ((M_PI/180)*degrees)
 
-// map a value (a) from between rlo <= rlo <= rhi to  shi <= b <= slo
-#define MAP(a, rlo, rhi, slo, shi) (slo + ((a - rlo) / (rhi - rlo) * (shi - slo)))
-
+// map a value (a) from between rlo <= a <= rhi to  shi <= b <= slo
+#define MAP(a, rlo, rhi, slo, shi)  slo + ((float)(a-rlo)/(rhi-rlo)) * (shi-slo)
+// turn a division by 255 into something 
+// much cheaper to calculate
+// for values between 0 and 65534
+#define div255(num) ((num + (num >> 8)) >> 8)
+#define lerp255(bg, fg, a) ((uint8_t)div255((fg*a+bg*(255-a))))
 
 #ifdef _MSC_VER
 #pragma warning(push)

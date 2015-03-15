@@ -52,3 +52,32 @@ int pb_rgba_get_frame(pb_rgba *pb, const unsigned int x, const unsigned int y, c
 
 	return 0;
 }
+
+void pb_rgba_cover_pixel(pb_rgba *pb, const unsigned int x, const unsigned int y, const uint32_t value)
+{
+
+	// Quick reject if the foreground pixel has both 0 opacity
+	// and 0 for color component values
+	if (0 == value) {
+		return;
+	}
+
+	if (0 == GET_A(value)) {
+		// Combine the colors, but don't
+		// change the alpha of the background
+	} else if (255 == GET_A(value)) {
+		// The foreground opacity is full, so set
+		// the color
+		// and set the background alpha to full as well
+		pb_rgba_set_pixel(pb, x, y, value);
+	} else {
+		// All other cases where doing a cover of something
+		// other than full opacity
+		uint8_t alpha = GET_A(value);
+		pix_rgba * B = (pix_rgba *)&pb->data[(y*(pb)->pixelpitch) + x];
+		B->r = lerp255(B->r, GET_R(value), alpha);
+		B->g = lerp255(B->g, GET_R(value), alpha);
+		B->b = lerp255(B->b, GET_R(value), alpha);
+		B->a = lerp255(B->a, GET_R(value), alpha);
+	}
+}

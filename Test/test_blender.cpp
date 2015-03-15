@@ -18,8 +18,8 @@ void checkerboard(pb_rgba *pb, const size_t cols, const size_t rows, const size_
 
 void test_blender()
 {
-	size_t width = 800;
-	size_t height = 600;
+	size_t width = 640;
+	size_t height = 480;
 
 	pb_rgba pb;
 	pb_rgba_init(&pb, width, height);
@@ -28,15 +28,15 @@ void test_blender()
 	raster_rgba_rect_fill(&pb, 0, 0, width, height, pRed);
 
 	// create checkerboard background
-	checkerboard(&pb, 16, 16, width, height, pLightGray, pYellow);
+	checkerboard(&pb, 8, 8, width, height, pBlack, pWhite);
 
 	// Draw some blended rectangles atop the whole
-	for (int offset = 10; offset < 400; offset += 40) {
-		float factor = offset / 400.0f;
-		int alpha = (int)(factor * 255);
-		//printf("factor: %f alpha: %d\n", factor, alpha);
+	for (int iter = 1; iter <= 9; iter++) {
+		float alpha = MAP(iter, 1, 9, 0, 255);
+		printf("iteration: %d alpha: %f\n", iter, alpha);
 
-		int fgColor = RGBA(0, 255, 255, alpha);
+		int fgColor = RGBA(0, 255, 255, (int)alpha);
+		int offset = iter * 40;
 		raster_rgba_rect_fill_blend(&pb, offset, offset, 100, 100, fgColor);
 	}
 
@@ -107,8 +107,8 @@ void test_factorial()
 
 int main(int argc, char **argv)
 {
-//	test_blender();
-	test_bezier();
+	test_blender();
+//	test_bezier();
 //	test_factorial();
 
 	return 0;
