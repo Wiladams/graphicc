@@ -5,7 +5,7 @@ http://www.calcul.com/show/calculator/matrix-multiplication_;4;4;4;4?matrix1=[["
 */
 
 #include "test_common.h"
-#include "transformer.h"
+
 
 void realn_write_array(const size_t nelems, const REAL *c)
 {
@@ -260,6 +260,12 @@ void test_rotation()
 	}
 }
 
+void test_struct()
+{
+	printf("sizeof(pix_rgba): %d\n", sizeof(pix_rgba));
+}
+
+
 int main(int argc, char **argv)
 {
 	//test_mat4_transform();
@@ -269,7 +275,8 @@ int main(int argc, char **argv)
 	//test_matn_transpose();
 	//test_adjoint();
 	//test_inverse();
-	test_rotation();
+	//test_rotation();
+	test_struct();
 
 	return 0;
 }

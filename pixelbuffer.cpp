@@ -81,3 +81,6 @@ void pb_rgba_cover_pixel(pb_rgba *pb, const unsigned int x, const unsigned int y
 		B->a = lerp255(B->a, GET_R(value), alpha);
 	}
 }
+
+
+

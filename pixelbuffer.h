@@ -81,7 +81,6 @@ int pb_rgba_get_frame(pb_rgba *pb, const unsigned int x, const unsigned int y, c
 
 void pb_rgba_cover_pixel(pb_rgba *pb, const unsigned int x, const unsigned int y, const uint32_t value);
 
-
 #ifdef __cplusplus
 }
 #endif
