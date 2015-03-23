@@ -5,6 +5,9 @@
 
 #define MAX_LOADSTRING 100
 
+// Forward declarations of functions included in this code module:
+LRESULT CALLBACK	WndProc(HWND, UINT, WPARAM, LPARAM);
+
 // Global Variables:
 HINSTANCE hInst;								// current instance
 TCHAR szTitle[] = "Window";					// The title bar text
@@ -14,9 +17,15 @@ HBITMAP gbmHandle;
 HDC ghMemDC;
 pb_rgba *gpb;
 
-// Forward declarations of functions included in this code module:
-//extern "C"
-LRESULT CALLBACK	WndProc(HWND, UINT, WPARAM, LPARAM);
+// Globals for the environment
+size_t width = 640;
+size_t height = 480;
+
+void size(const size_t lwidth, const size_t lheight)
+{
+	width = lwidth;
+	height = lheight;
+}
 
 HDC CreateOffscreenDC(HWND hWnd, const size_t width, const size_t height, void **data)
 {
@@ -136,7 +145,7 @@ HWND CreateWindowHandle(int width, int height)
 //
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
-	//int wmId, wmEvent;
+	int wmId, wmEvent;
 	PAINTSTRUCT ps;
 	HDC hdc;
 
@@ -144,11 +153,12 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
 	switch (message)
 	{
-/*
-case WM_COMMAND:
+
+	case WM_COMMAND:
 		wmId = LOWORD(wParam);
 		wmEvent = HIWORD(wParam);
 		// Parse the menu selections:
+/*
 		switch (wmId)
 		{
 		case IDM_ABOUT:
@@ -160,17 +170,18 @@ case WM_COMMAND:
 		default:
 			return DefWindowProc(hWnd, message, wParam, lParam);
 		}
-		break;
 */
+		break;
+
 	case WM_PAINT:
 		hdc = BeginPaint(hWnd, &ps);
 
+		// TODO: Add any drawing code here...
 		// bitblt bmhandle to client area
 		if ((NULL != ghMemDC) && (NULL != gpb)) {
 			::BitBlt(hdc, 0, 0, gpb->frame.width, gpb->frame.height, ghMemDC, 0, 0, SRCCOPY);
 		}
 
-		// TODO: Add any drawing code here...
 		EndPaint(hWnd, &ps);
 		break;
 	case WM_DESTROY:
@@ -207,13 +218,7 @@ int APIENTRY _tWinMain(_In_ HINSTANCE hInstance,
 	_In_ LPTSTR    lpCmdLine,
 	_In_ int       nCmdShow)
 {
-	size_t width;
-	size_t height;
-
-	setup(width, height);
-
-	if (width == 0) width = 640;
-	if (height == 0) height = 480;
+	setup();
 
 	HWND hWnd = CreateWindowHandle(width, height);
 

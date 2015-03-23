@@ -24,17 +24,28 @@ void checkerboard(pb_rgba *pb, const size_t cols, const size_t rows, const size_
 
 
 extern "C"
-void setup(size_t &width, size_t &height)
+void setup()
 {
-	width = gwidth;
-	height = gheight;
+	size(640, 480);
+
+	float zero = MAP(0.0f, 0.0f, 1.0f, 639, 0);
+	float half = MAP(0.5f, 0.0f, 1.0f, 639, 0);
+	float full = MAP(1.0f, 0.0f, 1.0f, 639, 0);
+
+	printf("0.0f : %f\n", zero);
+	printf("0.5f : %f\n", half);
+	printf("1.0f : %f\n", full);
+
 }
+
+static int barheight = 30;
 
 extern "C"
 void step(pb_rgba *pb)
 {
 	// create checkerboard background
-	checkerboard(pb, 8, 8, gwidth, gheight, pBlack, pWhite);
+	checkerboard(pb, 8, 8, width, height, pBlack, pWhite);
+
 }
 
 
