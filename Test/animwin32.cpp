@@ -17,9 +17,12 @@ HBITMAP gbmHandle;
 HDC ghMemDC;
 pb_rgba *gpb;
 
+
+
+
 // Globals for the environment
-size_t width = 640;
-size_t height = 480;
+size_t width;
+size_t height;
 
 void size(const size_t lwidth, const size_t lheight)
 {
@@ -27,6 +30,27 @@ void size(const size_t lwidth, const size_t lheight)
 	height = lheight;
 }
 
+uint64_t startcount;	// for time keeping
+uint64_t frequency;
+
+void resettime()
+{
+	::QueryPerformanceCounter((LARGE_INTEGER*)&startcount);
+}
+
+double seconds()
+{
+	uint64_t currentCount;
+	::QueryPerformanceCounter((LARGE_INTEGER*)&currentCount);
+
+	uint64_t ellapsed = currentCount - startcount;
+	double seconds = ellapsed * frequency;
+
+	return seconds;
+}
+
+
+// Internal construction
 HDC CreateOffscreenDC(HWND hWnd, const size_t width, const size_t height, void **data)
 {
 	int bitsperpixel = 32;
@@ -213,11 +237,26 @@ void eventLoop(HWND hWnd)
 	}
 }
 
+void initialize()
+{
+	width = 640;
+	height = 480;
+
+	// Setup time
+	uint64_t freq;
+
+	::QueryPerformanceFrequency((LARGE_INTEGER*)&freq);
+	::QueryPerformanceCounter((LARGE_INTEGER*)&startcount);
+
+	frequency = 1.0f / freq;
+}
+
 int APIENTRY _tWinMain(_In_ HINSTANCE hInstance,
 	_In_opt_ HINSTANCE hPrevInstance,
 	_In_ LPTSTR    lpCmdLine,
 	_In_ int       nCmdShow)
 {
+	initialize();
 	setup();
 
 	HWND hWnd = CreateWindowHandle(width, height);

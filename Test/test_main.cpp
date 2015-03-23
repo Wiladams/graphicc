@@ -32,20 +32,22 @@ void setup()
 	float half = MAP(0.5f, 0.0f, 1.0f, 639, 0);
 	float full = MAP(1.0f, 0.0f, 1.0f, 639, 0);
 
-	printf("0.0f : %f\n", zero);
-	printf("0.5f : %f\n", half);
-	printf("1.0f : %f\n", full);
-
 }
 
-static int barheight = 30;
+static int barheight = 300;
+static int barwidth = 64;
 
 extern "C"
 void step(pb_rgba *pb)
 {
 	// create checkerboard background
-	checkerboard(pb, 8, 8, width, height, pBlack, pWhite);
+	//checkerboard(pb, 8, 8, width, height, pBlack, pWhite);
 
+	// clear the rectangle to background color
+	raster_rgba_rect_fill(pb, 0, 0, width -1, height-1, cornsilk);
+
+	// draw the bar
+	raster_rgba_rect_fill(pb, 10, height-barheight, barwidth, barheight, pRed);
 }
 
 
