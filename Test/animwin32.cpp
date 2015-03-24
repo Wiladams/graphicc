@@ -31,7 +31,7 @@ void size(const size_t lwidth, const size_t lheight)
 }
 
 uint64_t startcount;	// for time keeping
-uint64_t frequency;
+double clockfrequency;
 
 void resettime()
 {
@@ -44,19 +44,40 @@ double seconds()
 	::QueryPerformanceCounter((LARGE_INTEGER*)&currentCount);
 
 	uint64_t ellapsed = currentCount - startcount;
-	double seconds = ellapsed * frequency;
+	double secs = ellapsed * clockfrequency;
 
-	return seconds;
+	return secs;
+}
+
+uint32_t bgColor;
+pb_rgba *bgImage = nullptr;
+
+void background(const uint32_t value)
+{
+	bgColor = value;
 }
 
 
-// Internal construction
+void InitializeInstance()
+{
+	width = 640;
+	height = 480;
+	bgColor = pDarkGray;
+
+	// Setup time
+	uint64_t freq;
+
+	::QueryPerformanceFrequency((LARGE_INTEGER*)&freq);
+	::QueryPerformanceCounter((LARGE_INTEGER*)&startcount);
+
+	clockfrequency = 1.0f / freq;
+}
+
+//
+// Internal Win32 specificconstruction
+//
 HDC CreateOffscreenDC(HWND hWnd, const size_t width, const size_t height, void **data)
 {
-	int bitsperpixel = 32;
-	int alignment = 4;
-	int bytesPerRow = width * 4;
-
 	BITMAPINFO info;
 	memset(&info, 0, sizeof(BITMAPINFO));
 
@@ -67,6 +88,7 @@ HDC CreateOffscreenDC(HWND hWnd, const size_t width, const size_t height, void *
 	info.bmiHeader.biBitCount = 32;
 	info.bmiHeader.biCompression = BI_RGB;
 
+	//int bytesPerRow = width * 4;
 	//info.bmiHeader.biSizeImage = bytesPerRow * abs((int)height);
 	//info.bmiHeader.biClrImportant = 0;
 	//info.bmiHeader.biClrUsed = 0;
@@ -80,10 +102,10 @@ HDC CreateOffscreenDC(HWND hWnd, const size_t width, const size_t height, void *
 		0);
 
 	// Create offscreen memory DC for DIB Section rendering
-	ghMemDC = ::CreateCompatibleDC(NULL);
-	::SelectObject(ghMemDC, gbmHandle);
+	HDC hdc = ::CreateCompatibleDC(NULL);
+	::SelectObject(hdc, gbmHandle);
 
-	return ghMemDC;
+	return hdc;
 }
 
 pb_rgba * CreatePixelBuffer(const size_t width, const int height, void *data)
@@ -101,7 +123,9 @@ pb_rgba * CreatePixelBuffer(const size_t width, const int height, void *data)
 	return pb;
 }
 
-ATOM RegisterWindowClass()
+
+
+HWND CreateWindowHandle(int width, int height)
 {
 	UINT style = CS_HREDRAW | CS_VREDRAW | CS_OWNDC;
 
@@ -118,23 +142,18 @@ ATOM RegisterWindowClass()
 	wcex.hIcon = NULL;				//LoadIcon(hInst, MAKEINTRESOURCE(IDI_APPLICATION));
 	wcex.hCursor = LoadCursor(NULL, IDC_ARROW);
 	wcex.hbrBackground = NULL;		//(HBRUSH)(COLOR_WINDOW + 1);
-	wcex.lpszMenuName = NULL;		//NULL;
+	wcex.lpszMenuName = NULL;
 	wcex.lpszClassName = szWindowClass;
 	wcex.hIconSm = NULL;			//LoadIcon(wcex.hInstance, MAKEINTRESOURCE(IDI_APPLICATION));
 
-	ATOM classAtom = ::RegisterClassExA(&wcex);
+	ATOM winclassatom = ::RegisterClassExA(&wcex);
 
-	return classAtom;
-}
 
-HWND CreateWindowHandle(int width, int height)
-{
+
 	DWORD dwExStyle = 0;
 	DWORD winstyle = WS_OVERLAPPEDWINDOW;
 	int x = CW_USEDEFAULT;
 	int y = CW_USEDEFAULT;
-	ATOM winclassatom = RegisterWindowClass();
-
 	HWND hWndParent = NULL;
 	HMENU hMenu = NULL;
 
@@ -142,7 +161,6 @@ HWND CreateWindowHandle(int width, int height)
 		return NULL;
 	}
 
-	HMODULE hInst = ::GetModuleHandleA(NULL);
 	HWND hWnd = ::CreateWindowExA(
 		0,
 		szWindowClass,
@@ -156,6 +174,18 @@ HWND CreateWindowHandle(int width, int height)
 
 	return hWnd;
 }
+
+void OnPaint(HDC hdc, PAINTSTRUCT &ps)
+{
+	// TODO: Add any drawing code here...
+	// bitblt bmhandle to client area
+	if ((NULL != ghMemDC) && (NULL != gpb)) {
+
+
+		::BitBlt(hdc, 0, 0, gpb->frame.width, gpb->frame.height, ghMemDC, 0, 0, SRCCOPY);
+	}
+}
+
 
 //
 //  FUNCTION: WndProc(HWND, UINT, WPARAM, LPARAM)
@@ -177,7 +207,24 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
 	switch (message)
 	{
+		/*
+	case WM_LBUTTONDOWN:
+		dragmode = true;
+		break;
 
+	case WM_MOUSEMOVE:
+		if (dragmode)
+		{
+			boxx = GET_X_LPARAM(lParam);
+			boxy = GET_Y_LPARAM(lParam);
+		}
+		break;
+
+	case WM_LBUTTONUP:
+		dragmode = false;
+		InvalidateRect(hWnd, 0, TRUE);
+		break;
+		*/
 	case WM_COMMAND:
 		wmId = LOWORD(wParam);
 		wmEvent = HIWORD(wParam);
@@ -200,11 +247,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	case WM_PAINT:
 		hdc = BeginPaint(hWnd, &ps);
 
-		// TODO: Add any drawing code here...
-		// bitblt bmhandle to client area
-		if ((NULL != ghMemDC) && (NULL != gpb)) {
-			::BitBlt(hdc, 0, 0, gpb->frame.width, gpb->frame.height, ghMemDC, 0, 0, SRCCOPY);
-		}
+		OnPaint(hdc, ps);
 
 		EndPaint(hWnd, &ps);
 		break;
@@ -233,30 +276,26 @@ void eventLoop(HWND hWnd)
 			DispatchMessage(&msg);
 		}
 
+		// draw the background color
+		raster_rgba_rect_fill(gpb, 0, 0, width - 1, height - 1, bgColor);
+
+		// Allow the client to do some drawing if desired
 		step(gpb);
+
+		// Assume the 'step()' did something which requires the 
+		// screen to be redrawn, so, invalidate the entire client area
+		InvalidateRect(hWnd, 0, TRUE);
 	}
 }
 
-void initialize()
-{
-	width = 640;
-	height = 480;
 
-	// Setup time
-	uint64_t freq;
-
-	::QueryPerformanceFrequency((LARGE_INTEGER*)&freq);
-	::QueryPerformanceCounter((LARGE_INTEGER*)&startcount);
-
-	frequency = 1.0f / freq;
-}
 
 int APIENTRY _tWinMain(_In_ HINSTANCE hInstance,
 	_In_opt_ HINSTANCE hPrevInstance,
 	_In_ LPTSTR    lpCmdLine,
 	_In_ int       nCmdShow)
 {
-	initialize();
+	InitializeInstance();
 	setup();
 
 	HWND hWnd = CreateWindowHandle(width, height);

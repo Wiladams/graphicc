@@ -41,7 +41,16 @@ typedef double REAL;
 #define RADIANS(degrees) ((M_PI/180)*degrees)
 
 // map a value (a) from between rlo <= a <= rhi to  shi <= b <= slo
-#define MAP(a, rlo, rhi, slo, shi)  slo + ((float)(a-rlo)/(rhi-rlo)) * (shi-slo)
+inline double MAP(double a, double rlo, double rhi, double slo, double shi)
+{
+	double rrange = (rhi - rlo);
+	double srange = (shi - slo);
+
+	double retvalue = slo + ((double)(a - rlo) / rrange) * srange;
+
+	return retvalue;
+}
+
 // turn a division by 255 into something 
 // much cheaper to calculate
 // for values between 0 and 65534

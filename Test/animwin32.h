@@ -28,7 +28,7 @@ void size(const size_t width, const size_t height);
 double seconds();
 void resettime();
 
-
+void background(const uint32_t value);
 
 
 
@@ -47,3 +47,5 @@ extern size_t height;
 
 extern uint64_t startcount;	// for time keeping
 extern uint64_t frequency;
+
+extern uint32_t bgColor;

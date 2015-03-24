@@ -2,6 +2,7 @@
 
 #include "animwin32.h"
 #include "linearalgebra.h"
+#include <math.h>
 
 static const size_t gwidth = 640;
 static const size_t gheight = 480;
@@ -36,6 +37,10 @@ void setup()
 
 static int barheight = 300;
 static int barwidth = 64;
+static int bargap = 10;
+
+static double maxsecs1 = 1.0 /1.0;
+static double maxsecs2 = 1.0 / 2.0;
 
 extern "C"
 void step(pb_rgba *pb)
@@ -43,11 +48,17 @@ void step(pb_rgba *pb)
 	// create checkerboard background
 	//checkerboard(pb, 8, 8, width, height, pBlack, pWhite);
 
-	// clear the rectangle to background color
-	raster_rgba_rect_fill(pb, 0, 0, width -1, height-1, cornsilk);
+
+	double secfrag;
+
+	secfrag = fmod(seconds(), maxsecs1);
+	barheight = MAP(secfrag, 0, maxsecs1, 4, height - 1);
+	raster_rgba_rect_fill(pb, bargap, height - barheight, barwidth, barheight, pGreen);
 
 	// draw the bar
-	raster_rgba_rect_fill(pb, 10, height-barheight, barwidth, barheight, pRed);
+	secfrag = fmod(seconds(), maxsecs2);
+	barheight = MAP(secfrag, 0, maxsecs2, 4, height - 1);
+	raster_rgba_rect_fill(pb, bargap + barwidth + bargap, height - barheight, barwidth, barheight, pRed);
 }
 
 
