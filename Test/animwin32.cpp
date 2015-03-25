@@ -1,6 +1,8 @@
 
 
 #include "animwin32.h"
+#include <windowsx.h>
+
 #include <math.h>
 
 #define MAX_LOADSTRING 100
@@ -21,18 +23,43 @@ pb_rgba *gpb;
 
 
 // Globals for the environment
-size_t width;
-size_t height;
+size_t width=0;
+size_t height=0;
+pb_rect pixelFrame;
 
+int grectMode = CORNER;
+int gellipseMode = CORNER;
+
+// for time keeping
+uint64_t startcount=0;	
+double clockfrequency=1;
+
+// Mouse
+int mouseX = 0;
+int mouseY = 0;
+
+// color setting
+uint32_t bgColor=0;
+pb_rgba *bgImage = nullptr;
+uint32_t strokeColor = RGBA(0, 0, 0, 255);
+uint32_t fillColor = RGBA(255, 255, 255, 255);
+
+
+
+// size of window
 void size(const size_t lwidth, const size_t lheight)
 {
 	width = lwidth;
 	height = lheight;
+
+	pixelFrame.x = 0;
+	pixelFrame.y = 0;
+	pixelFrame.width = width;
+	pixelFrame.height = height;
 }
 
-uint64_t startcount;	// for time keeping
-double clockfrequency;
 
+// time keeping
 void resettime()
 {
 	::QueryPerformanceCounter((LARGE_INTEGER*)&startcount);
@@ -50,13 +77,19 @@ double seconds()
 }
 
 // color setting
-uint32_t bgColor;
-pb_rgba *bgImage = nullptr;
-uint32_t strokeColor = RGBA(0, 0, 0, 255);
-
 void background(const uint32_t value)
 {
 	bgColor = value;
+}
+
+void noFill()
+{
+	fillColor = 0;
+}
+
+void noStroke()
+{
+	strokeColor = 0;
 }
 
 void stroke(const uint8_t value)
@@ -67,6 +100,16 @@ void stroke(const uint8_t value)
 void stroke(const uint32_t value)
 {
 	strokeColor = value;
+}
+
+void fill(const uint8_t value)
+{
+	fillColor = RGBA(value, value, value, 255);
+}
+
+void fill(const uint32_t value)
+{
+	fillColor = value;
 }
 
 // 2D primitives
@@ -81,15 +124,247 @@ void ellipse(const int a, const int b, const int c, const int d)
 	raster_rgba_ellipse_stroke(gpb, cx, cy, xradius, yradius, strokeColor);
 }
 
+//
+// Line Clipping in preparation for line drawing
+//
+typedef int OutCode;
+
+static const int INSIDE = 0; // 0000
+static const int LEFT = 1;   // 0001
+static const int RIGHT = 2;  // 0010
+static const int BOTTOM = 4; // 0100
+static const int TOP = 8;    // 1000
+
+// Compute the bit code for a point (x, y) using the clip rectangle
+// bounded diagonally by (xmin, ymin), and (xmax, ymax)
+
+OutCode ComputeOutCode(const pb_rect &rct, const int x, const int y)
+{
+	OutCode code;
+	double xmin = rct.x;
+	double xmax = rct.x + rct.width-1;
+	double ymin = rct.y;
+	double ymax = rct.y + rct.height-1;
+
+	code = INSIDE;          // initialised as being inside of clip window
+
+	if (x < xmin)           // to the left of clip window
+		code |= LEFT;
+	else if (x > xmax)      // to the right of clip window
+		code |= RIGHT;
+	if (y < ymin)           // below the clip window
+		code |= BOTTOM;
+	else if (y > ymax)      // above the clip window
+		code |= TOP;
+
+	return code;
+}
+
+// Cohen–Sutherland clipping algorithm clips a line from
+// P0 = (x0, y0) to P1 = (x1, y1) against a rectangle with 
+// diagonal from (xmin, ymin) to (xmax, ymax).
+bool ClipLine(const pb_rect &bounds, int &x0, int &y0, int &x1, int &y1)
+{
+	// compute outcodes for P0, P1, and whatever point lies outside the clip rectangle
+	OutCode outcode0 = ComputeOutCode(bounds, x0, y0);
+	OutCode outcode1 = ComputeOutCode(bounds, x1, y1);
+	bool accept = false;
+	double xmin = bounds.x;
+	double xmax = bounds.x + bounds.width - 1;
+	double ymin = bounds.y;
+	double ymax = bounds.y + bounds.height - 1;
+
+
+	while (true) {
+		if (!(outcode0 | outcode1)) { // Bitwise OR is 0. Trivially accept and get out of loop
+			accept = true;
+			break;
+		}
+		else if (outcode0 & outcode1) { // Bitwise AND is not 0. Trivially reject and get out of loop
+			break;
+		}
+		else {
+			// failed both tests, so calculate the line segment to clip
+			// from an outside point to an intersection with clip edge
+			double x, y;
+
+			// At least one endpoint is outside the clip rectangle; pick it.
+			OutCode outcodeOut = outcode0 ? outcode0 : outcode1;
+
+			// Now find the intersection point;
+			// use formulas y = y0 + slope * (x - x0), x = x0 + (1 / slope) * (y - y0)
+			if (outcodeOut & TOP) {           // point is above the clip rectangle
+				x = x0 + (x1 - x0) * (ymax - y0) / (y1 - y0);
+				y = ymax;
+			}
+			else if (outcodeOut & BOTTOM) { // point is below the clip rectangle
+				x = x0 + (x1 - x0) * (ymin - y0) / (y1 - y0);
+				y = ymin;
+			}
+			else if (outcodeOut & RIGHT) {  // point is to the right of clip rectangle
+				y = y0 + (y1 - y0) * (xmax - x0) / (x1 - x0);
+				x = xmax;
+			}
+			else if (outcodeOut & LEFT) {   // point is to the left of clip rectangle
+				y = y0 + (y1 - y0) * (xmin - x0) / (x1 - x0);
+				x = xmin;
+			}
+
+			// Now we move outside point to intersection point to clip
+			// and get ready for next pass.
+			if (outcodeOut == outcode0) {
+				x0 = x;
+				y0 = y;
+				outcode0 = ComputeOutCode(bounds, x0, y0);
+			}
+			else {
+				x1 = x;
+				y1 = y;
+				outcode1 = ComputeOutCode(bounds, x1, y1);
+			}
+		}
+	}
+
+	return accept;
+}
+
+
+
 void line(const int x1, const int y1, const int x2, const int y2)
 {
-	raster_rgba_line(gpb, x1, y1, x2, y2, strokeColor);
+	int xx1 = x1;
+	int yy1 = y1;
+	int xx2 = x2;
+	int yy2 = y2;
+
+	if (!ClipLine(pixelFrame, xx1, yy1, xx2, yy2))
+	{
+		return;
+	}
+
+	// TODO - need to intersect line with pixelFrame
+	if ((xx1 < 0) || (yy1 < 0))
+		return;
+
+	if ((xx2 > xx1 + width) || (yy2 > y1 + height))
+		return;
+
+	raster_rgba_line(gpb, xx1, yy1, xx2, yy2, strokeColor);
+}
+
+void lineloop(const size_t nPts, const int *pts)
+{
+	if (nPts < 2)
+		return;
+
+	int firstx = pts[0];
+	int firsty = pts[1];
+	int lastx = firstx;
+	int lasty = firsty;
+
+	for (int idx = 1; idx < nPts; idx++)
+	{
+		int nextx = pts[idx * 2];
+		int nexty = pts[(idx * 2) + 1];
+		line(lastx, lasty, nextx, nexty);
+		lastx = nextx;
+		lasty = nexty;
+	}
+
+	// draw last point to beginning
+	line(lastx, lasty, firstx, firsty);
 }
 
 void point(const int x, const int y)
 {
+	if (!pb_rect_contains_point(pixelFrame, x, y))
+		return;
+
 	pb_rgba_cover_pixel(gpb, x, y, strokeColor);
 }
+
+void rectMode(const int mode)
+{
+	grectMode = mode;
+}
+
+void rect(const int a, const int b, const int c, const int d)
+{
+	int x1=0, y1=0;
+	int rwidth=0, rheight=0;
+
+	switch (grectMode) {
+		case CORNER:
+			x1 = a;
+			y1 = b;
+			rwidth = c;
+			rheight = d;
+		break;
+		
+		case CORNERS:
+			x1 = a;
+			y1 = b;
+			rwidth = c - a + 1;
+			rheight = d - b + 1;
+		break;
+
+		case CENTER:
+			x1 = a - c / 2;
+			y1 = b - d / 2;
+			rwidth = c;
+			rheight = d;
+		break;
+
+		case RADIUS:
+			x1 = a - c;
+			y1 = b - d;
+			rwidth = c*2;
+			rheight = d*2;
+		break;
+	}
+
+	if (!pb_rect_contains_rect(pixelFrame, { x1, y1, rwidth, rheight }))
+		return;
+
+
+
+	if (fillColor != 0) {
+		//raster_rgba_rect_fill(gpb, x1, y1, rwidth, rheight, fillColor);
+		raster_rgba_rect_fill_blend(gpb, x1, y1, rwidth, rheight, fillColor);
+	}
+
+	// if the strokeColor != 0 then 
+	// frame the rectangle in the strokeColor
+	if (strokeColor != 0) {
+		int pts[] = {
+			x1, y1,
+			x1, y1+rheight-1,
+			x1+rwidth-1, y1+rheight-1,
+			x1+rwidth-1, y1
+		};
+
+		lineloop(4, pts);
+	}
+}
+
+void triangle(const int x1, const int y1, const int x2, const int y2, const int x3, const int y3)
+{
+	if (fillColor != 0) {
+		raster_rgba_triangle_fill(gpb, x1, y1, x2, y2, x3, y3, fillColor);
+	}
+
+	if (strokeColor != 0) {
+		int pts[] = {
+			x1, y1,
+			x2, y2,
+			x3, y3
+		};
+		lineloop(3, pts);
+	}
+}
+
+
+
 
 // Internal to animwin32
 
@@ -179,7 +454,7 @@ HWND CreateWindowHandle(int width, int height)
 	wcex.hbrBackground = NULL;		//(HBRUSH)(COLOR_WINDOW + 1);
 	wcex.lpszMenuName = NULL;
 	wcex.lpszClassName = szWindowClass;
-	wcex.hIconSm = NULL;			//LoadIcon(wcex.hInstance, MAKEINTRESOURCE(IDI_APPLICATION));
+	wcex.hIconSm = NULL;			//LoadIcon(hInst, MAKEINTRESOURCE(IDI_APPLICATION));
 
 	ATOM winclassatom = ::RegisterClassExA(&wcex);
 
@@ -242,24 +517,22 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
 	switch (message)
 	{
-		/*
+		case WM_MOUSEMOVE:
+			mouseX = GET_X_LPARAM(lParam);
+			mouseY = GET_Y_LPARAM(lParam);
+		break;
+/*
 	case WM_LBUTTONDOWN:
 		dragmode = true;
 		break;
 
-	case WM_MOUSEMOVE:
-		if (dragmode)
-		{
-			boxx = GET_X_LPARAM(lParam);
-			boxy = GET_Y_LPARAM(lParam);
-		}
-		break;
+
 
 	case WM_LBUTTONUP:
 		dragmode = false;
 		InvalidateRect(hWnd, 0, TRUE);
 		break;
-		*/
+*/
 	case WM_COMMAND:
 		wmId = LOWORD(wParam);
 		wmEvent = HIWORD(wParam);

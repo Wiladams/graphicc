@@ -14,6 +14,7 @@
 #include <memory.h>
 #include <tchar.h>
 
+#define BGR_DOMINANT 1
 #include "test_common.h"
 
 #ifdef __cplusplus
@@ -29,15 +30,31 @@ void setup();
 #endif
 
 
+
+/*
+	Drawing API
+*/
+enum {
+	CORNER,
+	CORNERS,
+	RADIUS,
+	CENTER
+};
+
 // Global variables
 extern size_t width;
 extern size_t height;
+
+extern int mouseX;
+extern int mouseY;
 
 extern uint64_t startcount;	// for time keeping
 extern uint64_t frequency;
 
 extern uint32_t bgColor;
 
+extern int grectMode;
+extern int gellipseMode;
 
 // Drawing API
 void size(const size_t width, const size_t height);
@@ -45,11 +62,32 @@ void size(const size_t width, const size_t height);
 double seconds();
 void resettime();
 
+// Setting colors
 void background(const uint32_t value);
+//void clear();
+//void colorMode();
+void fill(const uint32_t value);
+void fill(const uint8_t gray);
+void noFill();
+void noStroke();
 void stroke(const uint32_t value);
 void stroke(const uint8_t gray);
 
+// attributes
+void ellipseMode(const int mode);
+//void noSmooth();
+void rectMode(const int mode);
+//void smooth();
+//void strokeCap();
+//void strokeJoin();
+//void strokeWeight();
+
+
 // 2D primitives
+
 void ellipse(const int a, const int b, const int c, const int d);
 void line(const int x1, const int y1, const int x2, const int y2);
+void lineloop(const size_t nPtr, const int *pts);
 void point(const int x, const int y);
+void rect(const int a, const int b, const int c, const int d);
+void triangle(const int x1, const int y1, const int x2, const int y2, const int x3, const int y3);

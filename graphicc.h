@@ -20,6 +20,7 @@ limitations under the License.
 #define graphicc_h
 
 #include <stdint.h>
+#include <string.h>
 
 typedef double REAL;
 
@@ -101,6 +102,41 @@ enum pixellayouts {
 	rgba
 };
 
+// pixel buffer rectangle
+typedef struct _pb_rect {
+	unsigned int x, y, width, height;
+} pb_rect;
+
+inline int pb_rect_contains_point(const pb_rect &rct, const int x, const int y)
+{
+	if ((x < rct.x) || (y < rct.y))
+		return 0;
+
+	if ((x >= rct.x + rct.width) || (y >= rct.y + rct.height))
+		return 0;
+
+	return 1;
+}
+
+inline int pb_rect_contains_rect(const pb_rect &container, const pb_rect &other)
+{
+	if (!pb_rect_contains_point(container, other.x, other.y))
+	{
+		return 0;
+	}
+
+	if (!pb_rect_contains_point(container, other.x + other.width - 1, other.y + other.height - 1))
+	{
+		return 0;
+	}
+
+	return 1;
+}
+
+inline void pb_rect_clear(pb_rect &rect)
+{
+	memset(&rect, 0, sizeof(pb_rect));
+}
 
 #ifdef _MSC_VER
 #pragma warning(pop)

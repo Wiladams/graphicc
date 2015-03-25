@@ -33,11 +33,19 @@ typedef struct _pix_rgba {
 // byte 1 == green
 // byte 2 == blue
 // byte 3 == alpha
+#ifdef BGR_DOMINANT
+#define RGBA(r,g,b,a) ((uint32_t)(a<<24|r<<16|g<<8|b))
+#define GET_B(value) ((uint32_t)value &0xff)
+#define GET_G(value) (((uint32_t)value &0xff00) >> 8)
+#define GET_R(value) (((uint32_t)value &0xff0000) >> 16)
+#define GET_A(value) (((uint32_t)value &0xff000000) >> 24)
+#else
 #define RGBA(r,g,b,a) ((uint32_t)(a<<24|b<<16|g<<8|r))
 #define GET_R(value) ((uint32_t)value &0xff)
 #define GET_G(value) (((uint32_t)value &0xff00) >> 8)
 #define GET_B(value) (((uint32_t)value &0xff0000) >> 16)
 #define GET_A(value) (((uint32_t)value &0xff000000) >> 24)
+#endif
 
 
 /*
@@ -52,11 +60,6 @@ width - number of pixels wide
 height - number of pixels high
 pixelpitch - number of pixels between rows
 */
-
-// pixel buffer rectangle
-typedef struct _pb_rect {
-	unsigned int x, y, width, height;
-} pb_rect;
 
 typedef struct _pb_rgba {
 	uint8_t *		data;
@@ -89,7 +92,5 @@ void pb_rgba_cover_pixel(pb_rgba *pb, const unsigned int x, const unsigned int y
 #define pb_rgba_set_pixel(pb, x, y, value) ((uint32_t *)(pb)->data)[(y*(pb)->pixelpitch)+x] = value
 
 
-#define pb_rect_contains(rect, x, y) ((x>=(rect)->x && x<= (rect)->x+(rect)->width) && ((y>=(rect)->y) && (y<=(rect)->y+(rect)->height)))
-#define pb_rect_clear(rect) memset((rect), 0, sizeof(pb_rect))
 
 #endif // PIXELBUFFER_H

@@ -85,35 +85,93 @@ void setup()
 
 
 
-
-
-extern "C"
-void step(pb_rgba *pb)
+void drawPoints()
 {
-	uint32_t color = rand() % 10;
-
-	for (int offset = 0; offset < numbars; offset++)
-	{
-		double secfrag = fmod(seconds(), bars[offset].interval);
-		int barheight = MAP(secfrag, 0, bars[offset].interval, 4, height - 1);
-		raster_rgba_rect_fill(pb, offset*(bargap + barwidth) + bargap, height - barheight, barwidth, barheight, bars[offset].color);
-	}
-
 	stroke(pBlack);
-	ellipse(10, 10, 160, 120);
+	point(130, 20);
+	point(185, 20);
+	point(185, 75);
+	point(130, 75);
+}
 
+void drawLines()
+{
 	line(30, 20, 85, 75);
 	line(30, 20, 85, 20);
 	stroke((uint8_t)126);
 	line(85, 20, 85, 75);
 	stroke((uint8_t)255);
 	line(85, 75, 30, 75);
+}
 
+void drawRects()
+{
+	rectMode(CORNER);
+	fill((uint8_t)255);
+	rect(25, 25, 60, 60);
+
+	rectMode(CORNERS);
+	fill((uint8_t)100);
+	rect(25, 25, 50, 50);
+
+	rectMode(RADIUS);
+	fill((uint8_t)255);
+	rect(250, 50, 30, 30);
+
+	rectMode(CENTER);
+	fill((uint8_t)100);
+	rect(250, 50, 30, 30);
+}
+
+void drawEllipses()
+{
 	stroke(pBlack);
-	point(130, 20);
-	point(185, 20);
-	point(185, 75);
-	point(130, 75);
+	ellipse(10, 10, 160, 120);
+}
+
+void drawTriangles()
+{
+	stroke(pBlack);
+	fill((uint8_t)255);
+	triangle(30, 75, 58, 20, 86, 75);
+}
+
+void drawBars()
+{
+	rectMode(CORNER);
+	//nostroke();
+
+	for (int offset = 0; offset < numbars; offset++)
+	{
+		double secfrag = fmod(seconds(), bars[offset].interval);
+		int barheight = MAP(secfrag, 0, bars[offset].interval, 4, height - 1);
+		fill(bars[offset].color);
+		rect(offset*(bargap + barwidth) + bargap, height - barheight, barwidth, barheight);
+	}
+}
+
+void drawMouse()
+{
+	int mWidth = 64;
+	int mHeight = 64;
+
+	rectMode(CENTER);
+	stroke(pBlack);
+	fill(RGBA(0, 127, 255, 200));
+	rect(mouseX, mouseY, mWidth, mHeight);
+}
+
+
+extern "C"
+void step(pb_rgba *pb)
+{
+	drawBars();
+	//drawEllipses();
+	drawLines();
+	//drawPoints();
+	drawRects();
+	drawTriangles();
+	drawMouse();
 
 }
 
