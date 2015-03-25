@@ -49,6 +49,8 @@ void raster_rgba_triangle_fill(pb_rgba *pb,
 
 void raster_rgba_blit(pb_rgba *pb, unsigned int x, unsigned int y, pb_rgba *src);
 
+void raster_rgba_ellipse_stroke(pb_rgba *pb, const uint32_t cx, const uint32_t cy, const size_t xradius, size_t yradius, const uint32_t color);
+
 #ifdef __cplusplus
 }
 #endif

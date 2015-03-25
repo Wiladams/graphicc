@@ -26,5 +26,8 @@
     <ClInclude Include="animwin32.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="test_common.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

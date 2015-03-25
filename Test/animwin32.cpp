@@ -49,14 +49,49 @@ double seconds()
 	return secs;
 }
 
+// color setting
 uint32_t bgColor;
 pb_rgba *bgImage = nullptr;
+uint32_t strokeColor = RGBA(0, 0, 0, 255);
 
 void background(const uint32_t value)
 {
 	bgColor = value;
 }
 
+void stroke(const uint8_t value)
+{
+	strokeColor = RGBA(value,value,value,255);
+}
+
+void stroke(const uint32_t value)
+{
+	strokeColor = value;
+}
+
+// 2D primitives
+
+void ellipse(const int a, const int b, const int c, const int d)
+{
+	size_t xradius = c / 2;
+	size_t yradius = d / 2;
+
+	uint32_t cx = a + xradius;
+	uint32_t cy = b + yradius;
+	raster_rgba_ellipse_stroke(gpb, cx, cy, xradius, yradius, strokeColor);
+}
+
+void line(const int x1, const int y1, const int x2, const int y2)
+{
+	raster_rgba_line(gpb, x1, y1, x2, y2, strokeColor);
+}
+
+void point(const int x, const int y)
+{
+	pb_rgba_cover_pixel(gpb, x, y, strokeColor);
+}
+
+// Internal to animwin32
 
 void InitializeInstance()
 {

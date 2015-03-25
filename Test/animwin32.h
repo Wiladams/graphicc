@@ -20,18 +20,6 @@
 extern "C" {
 #endif
 
-//HWND CreateWindowHandle(int width, int height);
-
-// Change global variables of environment
-void size(const size_t width, const size_t height);
-
-double seconds();
-void resettime();
-
-void background(const uint32_t value);
-
-
-
 // MUST BE IMPLEMENTED BY TEST CASE
 void step(pb_rgba *pb);
 void setup();
@@ -49,3 +37,19 @@ extern uint64_t startcount;	// for time keeping
 extern uint64_t frequency;
 
 extern uint32_t bgColor;
+
+
+// Drawing API
+void size(const size_t width, const size_t height);
+
+double seconds();
+void resettime();
+
+void background(const uint32_t value);
+void stroke(const uint32_t value);
+void stroke(const uint8_t gray);
+
+// 2D primitives
+void ellipse(const int a, const int b, const int c, const int d);
+void line(const int x1, const int y1, const int x2, const int y2);
+void point(const int x, const int y);
