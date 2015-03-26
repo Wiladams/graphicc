@@ -41,6 +41,19 @@ enum {
 	CENTER
 };
 
+enum {
+	POINTS,
+	LINES,
+	LINE_STRIP,
+	LINE_LOOP,
+	POLYGON,
+	QUADS,
+	QUADSTRIP, 
+	TRIANGLES,
+	TRIANGLE_STRIP,
+	TRIANGLE_FAN
+};
+
 // Global variables
 extern size_t width;
 extern size_t height;
@@ -84,7 +97,7 @@ void rectMode(const int mode);
 
 
 // 2D primitives
-
+void bezier(const int x1, const int y1, const int x2, const int y2, const int x3, const int y3);
 void ellipse(const int a, const int b, const int c, const int d);
 void line(const int x1, const int y1, const int x2, const int y2);
 void lineloop(const size_t nPtr, const int *pts);
