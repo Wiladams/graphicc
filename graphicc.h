@@ -23,7 +23,9 @@ limitations under the License.
 #include <string.h>
 #include <math.h>
 
-typedef double REAL;
+typedef float	float32;
+typedef double	float64;
+typedef double	REAL;
 
 // There are various sources for high precision numbers.  The well known
 // CRC books are one.  The ones used here come variously from the Graphics Gems
@@ -60,15 +62,7 @@ inline REAL DEGREES(const REAL radians) {return ((180 / G_PI) * radians);}
 inline REAL RADIANS(const REAL degrees) {return ((G_PI / 180)*degrees);}
 
 // map a value (a) from between rlo <= a <= rhi to  shi <= b <= slo
-inline double MAP(double a, double rlo, double rhi, double slo, double shi)
-{
-	double rrange = (rhi - rlo);
-	double srange = (shi - slo);
-
-	double retvalue = slo + ((double)(a - rlo) / rrange) * srange;
-
-	return retvalue;
-}
+inline double MAP(double a, double rlo, double rhi, double slo, double shi) {return slo + ((double)(a - rlo) / (rhi - rlo)) * (shi - slo);}
 
 // turn a division by 255 into something 
 // much cheaper to calculate
@@ -83,42 +77,36 @@ inline double MAP(double a, double rlo, double rhi, double slo, double shi)
 
 
 
-typedef REAL real2[2];
-typedef REAL real3[3];
-typedef REAL real4[4];
 
-typedef struct {
-	REAL x;
-	REAL y;
-	REAL z;
-} Pt3;
-
-
-typedef struct _mat2 {
-	REAL m11, m12;
-	REAL m21, m22;
-} mat2;
-
-typedef struct _mat3 {
-	REAL m11, m12, m13;
-	REAL m21, m22, m23;
-	REAL m31, m32, m33;
-} mat3;
-
-
-typedef struct _mat4 {
-	REAL m11, m12, m13, m14;
-	REAL m21, m22, m23, m24;
-	REAL m31, m32, m33, m34;
-	REAL m41, m42, m43, m44;
-} mat4;
-
-typedef REAL mat4x4[4][4];
 
 
 enum pixellayouts {
 	rgba
 };
+
+#ifdef BGR_DOMINANT
+#define RGBA(r,g,b,a) ((uint32_t)(a<<24|r<<16|g<<8|b))
+#define GET_B(value) ((uint32_t)value &0xff)
+#define GET_G(value) (((uint32_t)value &0xff00) >> 8)
+#define GET_R(value) (((uint32_t)value &0xff0000) >> 16)
+#define GET_A(value) (((uint32_t)value &0xff000000) >> 24)
+#else
+#define RGBA(r,g,b,a) ((uint32_t)(a<<24|b<<16|g<<8|r))
+#define GET_R(value) ((uint32_t)value &0xff)
+#define GET_G(value) (((uint32_t)value &0xff00) >> 8)
+#define GET_B(value) (((uint32_t)value &0xff0000) >> 16)
+#define GET_A(value) (((uint32_t)value &0xff000000) >> 24)
+#endif
+
+// pixel buffer color
+typedef struct {
+	union {
+		struct {
+			uint8_t r, g, b, a;
+		};
+		uint32_t value;
+	};
+} pix_rgba;
 
 // pixel buffer rectangle
 typedef struct _pb_rect {
@@ -152,10 +140,68 @@ inline int pb_rect_contains_rect(const pb_rect &container, const pb_rect &other)
 	return 1;
 }
 
+// return the intersection of rectangles a and b
+// if there is no intersection, one or both of width and height
+// will be == zero
+inline void pb_rect_intersection(pb_rect &c, const pb_rect &a, const pb_rect &b)
+{
+	int x = a.x > b.x ? a.x : b.x;
+	int y = a.y > b.y ? a.y : b.y;
+	int right = ((a.x + a.width - 1) < (b.x + b.width - 1)) ? (a.x + a.width - 1) : (b.x + b.width - 1);
+	int bottom = ((a.y + a.height - 1) < (b.y + b.height - 1)) ? (a.y + a.height - 1) : (b.y + b.height - 1);
+
+	int width = ((right - x) > 0) ? (right - x) : 0;
+	int height = ((bottom - y) > 0) ? (bottom - y) : 0;
+
+	c.x = x;
+	c.y = y;
+	c.width = width;
+	c.height = height;
+}
+
+inline bool pb_rect_intersect(const pb_rect &a, const pb_rect &b)
+{
+	pb_rect c;
+	pb_rect_intersection(c, a, b);
+	return ((c.width > 0) && (c.height > 0));
+}
+
 inline void pb_rect_clear(pb_rect &rect)
 {
 	memset(&rect, 0, sizeof(pb_rect));
 }
+
+typedef REAL real2[2];
+typedef REAL real3[3];
+typedef REAL real4[4];
+
+typedef struct {
+	REAL x;
+	REAL y;
+	REAL z;
+} Pt3;
+
+
+typedef struct _mat2 {
+	REAL m11, m12;
+	REAL m21, m22;
+} mat2;
+
+typedef struct _mat3 {
+	REAL m11, m12, m13;
+	REAL m21, m22, m23;
+	REAL m31, m32, m33;
+} mat3;
+
+
+typedef struct _mat4 {
+	REAL m11, m12, m13, m14;
+	REAL m21, m22, m23, m24;
+	REAL m31, m32, m33, m34;
+	REAL m41, m42, m43, m44;
+} mat4;
+
+typedef REAL mat4x4[4][4];
 
 #ifdef _MSC_VER
 #pragma warning(pop)

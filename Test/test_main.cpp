@@ -123,6 +123,23 @@ void drawRects()
 	rect(250, 50, 30, 30);
 }
 
+void drawRandomLines()
+{
+	uint8_t r = rand() % 255;
+	uint8_t g = rand() % 255;
+	uint8_t b = rand() % 255;
+	uint32_t c = RGBA(r, g, b, 255);
+
+	int x1 = rand() % width - 1;
+	int y1 = rand() % height - 1;
+	int x2 = rand() % width - 1;
+	int y2 = rand() % height - 1;
+
+	stroke(c);
+	line(x1, y1, x2, y2);
+
+}
+
 void drawEllipses()
 {
 	stroke(pBlack);
@@ -168,6 +185,7 @@ void step(pb_rgba *pb)
 	drawBars();
 	//drawEllipses();
 	drawLines();
+	drawRandomLines();
 	//drawPoints();
 	drawRects();
 	drawTriangles();

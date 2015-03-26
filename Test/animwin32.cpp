@@ -327,24 +327,26 @@ void rect(const int a, const int b, const int c, const int d)
 		break;
 	}
 
-	if (!pb_rect_contains_rect(pixelFrame, { x1, y1, rwidth, rheight }))
+	// find the intersection of the rectangle and the pixelframe
+	pb_rect crect;
+	pb_rect_intersection(crect, pixelFrame, { x1, y1, rwidth, rheight });
+
+	if ((crect.width==0) || (crect.height == 0))
 		return;
 
-
-
 	if (fillColor != 0) {
-		//raster_rgba_rect_fill(gpb, x1, y1, rwidth, rheight, fillColor);
-		raster_rgba_rect_fill_blend(gpb, x1, y1, rwidth, rheight, fillColor);
+		//raster_rgba_rect_fill_blend(gpb, x1, y1, rwidth, rheight, fillColor);
+		raster_rgba_rect_fill_blend(gpb, crect.x, crect.y, crect.width, crect.height, fillColor);
 	}
 
 	// if the strokeColor != 0 then 
 	// frame the rectangle in the strokeColor
 	if (strokeColor != 0) {
 		int pts[] = {
-			x1, y1,
-			x1, y1+rheight-1,
-			x1+rwidth-1, y1+rheight-1,
-			x1+rwidth-1, y1
+			crect.x, crect.y,
+			crect.x, crect.y+crect.height-1,
+			crect.x+crect.width-1, crect.y+crect.height-1,
+			crect.x+crect.width-1, crect.y
 		};
 
 		lineloop(4, pts);

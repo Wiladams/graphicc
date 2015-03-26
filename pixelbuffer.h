@@ -23,29 +23,8 @@ limitations under the License.
 
 
 
-typedef struct _pix_rgba {
-	uint8_t r, g, b, a;
-} pix_rgba;
 
-// On a little endian machine
-// Stuff it such that 
-// byte 0 == red
-// byte 1 == green
-// byte 2 == blue
-// byte 3 == alpha
-#ifdef BGR_DOMINANT
-#define RGBA(r,g,b,a) ((uint32_t)(a<<24|r<<16|g<<8|b))
-#define GET_B(value) ((uint32_t)value &0xff)
-#define GET_G(value) (((uint32_t)value &0xff00) >> 8)
-#define GET_R(value) (((uint32_t)value &0xff0000) >> 16)
-#define GET_A(value) (((uint32_t)value &0xff000000) >> 24)
-#else
-#define RGBA(r,g,b,a) ((uint32_t)(a<<24|b<<16|g<<8|r))
-#define GET_R(value) ((uint32_t)value &0xff)
-#define GET_G(value) (((uint32_t)value &0xff00) >> 8)
-#define GET_B(value) (((uint32_t)value &0xff0000) >> 16)
-#define GET_A(value) (((uint32_t)value &0xff000000) >> 24)
-#endif
+
 
 
 /*
