@@ -159,11 +159,15 @@ inline void pb_rect_intersection(pb_rect &c, const pb_rect &a, const pb_rect &b)
 	c.height = height;
 }
 
+// returns whether two rectangles intersect
+// if the intersection would result in a rectangle with zero
+// width or height, the answer is 'false'
 inline bool pb_rect_intersect(const pb_rect &a, const pb_rect &b)
 {
-	pb_rect c;
-	pb_rect_intersection(c, a, b);
-	return ((c.width > 0) && (c.height > 0));
+	return (a.x < (b.x + b.width - 1)) &&
+		(b.x < (a.x + a.width - 1)) &&
+		(a.y < (b.y + b.height - 1)) &&
+		(b.y < (a.y + a.height - 1));
 }
 
 inline void pb_rect_clear(pb_rect &rect)
