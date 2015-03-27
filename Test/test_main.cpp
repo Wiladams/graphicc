@@ -130,7 +130,8 @@ void drawRandomRectangles()
 	int lheight = 32;
 
 	rectMode(CORNER);
-	noStroke();
+	//noStroke();
+	stroke(pBlack);
 
 	for (int cnt = 1001; cnt; cnt--)
 	{
@@ -142,7 +143,8 @@ void drawRandomRectangles()
 		int x1 = rand() % (width - 1);
 		int y1 = rand() % (height - 1);
 
-		fill(c);
+		noFill();
+		//fill(c);
 		rect(x1, y1, lwidth, lheight);
 	}
 }
@@ -225,11 +227,11 @@ void step(pb_rgba *pb)
 	//drawLines();
 	//drawPoints();
 	//drawRects();
-	drawRandomRectangles();
-	drawRandomLines();
-	//drawTriangles();
+	//drawRandomRectangles();
+	//drawRandomLines();
+	drawTriangles();
 	//drawQuads();
-	drawBars();
+	//drawBars();
 
 	drawMouse();
 

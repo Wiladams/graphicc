@@ -228,3 +228,4 @@ void raster_rgba_triangle_fill(pb_rgba *pb,
 		raster_rgba_hline(pb, a, y, b - a + 1, color);
 	}
 }
+

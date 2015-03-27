@@ -353,10 +353,77 @@ void rect(const int a, const int b, const int c, const int d)
 	}
 }
 
+#define min3(a,b,c) min(min(a,b),c)
+#define max3(a,b,c) max(max(a,b),c)
+// http://www.sunshine2k.de/coding/java/TriangleRasterization/TriangleRasterization.html
+
+void fillBottomFlatTriangle(
+	const int v1x, const int v1y, 
+	const int v2x, const int v2y,
+	const int v3x, const int v3y)
+{
+	float invslope1 = (v2x - v1x) / (v2y - v1y);
+	float invslope2 = (v3x - v1x) / (v3y - v1y);
+
+	float curx1 = v1x;
+	float curx2 = v1x;
+
+	for (int scanlineY = v1.y; scanlineY <= v2.y; scanlineY++)
+	{
+		line((int)curx1, scanlineY, (int)curx2, scanlineY);
+		curx1 += invslope1;
+		curx2 += invslope2;
+	}
+}
+
+
+fillTopFlatTriangle(Vertice v1, Vertice v2, Vertice v3)
+{
+	float invslope1 = (v3.x - v1.x) / (v3.y - v1.y);
+	float invslope2 = (v3.x - v2.x) / (v3.y - v2.y);
+
+	float curx1 = v3.x;
+	float curx2 = v3.x;
+
+	for (int scanlineY = v3.y; scanlineY > v1.y; scanlineY--)
+	{
+		curx1 -= invslope1;
+		curx2 -= invslope2;
+		drawLine((int)curx1, scanlineY, (int)curx2, scanlineY);
+	}
+}
+
+
+drawTriangle()
+{
+	/* at first sort the three vertices by y-coordinate ascending so v1 is the topmost vertice */
+	sortVerticesAscendingByY();
+
+	/* here we know that v1.y <= v2.y <= v3.y */
+	/* check for trivial case of bottom-flat triangle */
+	if (v2.y == v3.y)
+	{
+		fillBottomFlatTriangle(v1, v2, v3);
+	}
+	/* check for trivial case of top-flat triangle */
+	else if (vt1.y == vt2.y)
+	{
+		fillTopFlatTriangle(g, vt1, vt2, vt3);
+	}
+	else
+	{
+		/* general case - split the triangle in a topflat and bottom-flat one */
+		Vertice v4 = new Vertice(
+			(int)(vt1.x + ((float)(vt2.y - vt1.y) / (float)(vt3.y - vt1.y)) * (vt3.x - vt1.x)), vt2.y);
+		fillBottomFlatTriangle(g, vt1, vt2, v4);
+		fillTopFlatTriangle(g, vt2, v4, vt3);
+	}
+}
+
 void triangle(const int x1, const int y1, const int x2, const int y2, const int x3, const int y3)
 {
 	if (fillColor != 0) {
-		raster_rgba_triangle_fill(gpb, x1, y1, x2, y2, x3, y3, fillColor);
+		raster_triangle_fill(gpb, x1, y1, x2, y2, x3, y3, fillColor);
 	}
 
 	if (strokeColor != 0) {
