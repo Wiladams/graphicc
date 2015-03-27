@@ -106,6 +106,7 @@ void drawLines()
 
 void drawRects()
 {
+	stroke(pBlack);
 	rectMode(CORNER);
 	fill((uint8_t)255);
 	rect(25, 25, 60, 60);
@@ -123,21 +124,53 @@ void drawRects()
 	rect(250, 50, 30, 30);
 }
 
+void drawRandomRectangles()
+{
+	int lwidth = 32;
+	int lheight = 32;
+
+	rectMode(CORNER);
+	noStroke();
+
+	for (int cnt = 1001; cnt; cnt--)
+	{
+		uint8_t r = rand() % 255;
+		uint8_t g = rand() % 255;
+		uint8_t b = rand() % 255;
+		uint32_t c = RGBA(r, g, b, 255);
+
+		int x1 = rand() % (width - 1);
+		int y1 = rand() % (height - 1);
+
+		fill(c);
+		rect(x1, y1, lwidth, lheight);
+	}
+}
+
+void drawQuads()
+{
+	stroke(pBlack);
+	fill(pWhite);
+	quad(38, 31, 86, 20, 69, 63, 30, 76);
+}
+
 void drawRandomLines()
 {
-	uint8_t r = rand() % 255;
-	uint8_t g = rand() % 255;
-	uint8_t b = rand() % 255;
-	uint32_t c = RGBA(r, g, b, 255);
+	for (int cnt = 1001; cnt; cnt--)
+	{
+		uint8_t r = rand() % 255;
+		uint8_t g = rand() % 255;
+		uint8_t b = rand() % 255;
+		uint32_t c = RGBA(r, g, b, 255);
 
-	int x1 = rand() % width - 1;
-	int y1 = rand() % height - 1;
-	int x2 = rand() % width - 1;
-	int y2 = rand() % height - 1;
+		int x1 = rand() % width - 1;
+		int y1 = rand() % height - 1;
+		int x2 = rand() % width - 1;
+		int y2 = rand() % height - 1;
 
-	stroke(c);
-	line(x1, y1, x2, y2);
-
+		stroke(c);
+		line(x1, y1, x2, y2);
+	}
 }
 
 void drawEllipses()
@@ -150,13 +183,19 @@ void drawTriangles()
 {
 	stroke(pBlack);
 	fill((uint8_t)255);
-	triangle(30, 75, 58, 20, 86, 75);
+	//triangle(30, 75, 58, 20, 86, 75);
+
+	stroke(pBlack);
+	fill(pWhite);
+	triangle(38, 31, 86, 20, 30, 76);
+
 }
 
 void drawBars()
 {
 	rectMode(CORNER);
 	//nostroke();
+	stroke(pBlack);
 
 	for (int offset = 0; offset < numbars; offset++)
 	{
@@ -182,13 +221,16 @@ void drawMouse()
 extern "C"
 void step(pb_rgba *pb)
 {
-	drawBars();
 	//drawEllipses();
-	drawLines();
-	drawRandomLines();
+	//drawLines();
 	//drawPoints();
-	drawRects();
-	drawTriangles();
+	//drawRects();
+	drawRandomRectangles();
+	drawRandomLines();
+	//drawTriangles();
+	//drawQuads();
+	drawBars();
+
 	drawMouse();
 
 }

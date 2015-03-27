@@ -369,6 +369,31 @@ void triangle(const int x1, const int y1, const int x2, const int y2, const int 
 	}
 }
 
+void quad(const int x1, const int y1, const int x2, const int y2, const int x3, const int y3, const int x4, const int y4)
+{
+	// preserve current stroke color
+	uint32_t savedStroke = strokeColor;
+
+	noStroke();
+	// triangle 1
+	triangle(x1, y1, x2, y2, x4, y4);
+
+	// triangle 2
+	//triangle(x2, y2, x3, y3, x4, y4);
+
+	// outline
+	stroke(savedStroke);
+
+	if (strokeColor != 0) {
+		int pts[] = {
+			x1, y1,
+			x2, y2,
+			x3, y3,
+			x4, y4
+		};
+		lineloop(4, pts);
+	}
+}
 
 
 
