@@ -72,31 +72,55 @@ int FindTopmostPolyVertex(const point2d *poly, const size_t nelems)
 	return vmin;
 }
 
-void RotateVertices(point2d *res, point2d *poly, const size_t nelems, const int starting)
-{
-	size_t offset = starting;
-	size_t idx = 0;
-	while (idx < nelems) {
-		res[idx].x = poly[offset].x;
-		res[idx].y = poly[offset].y;
-		offset++;
-		
-		if (offset > nelems-1) {
-			offset = 0;
-		}
-
-		idx++;
-	}
-}
-
 void sortTriangle(point2d *sorted, const int x1, const int y1, const int x2, const int y2, const int x3, const int y3)
 {
 	point2d verts[3] = { { x1, y1 }, { x2, y2 }, { x3, y3 } };
 
 	int topmost = FindTopmostPolyVertex(verts, 3);
-	RotateVertices(sorted, verts, 3, topmost);
+
+	sorted[0].x = verts[topmost].x;
+	sorted[0].y = verts[topmost].y;
+
+	switch (topmost) {
+		case 0:
+			if (verts[1].y < verts[2].y)
+			{
+				sorted[1].x = verts[1].x; sorted[1].y = verts[1].y;
+				sorted[2].x = verts[2].x; sorted[2].y = verts[2].y;
+			}
+			else {
+				sorted[1].x = verts[2].x; sorted[1].y = verts[2].y;
+				sorted[2].x = verts[1].x; sorted[2].y = verts[1].y;
+			}
+		break;
+		
+		case 1:
+			if (verts[0].y < verts[2].y)
+			{
+				sorted[1].x = verts[0].x; sorted[1].y = verts[0].y;
+				sorted[2].x = verts[2].x; sorted[2].y = verts[2].y;
+			}
+			else {
+				sorted[1].x = verts[2].x; sorted[1].y = verts[2].y;
+				sorted[2].x = verts[0].x; sorted[2].y = verts[0].y;
+			}		
+		break;
+	
+		case 2:
+			if (verts[0].y < verts[1].y)
+			{
+				sorted[1].x = verts[0].x; sorted[1].y = verts[0].y;
+				sorted[2].x = verts[1].x; sorted[2].y = verts[1].y;
+			}
+			else {
+				sorted[1].x = verts[1].x; sorted[1].y = verts[1].y;
+				sorted[2].x = verts[0].x; sorted[2].y = verts[0].y;
+			}
+		break;
+	}
 }
 
+/*
 void raster_rgba_draw_spans_between_edges(pb_rgba *pb, const edge &e1, const edge &e2)
 {
 	// calculate difference between the y coordinates
@@ -134,13 +158,14 @@ void raster_rgba_draw_spans_between_edges(pb_rgba *pb, const edge &e1, const edg
 		//	e2.X1 + (int)(e2xdiff * factor2), e2.Color1 + (e2colordiff * factor2), y);
 		
 		
-		raster_rgba_hline(pb, e1.X1 + (int)(e1xdiff * factor1), y, spanlength, e1.Color1);
-
+		//raster_rgba_hline(pb, e1.X1 + (int)(e1xdiff * factor1), y, spanlength, e1.Color1);
+		raster_rgba_hline_blend(pb, e1.X1 + (int)(e1xdiff * factor1), y, spanlength, e1.Color1);
 		// increase factors
 		factor1 += factorStep1;
 		factor2 += factorStep2;
 	}
 }
+*/
 
 void raster_rgba_triangle_fill(pb_rgba *pb, 
 	const unsigned int x1, const unsigned int  y1, 
@@ -168,7 +193,7 @@ void raster_rgba_triangle_fill(pb_rgba *pb,
 		else if (sorted[2].x > b) 
 			b = sorted[2].x;
 
-		raster_rgba_hline(pb, a, sorted[0].y, b - a + 1, color);
+		raster_rgba_hline_blend(pb, a, sorted[0].y, b - a + 1, color);
 		return;
 	}
 
@@ -205,7 +230,7 @@ void raster_rgba_triangle_fill(pb_rgba *pb,
 		*/
 		
 		if (a > b) swap16(a, b);
-		raster_rgba_hline(pb, a, y, b - a + 1, color);
+		raster_rgba_hline_blend(pb, a, y, b - a + 1, color);
 	}
 
 	// For lower part of triangle, find scanline crossings for segments
@@ -225,7 +250,75 @@ void raster_rgba_triangle_fill(pb_rgba *pb,
 		if (a > b) 
 			swap16(a, b);
 
-		raster_rgba_hline(pb, a, y, b - a + 1, color);
+		raster_rgba_hline_blend(pb, a, y, b - a + 1, color);
 	}
 }
 
+
+/*
+// http://www.sunshine2k.de/coding/java/TriangleRasterization/TriangleRasterization.html
+void fillBottomFlatTriangle(pb_rgba *pb,
+	const int v1x, const int v1y,
+	const int v2x, const int v2y,
+	const int v3x, const int v3y)
+{
+	float invslope1 = (v2x - v1x) / (v2y - v1y);
+	float invslope2 = (v3x - v1x) / (v3y - v1y);
+
+	float curx1 = v1x;
+	float curx2 = v1x;
+
+	for (int scanlineY = v1.y; scanlineY <= v2.y; scanlineY++)
+	{
+		line((int)curx1, scanlineY, (int)curx2, scanlineY);
+		curx1 += invslope1;
+		curx2 += invslope2;
+	}
+}
+
+
+void fillTopFlatTriangle(Vertice v1, Vertice v2, Vertice v3)
+{
+float invslope1 = (v3.x - v1.x) / (v3.y - v1.y);
+float invslope2 = (v3.x - v2.x) / (v3.y - v2.y);
+
+float curx1 = v3.x;
+float curx2 = v3.x;
+
+for (int scanlineY = v3.y; scanlineY > v1.y; scanlineY--)
+{
+curx1 -= invslope1;
+curx2 -= invslope2;
+drawLine((int)curx1, scanlineY, (int)curx2, scanlineY);
+}
+}
+*/
+/*
+void raster_triangle_fill(pb_rgba *pb,
+	const unsigned int x1, const unsigned int  y1,
+	const unsigned int  x2, const unsigned int  y2,
+	const unsigned int  x3, const unsigned int  y3,
+	int color)
+{
+	// at first sort the three vertices by y-coordinate ascending so v1 is the topmost vertice
+	point2d sorted[3];
+	sortTriangle(sorted, x1, y1, x2, y2, x3, y3);
+
+	// here we know that v1.y <= v2.y <= v3.y
+	// check for trivial case of bottom-flat triangle
+	if (sorted[1].y == sorted[2].y)
+	{
+		fillBottomFlatTriangle(pb_rgba *pb, v1, v2, v3, color);
+	} else if (vt1.y == vt2.y)
+	{
+		// check for trivial case of top-flat triangle
+		fillTopFlatTriangle(g, vt1, vt2, vt3);
+	} else {
+		// general case - split the triangle in a topflat and bottom-flat one
+		Vertice v4 = new Vertice(
+		(int)(vt1.x + ((float)(vt2.y - vt1.y) / (float)(vt3.y - vt1.y)) * (vt3.x - vt1.x)), vt2.y);
+		fillBottomFlatTriangle(g, vt1, vt2, v4);
+		fillTopFlatTriangle(g, vt2, v4, vt3);
+	}
+}
+*/

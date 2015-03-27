@@ -61,27 +61,7 @@ typedef struct {
 
 bar *bars;
 
-extern "C"
-void setup()
-{
-	size(640, 480);
-	background(pLightGray);
 
-	// setup the array of color bars
-	numintervals = sizeof(intervals) / sizeof(intervals[0]);
-	numcolors = sizeof(colors) / sizeof(colors[0]);
-
-	int availwidth = width - (2 + numbars - 1)*bargap;
-	barwidth = availwidth / numbars;
-
-	// assign colors to bars
-	bars = new bar[numbars];
-	for (int idx = 0; idx < numbars; idx++)
-	{
-		bars[idx].color = colors[rand() % 10];
-		bars[idx].interval = intervals[rand() % numintervals];
-	}
-}
 
 
 
@@ -138,13 +118,13 @@ void drawRandomRectangles()
 		uint8_t r = rand() % 255;
 		uint8_t g = rand() % 255;
 		uint8_t b = rand() % 255;
-		uint32_t c = RGBA(r, g, b, 255);
+		uint32_t c = RGBA(r, g, b, 202);
 
 		int x1 = rand() % (width - 1);
 		int y1 = rand() % (height - 1);
 
-		noFill();
-		//fill(c);
+		//noFill();
+		fill(c);
 		rect(x1, y1, lwidth, lheight);
 	}
 }
@@ -193,6 +173,40 @@ void drawTriangles()
 
 }
 
+void drawRandomTriangles()
+{
+	//noStroke();
+	stroke(pBlack);
+
+	for (int cnt = 5001; cnt; cnt--)
+	{
+		uint8_t r = rand() % 255;
+		uint8_t g = rand() % 255;
+		uint8_t b = rand() % 255;
+		uint32_t c = RGBA(r, g, b, 202);
+
+		int x1 = rand() % (width - 64)+20;
+		int y1 = rand() % (height - 64)+20;
+		
+		int maxsize = 20;
+		int minx = x1 - maxsize;
+		int miny = y1 - maxsize;
+
+		int xrange = (x1 + maxsize) - (x1 - maxsize);
+		int yrange = (y1 + maxsize) - (y1 - maxsize);
+
+		int x2 = (rand() % xrange) + minx;
+		int y2 = (rand() % yrange) + miny;
+
+		int x3 = (rand() % xrange) + minx;
+		int y3 = (rand() % yrange) + miny;
+
+		//noFill();
+		fill(c);
+		triangle(x1, y1, x2, y2, x3, y3);
+	}
+}
+
 void drawBars()
 {
 	rectMode(CORNER);
@@ -219,6 +233,27 @@ void drawMouse()
 	rect(mouseX, mouseY, mWidth, mHeight);
 }
 
+extern "C"
+void setup()
+{
+	size(640, 480);
+	background(pLightGray);
+
+	// setup the array of color bars
+	numintervals = sizeof(intervals) / sizeof(intervals[0]);
+	numcolors = sizeof(colors) / sizeof(colors[0]);
+
+	int availwidth = width - (2 + numbars - 1)*bargap;
+	barwidth = availwidth / numbars;
+
+	// assign colors to bars
+	bars = new bar[numbars];
+	for (int idx = 0; idx < numbars; idx++)
+	{
+		bars[idx].color = colors[rand() % 10];
+		bars[idx].interval = intervals[rand() % numintervals];
+	}
+}
 
 extern "C"
 void step(pb_rgba *pb)
@@ -227,11 +262,13 @@ void step(pb_rgba *pb)
 	//drawLines();
 	//drawPoints();
 	//drawRects();
+	//drawTriangles();
+	//drawQuads();
+
 	//drawRandomRectangles();
 	//drawRandomLines();
-	drawTriangles();
-	//drawQuads();
-	//drawBars();
+	drawRandomTriangles();
+	drawBars();
 
 	drawMouse();
 

@@ -19,6 +19,12 @@ HBITMAP gbmHandle;
 HDC ghMemDC;
 pb_rgba *gpb;
 
+static KeyboardHandler gkbdHandler = nullptr;
+static MouseHandler gmouseHandler = nullptr;
+
+
+
+
 
 
 
@@ -33,6 +39,10 @@ int gellipseMode = CORNER;
 // for time keeping
 uint64_t startcount=0;	
 double clockfrequency=1;
+
+// Keyboard
+int keyCode = 0;
+int key = 0;
 
 // Mouse
 int mouseX = 0;
@@ -355,75 +365,12 @@ void rect(const int a, const int b, const int c, const int d)
 
 #define min3(a,b,c) min(min(a,b),c)
 #define max3(a,b,c) max(max(a,b),c)
-// http://www.sunshine2k.de/coding/java/TriangleRasterization/TriangleRasterization.html
 
-void fillBottomFlatTriangle(
-	const int v1x, const int v1y, 
-	const int v2x, const int v2y,
-	const int v3x, const int v3y)
-{
-	float invslope1 = (v2x - v1x) / (v2y - v1y);
-	float invslope2 = (v3x - v1x) / (v3y - v1y);
-
-	float curx1 = v1x;
-	float curx2 = v1x;
-
-	for (int scanlineY = v1.y; scanlineY <= v2.y; scanlineY++)
-	{
-		line((int)curx1, scanlineY, (int)curx2, scanlineY);
-		curx1 += invslope1;
-		curx2 += invslope2;
-	}
-}
-
-
-fillTopFlatTriangle(Vertice v1, Vertice v2, Vertice v3)
-{
-	float invslope1 = (v3.x - v1.x) / (v3.y - v1.y);
-	float invslope2 = (v3.x - v2.x) / (v3.y - v2.y);
-
-	float curx1 = v3.x;
-	float curx2 = v3.x;
-
-	for (int scanlineY = v3.y; scanlineY > v1.y; scanlineY--)
-	{
-		curx1 -= invslope1;
-		curx2 -= invslope2;
-		drawLine((int)curx1, scanlineY, (int)curx2, scanlineY);
-	}
-}
-
-
-drawTriangle()
-{
-	/* at first sort the three vertices by y-coordinate ascending so v1 is the topmost vertice */
-	sortVerticesAscendingByY();
-
-	/* here we know that v1.y <= v2.y <= v3.y */
-	/* check for trivial case of bottom-flat triangle */
-	if (v2.y == v3.y)
-	{
-		fillBottomFlatTriangle(v1, v2, v3);
-	}
-	/* check for trivial case of top-flat triangle */
-	else if (vt1.y == vt2.y)
-	{
-		fillTopFlatTriangle(g, vt1, vt2, vt3);
-	}
-	else
-	{
-		/* general case - split the triangle in a topflat and bottom-flat one */
-		Vertice v4 = new Vertice(
-			(int)(vt1.x + ((float)(vt2.y - vt1.y) / (float)(vt3.y - vt1.y)) * (vt3.x - vt1.x)), vt2.y);
-		fillBottomFlatTriangle(g, vt1, vt2, v4);
-		fillTopFlatTriangle(g, vt2, v4, vt3);
-	}
-}
 
 void triangle(const int x1, const int y1, const int x2, const int y2, const int x3, const int y3)
 {
 	if (fillColor != 0) {
-		raster_triangle_fill(gpb, x1, y1, x2, y2, x3, y3, fillColor);
+		raster_rgba_triangle_fill(gpb, x1, y1, x2, y2, x3, y3, fillColor);
 	}
 
 	if (strokeColor != 0) {
@@ -446,7 +393,7 @@ void quad(const int x1, const int y1, const int x2, const int y2, const int x3, 
 	triangle(x1, y1, x2, y2, x4, y4);
 
 	// triangle 2
-	//triangle(x2, y2, x3, y3, x4, y4);
+	triangle(x2, y2, x3, y3, x4, y4);
 
 	// outline
 	stroke(savedStroke);
@@ -465,6 +412,8 @@ void quad(const int x1, const int y1, const int x2, const int y2, const int x3, 
 
 
 // Internal to animwin32
+
+
 
 void InitializeInstance()
 {
@@ -588,12 +537,26 @@ void OnPaint(HDC hdc, PAINTSTRUCT &ps)
 	// TODO: Add any drawing code here...
 	// bitblt bmhandle to client area
 	if ((NULL != ghMemDC) && (NULL != gpb)) {
-
-
 		::BitBlt(hdc, 0, 0, gpb->frame.width, gpb->frame.height, ghMemDC, 0, 0, SRCCOPY);
 	}
 }
 
+void quit()
+{
+	PostQuitMessage(0);
+	continueRunning = false;
+}
+
+
+void setKeyboardHandler(KeyboardHandler handler)
+{
+	gkbdHandler = handler;
+}
+
+void setMouseHandler(MouseHandler handler)
+{
+	gmouseHandler = handler;
+}
 
 //
 //  FUNCTION: WndProc(HWND, UINT, WPARAM, LPARAM)
@@ -615,6 +578,26 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
 	switch (message)
 	{
+		case WM_CHAR:
+			// Processing regular characters, after translation of various keycodes
+			key = wParam;
+
+			switch (key){
+				case 0x1B:  // ESC
+					quit();
+				break;
+			}
+		break;
+		
+		case WM_KEYDOWN:
+		case WM_KEYUP:
+			if (gkbdHandler != nullptr)
+				return gkbdHandler(hWnd, message, wParam, lParam);
+
+			// raw keycodes
+			keyCode = wParam;
+		break;
+
 		case WM_MOUSEMOVE:
 			mouseX = GET_X_LPARAM(lParam);
 			mouseY = GET_Y_LPARAM(lParam);
@@ -634,20 +617,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	case WM_COMMAND:
 		wmId = LOWORD(wParam);
 		wmEvent = HIWORD(wParam);
-		// Parse the menu selections:
-/*
-		switch (wmId)
-		{
-		case IDM_ABOUT:
-			DialogBox(hInst, MAKEINTRESOURCE(IDD_ABOUTBOX), hWnd, About);
-			break;
-		case IDM_EXIT:
-			DestroyWindow(hWnd);
-			break;
-		default:
-			return DefWindowProc(hWnd, message, wParam, lParam);
-		}
-*/
+
 		break;
 
 	case WM_PAINT:
@@ -658,14 +628,12 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		EndPaint(hWnd, &ps);
 		break;
 	case WM_DESTROY:
-		printf("WM_DESTROY\n");
-
-		PostQuitMessage(0);
-		continueRunning = false;
+		quit();
 		break;
 	default:
 		return DefWindowProc(hWnd, message, wParam, lParam);
 	}
+
 	return 0;
 }
 
