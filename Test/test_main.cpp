@@ -236,7 +236,7 @@ void drawMouse()
 extern "C"
 void setup()
 {
-	size(640, 480);
+	size(1024, 768);
 	background(pLightGray);
 
 	// setup the array of color bars
