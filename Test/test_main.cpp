@@ -23,7 +23,7 @@
 
 static uint32_t colors[] = {
 	pBlack,
-	pRed,
+	RGBA(255, 0, 0, 202),	// Red
 	pDarkGray,
 	pGreen,
 	pLightGray,
@@ -50,7 +50,7 @@ static int numintervals = 0;
 static int numcolors = 0;
 
 static int bargap = 4;
-static int numbars = 10;
+static int numbars = 20;
 static int barwidth = 0;
 
 
@@ -178,7 +178,7 @@ void drawRandomTriangles()
 	//noStroke();
 	stroke(pBlack);
 
-	for (int cnt = 5001; cnt; cnt--)
+	for (int cnt = 10001; cnt; cnt--)
 	{
 		uint8_t r = rand() % 255;
 		uint8_t g = rand() % 255;
@@ -255,7 +255,7 @@ LRESULT CALLBACK myKbHandler(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPar
 extern "C"
 void setup()
 {
-	size(1024, 768);
+	size(1920, 1200);
 	background(pLightGray);
 
 	// setup the array of color bars
