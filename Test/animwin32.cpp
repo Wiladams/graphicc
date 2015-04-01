@@ -578,7 +578,8 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
 	switch (message)
 	{
-		case WM_CHAR:
+/*
+case WM_CHAR:
 			// Processing regular characters, after translation of various keycodes
 			key = wParam;
 
@@ -588,16 +589,20 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 				break;
 			}
 		break;
-		
+*/
+
+		case WM_CHAR:
 		case WM_KEYDOWN:
 		case WM_KEYUP:
-			if (gkbdHandler != nullptr)
-				return gkbdHandler(hWnd, message, wParam, lParam);
-
 			// raw keycodes
 			keyCode = wParam;
+
+			if (gkbdHandler != nullptr)
+				return gkbdHandler(hWnd, message, wParam, lParam);
 		break;
 
+//		case WM_LBUTTONUP:
+//		case WM_LBUTTONDOWN:
 		case WM_MOUSEMOVE:
 			mouseX = GET_X_LPARAM(lParam);
 			mouseY = GET_Y_LPARAM(lParam);

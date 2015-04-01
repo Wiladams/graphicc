@@ -233,6 +233,25 @@ void drawMouse()
 	rect(mouseX, mouseY, mWidth, mHeight);
 }
 
+LRESULT CALLBACK myKbHandler(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
+{
+	switch (message)
+	{
+		case WM_CHAR:
+			// Processing regular characters, after translation of various keycodes
+			//key = wParam;
+
+			switch (wParam){
+				case 0x1B:  // ESC
+					quit();
+				break;
+			}
+		break;
+	}
+
+	return 0;
+}
+
 extern "C"
 void setup()
 {
@@ -253,6 +272,9 @@ void setup()
 		bars[idx].color = colors[rand() % 10];
 		bars[idx].interval = intervals[rand() % numintervals];
 	}
+
+	setKeyboardHandler(myKbHandler);
+
 }
 
 extern "C"
