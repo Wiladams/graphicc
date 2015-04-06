@@ -11,20 +11,21 @@ References:
 #include "linearalgebra.h"
 #include <math.h>
 
+// Mandelbrot parameters
 double MinRe = -2.0;	// -2.0
 double MaxRe = 1.0;		// 1.0
 double MinIm = -1.2;
 
-
 static unsigned int MaxIterations = 60;
+
+// Mouse box parameters
+static int mWidth = 64;
+static int mHeight = 64;
 
 
 
 void drawMouse()
 {
-	int mWidth = 64;
-	int mHeight = 64;
-
 	// calculate the rectangle boundaries
 	int x1 = mouseX, y1 = mouseY;
 	int rwidth = 0, rheight = 0;
@@ -93,9 +94,10 @@ void drawMandelbrot()
 int OnMouseDown(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
 	// use the mouse rectangle to zoom
+	return 0;
 }
 
-int OnMouseWheel(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
+LRESULT CALLBACK OnMouseWheel(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
 	int fwKeys = GET_KEYSTATE_WPARAM(wParam);
 	int zDelta = GET_WHEEL_DELTA_WPARAM(wParam);
