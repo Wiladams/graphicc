@@ -231,7 +231,7 @@ void raster_rgba_blit(pb_rgba *pb, unsigned int x, unsigned int y, pb_rgba *src)
 	// IMPROVE
 	// use _span
 
-	for (size_t srcrow = 0; srcrow < src->frame.height; srcrow++)
+	for (int srcrow = 0; srcrow < src->frame.height; srcrow++)
 	{
 		// for each row of the source
 		// copy to the destination

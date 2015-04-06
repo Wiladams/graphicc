@@ -22,7 +22,7 @@ extern "C" {
 #endif
 
 // MUST BE IMPLEMENTED BY TEST CASE
-void step(pb_rgba *pb);
+void draw();
 void setup();
 
 void quit();
@@ -32,7 +32,13 @@ typedef int (*KeyboardHandler)(HWND hWnd, UINT message, WPARAM wParam, LPARAM lP
 typedef int (*MouseHandler)(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
 
 void setKeyboardHandler(KeyboardHandler handler);
+void setOnKeyPressed(KeyboardHandler handler);
+void setOnKeyReleased(KeyboardHandler handler);
+void setOnKeyTyped(KeyboardHandler handler);
+
 void setMouseHandler(MouseHandler handler);
+void setOnMouseDownHandler(MouseHandler handler);
+void setOnMouseWheelHandler(MouseHandler handler);
 
 #ifdef __cplusplus
 }
@@ -67,8 +73,9 @@ typedef enum GEOMETRY {
 extern size_t width;
 extern size_t height;
 
-extern int mouseX;
-extern int mouseY;
+extern pb_rect pixelFrame;
+
+
 
 extern uint64_t startcount;	// for time keeping
 extern uint64_t frequency;
@@ -83,6 +90,31 @@ void size(const size_t width, const size_t height);
 
 double seconds();
 void resettime();
+
+// Mouse
+// Mouse
+extern int mouseX;
+extern int mouseY;
+// mouseButton
+// mouseClicked()
+// mouseDragged()
+// mouseMoved()
+// mousePressed()
+// mousePressed
+// mouseReleased()
+// mouseWheel()
+// mouseX
+// mouseY
+// pmouseX
+// pmouseY
+
+// Keyboard
+extern int key;
+extern int keyCode;
+extern int isKeyPressed;
+// keyPressed()
+// keyReleased()
+// keyTyped()
 
 // Setting colors
 void background(const uint32_t value);

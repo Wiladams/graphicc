@@ -25,6 +25,7 @@ limitations under the License.
 extern "C" {
 #endif
 
+int read_PPM(const char *filename, pb_rgba *fb);
 int write_PPM(const char *filename, pb_rgba *fb);
 
 #ifdef __cplusplus

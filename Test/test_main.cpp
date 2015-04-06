@@ -18,9 +18,6 @@
 #include <math.h>
 
 
-
-
-
 static uint32_t colors[] = {
 	pBlack,
 	pRed,
@@ -256,7 +253,7 @@ void setup()
 }
 
 extern "C"
-void step(pb_rgba *pb)
+void draw()
 {
 	//drawEllipses();
 	//drawLines();

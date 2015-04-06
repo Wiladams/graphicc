@@ -28,7 +28,7 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "test_agg_raster_fonts", "Te
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "test_bezier", "Test\test_bezier.vcxproj", "{D3B71495-3887-4A3A-A5D1-9C041FF8FCAF}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "test_animwin", "Test\test_animwin\test_animwin.vcxproj", "{38E7B948-FD3F-41EC-B248-E8FBF313A73A}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "test_mandelbrot", "Test\test_mandelbrot\test_mandelbrot.vcxproj", "{8B7672C9-F2B2-4FA8-9C95-EAC23FD7A5CC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -80,10 +80,10 @@ Global
 		{D3B71495-3887-4A3A-A5D1-9C041FF8FCAF}.Debug|Win32.Build.0 = Debug|Win32
 		{D3B71495-3887-4A3A-A5D1-9C041FF8FCAF}.Release|Win32.ActiveCfg = Release|Win32
 		{D3B71495-3887-4A3A-A5D1-9C041FF8FCAF}.Release|Win32.Build.0 = Release|Win32
-		{38E7B948-FD3F-41EC-B248-E8FBF313A73A}.Debug|Win32.ActiveCfg = Debug|Win32
-		{38E7B948-FD3F-41EC-B248-E8FBF313A73A}.Debug|Win32.Build.0 = Debug|Win32
-		{38E7B948-FD3F-41EC-B248-E8FBF313A73A}.Release|Win32.ActiveCfg = Release|Win32
-		{38E7B948-FD3F-41EC-B248-E8FBF313A73A}.Release|Win32.Build.0 = Release|Win32
+		{8B7672C9-F2B2-4FA8-9C95-EAC23FD7A5CC}.Debug|Win32.ActiveCfg = Debug|Win32
+		{8B7672C9-F2B2-4FA8-9C95-EAC23FD7A5CC}.Debug|Win32.Build.0 = Debug|Win32
+		{8B7672C9-F2B2-4FA8-9C95-EAC23FD7A5CC}.Release|Win32.ActiveCfg = Release|Win32
+		{8B7672C9-F2B2-4FA8-9C95-EAC23FD7A5CC}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -21,6 +21,10 @@ limitations under the License.
 #pragma warning(push)
 #pragma warning(disable: 4996)	// _CRT_SECURE_NO_WARNINGS (fopen) 
 
+int read_PPM(const char *filename, pb_rgba *fb)
+{
+	return -1;
+}
 
 int write_PPM(const char *filename, pb_rgba *fb)
 {

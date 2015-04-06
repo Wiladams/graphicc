@@ -1,7 +1,7 @@
 
 
 #include "animwin32.h"
-#include <windowsx.h>
+#include <windowsx.h>	// GET_X_LPARAM
 
 #include <math.h>
 
@@ -12,15 +12,23 @@ LRESULT CALLBACK	WndProc(HWND, UINT, WPARAM, LPARAM);
 
 // Global Variables:
 HINSTANCE hInst;								// current instance
-TCHAR szTitle[] = "Window";					// The title bar text
-TCHAR szWindowClass[] = "animwin";			// the main window class name
+char szTitle[] = "Window";					// The title bar text
+char szWindowClass[] = "animwin";			// the main window class name
 bool continueRunning = true;
 HBITMAP gbmHandle;
 HDC ghMemDC;
 pb_rgba *gpb;
 
+// Keyboard event handlers
 static KeyboardHandler gkbdHandler = nullptr;
+static KeyboardHandler gkbdOnPressedHandler = nullptr;
+static KeyboardHandler gkbdOnReleasedHandler = nullptr;
+static KeyboardHandler gkbdOnTypedHandler = nullptr;
+
+// Mouse event handlers
 static MouseHandler gmouseHandler = nullptr;
+static MouseHandler gmouseOnDownHandler = nullptr;
+static MouseHandler gmouseOnWheelHandler = nullptr;
 
 
 
@@ -43,6 +51,7 @@ double clockfrequency=1;
 // Keyboard
 int keyCode = 0;
 int key = 0;
+int isKeyPressed = 0;
 
 // Mouse
 int mouseX = 0;
@@ -553,9 +562,35 @@ void setKeyboardHandler(KeyboardHandler handler)
 	gkbdHandler = handler;
 }
 
+void setOnKeyPressedHandler(KeyboardHandler handler)
+{
+	gkbdOnPressedHandler = handler;
+}
+
+void setOnKeyReleasedHandler(KeyboardHandler handler)
+{
+	gkbdOnReleasedHandler = handler;
+}
+
+void setOnKeyTypedHandler(KeyboardHandler handler)
+{
+	gkbdOnTypedHandler = handler;
+}
+
+
 void setMouseHandler(MouseHandler handler)
 {
 	gmouseHandler = handler;
+}
+
+void setOnMouseDownHandler(MouseHandler handler)
+{
+	gmouseOnDownHandler = handler;
+}
+
+void setOnMouseWheelHandler(MouseHandler handler)
+{
+	gmouseOnWheelHandler = handler;
 }
 
 //
@@ -592,15 +627,36 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		case WM_KEYDOWN:
 		case WM_KEYUP:
 			if (gkbdHandler != nullptr)
+			{
 				return gkbdHandler(hWnd, message, wParam, lParam);
+			} else {
+				// raw keycodes
+				keyCode = wParam;
+				if (message == WM_KEYDOWN)
+				{
+					isKeyPressed = 1;
+				} else {
+					isKeyPressed = 0;
+				}
+			}
+		break;
 
-			// raw keycodes
-			keyCode = wParam;
+		case WM_MOUSEWHEEL:
+			if (gmouseOnWheelHandler != nullptr) {
+				return gmouseOnWheelHandler(hWnd, message, wParam, lParam);
+			}
 		break;
 
 		case WM_MOUSEMOVE:
 			mouseX = GET_X_LPARAM(lParam);
 			mouseY = GET_Y_LPARAM(lParam);
+		break;
+
+		case WM_LBUTTONDOWN:
+		case WM_RBUTTONDOWN:
+			if (gmouseOnDownHandler != nullptr) {
+				return gmouseOnDownHandler(hWnd, message, wParam, lParam);
+			}
 		break;
 /*
 	case WM_LBUTTONDOWN:
@@ -654,7 +710,7 @@ void eventLoop(HWND hWnd)
 		raster_rgba_rect_fill(gpb, 0, 0, width - 1, height - 1, bgColor);
 
 		// Allow the client to do some drawing if desired
-		step(gpb);
+		draw();
 
 		// Assume the 'step()' did something which requires the 
 		// screen to be redrawn, so, invalidate the entire client area
