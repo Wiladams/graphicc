@@ -613,6 +613,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
 	switch (message)
 	{
+
 		case WM_CHAR:
 			// Processing regular characters, after translation of various keycodes
 			key = wParam;
@@ -623,7 +624,8 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 				break;
 			}
 		break;
-		
+
+
 		case WM_KEYDOWN:
 		case WM_KEYUP:
 			if (gkbdHandler != nullptr)
@@ -647,6 +649,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 			}
 		break;
 
+
 		case WM_MOUSEMOVE:
 			mouseX = GET_X_LPARAM(lParam);
 			mouseY = GET_Y_LPARAM(lParam);
@@ -658,18 +661,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 				return gmouseOnDownHandler(hWnd, message, wParam, lParam);
 			}
 		break;
-/*
-	case WM_LBUTTONDOWN:
-		dragmode = true;
-		break;
 
-
-
-	case WM_LBUTTONUP:
-		dragmode = false;
-		InvalidateRect(hWnd, 0, TRUE);
-		break;
-*/
 	case WM_COMMAND:
 		wmId = LOWORD(wParam);
 		wmEvent = HIWORD(wParam);

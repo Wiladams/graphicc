@@ -28,8 +28,8 @@ void setup();
 void quit();
 
 // Callback functions
-typedef int (*KeyboardHandler)(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
-typedef int (*MouseHandler)(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
+typedef LRESULT(CALLBACK* KeyboardHandler)(HWND, UINT, WPARAM, LPARAM);
+typedef LRESULT(CALLBACK*MouseHandler)(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
 
 void setKeyboardHandler(KeyboardHandler handler);
 void setOnKeyPressed(KeyboardHandler handler);
