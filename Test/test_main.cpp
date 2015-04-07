@@ -221,8 +221,8 @@ void drawBars()
 
 void drawMouse()
 {
-	int mWidth = 64;
-	int mHeight = 64;
+	int mWidth = 128;
+	int mHeight = 128;
 
 	rectMode(CENTER);
 	stroke(pBlack);

@@ -5,13 +5,13 @@
 // agg_glyph_raster_bin
 //
 
-typedef unsigned char cover_type;    //----cover_type
+typedef uint8_t cover_type;    //----cover_type
 enum cover_scale_e
 {
+	cover_none = 0,                 //----cover_none 
 	cover_shift = 8,                 //----cover_shift
 	cover_size = 1 << cover_shift,  //----cover_size 
 	cover_mask = cover_size - 1,    //----cover_mask 
-	cover_none = 0,                 //----cover_none 
 	cover_full = cover_mask         //----cover_full 
 };
 
@@ -28,16 +28,17 @@ font[3]		num_chars
 */
 
 typedef struct _font {
-	uint8_t	height;
-	uint8_t baseline;
-	uint8_t start_char;
-	size_t num_chars;
+	uint8_t	height;			// height in pixels of all characters
+	uint8_t baseline;		// baseline offset of character
+	uint8_t start_char;		// ordinal of first character in the set
+	uint8_t num_chars;		// number of characters in the font
 
-	bool bigendian;
-	uint8_t *charbits;
+	bool bigendian;			// endianness of current machine
+	uint8_t *charbits;		// pointer to where the bits for the chars start
 
 } font_t;
 
+// Rectangle representing the boundary of a glyph
 struct glyph_rect
 {
 	int x1, y1, x2, y2;
@@ -134,12 +135,10 @@ void glyph_t_prepare(const font_t *font, const glyph_t *ginfo, struct glyph_rect
 
 
 // Create a single scanline of the glyph
-cover_type* glyph_t_span(const font_t *f, glyph_t *g, unsigned i, cover_type *m_span)
+void glyph_t_span(const font_t *f, glyph_t *g, unsigned i, cover_type *m_span)
 {
-	//i = m_font[0] - i - 1;
 	i = f->height - i - 1;
 
-	//const uint8_t * bits = m_bits + i * g->byte_width;
 	const uint8_t *bits = g->data + i * g->byte_width;
 	unsigned int j;
 	unsigned int val = *bits;
@@ -156,7 +155,7 @@ cover_type* glyph_t_span(const font_t *f, glyph_t *g, unsigned i, cover_type *m_
 		}
 	}
 	
-	return m_span;
+	//return m_span;
 }
 
 
@@ -216,7 +215,71 @@ void test_prepare_glyph()
 	printf("PREPARED ('H'): %d, %d  %d, %d\n", r.x1, r.y1, r.x2, r.y2);
 }
 
+int scan_glyph(pb_rgba *pb, font_t *font, glyph_t *glyph, int x, int y)
+{
+	cover_type m_span[32];
+	int line = font->height;
+	
+	while (line--)
+	{
+		glyph_t_span(font, glyph, line, m_span);
 
+		// transfer the span to the bitmap
+		int spanwidth = glyph->width;
+		while (spanwidth--) {
+			if (m_span[spanwidth] == cover_full) {
+				pb_rgba_cover_pixel(pb, x+spanwidth, y+font->height - line, pBlack);
+			}
+		}
+		memset(m_span, 0, 32);
+	}
+	
+	return glyph->width;
+
+}
+
+void test_glyph_scan()
+{
+	font_t vd12;
+	glyph_t ginfo;
+	struct glyph_rect r;
+	double x = 0;
+	double y = 12;
+	bool flip = false;
+
+	size_t pbwidth = 20;
+	size_t pbheight = 20;
+
+	pb_rgba pb;
+	pb_rgba_init(&pb, pbwidth, pbheight);
+
+	raster_rgba_rect_fill(&pb, 0, 0, pbwidth - 1, pbheight - 1, pWhite);
+
+
+	font_t_init(&vd12, verdana12);
+	glyph_t_init(&vd12, &ginfo, 'A');
+	glyph_t_prepare(&vd12, &ginfo, &r, x, y, flip);
+
+	scan_glyph(&pb, &vd12, &ginfo, 0, 0);
+/*
+	// scan out glyph lines
+	cover_type m_span[32];
+	int line = vd12.height;
+	while (line--)
+	{
+		glyph_t_span(&vd12, &ginfo, line, m_span);
+		
+		// transfer the span to the bitmap
+		for (int sx = 0; sx < ginfo.width; sx++) {
+			if (m_span[sx] == cover_full) {
+				pb_rgba_cover_pixel(&pb, sx, vd12.height-line, pBlack);
+			}
+		}
+		memset(m_span, 0, 32);
+	}
+*/
+	int err = write_PPM("test_glyph_scan.ppm", &pb);
+}
 
 int main(int argc, char **argv)
 {
@@ -229,7 +292,8 @@ int main(int argc, char **argv)
 	raster_rgba_rect_fill(&pb, 0, 0, pbwidth-1, pbheight-1, pBlue);
 
 	//test_font_info();
-	test_prepare_glyph();
+	//test_prepare_glyph();
+	test_glyph_scan();
 
 	int err = write_PPM("test_agg_raster_fonts.ppm", &pb);
 
