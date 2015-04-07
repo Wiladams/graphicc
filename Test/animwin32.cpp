@@ -418,12 +418,21 @@ void quad(const int x1, const int y1, const int x2, const int y2, const int x3, 
 	}
 }
 
+// Text Processing
+void text(const char *str, const int x, const int y)
+{
+
+}
+
+
+
+
+
+
+
 
 
 // Internal to animwin32
-
-
-
 void InitializeInstance()
 {
 	width = 640;

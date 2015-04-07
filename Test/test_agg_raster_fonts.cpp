@@ -20,12 +20,6 @@ bool isBigEndian() {
 	return (*(char*)&t == 0);
 }
 
-/*
-font[0]		height
-font[1]		baseline
-font[2]		start_char
-font[3]		num_chars
-*/
 
 typedef struct _font {
 	uint8_t	height;			// height in pixels of all characters
@@ -94,24 +88,6 @@ uint8_t * font_t_glyph_pointer(const font_t *f, const unsigned int glyph)
 	return (f)->charbits + (f)->num_chars * 2 + font_t_value(f, (f)->charbits + (glyph - (f)->start_char) * 2);
 }
 
-// Fill in the meta information for the specified glyph
-void glyph_t_init(const font_t *f, glyph_t *ginfo, const unsigned int glyph)
-{
-	uint8_t * glyphptr = font_t_glyph_pointer(f, glyph);
-
-	ginfo->width = glyphptr[0];
-	ginfo->data = glyphptr + 1;
-	ginfo->byte_width = (ginfo->width + 7) >> 3;
-}
-
-size_t font_t_glyph_width(const font_t *f, const unsigned int glyph)
-{
-	glyph_t ginfo;
-	glyph_t_init(f, &ginfo, glyph);
-
-	return ginfo.width;
-}
-
 // Prepare a glyph to be written to a specific
 // position
 void glyph_t_prepare(const font_t *font, const glyph_t *ginfo, struct glyph_rect* r, double x, double y, bool flip)
@@ -130,6 +106,38 @@ void glyph_t_prepare(const font_t *font, const glyph_t *ginfo, struct glyph_rect
 	}
 	r->dx = ginfo->width;
 	r->dy = 0;
+}
+
+// Fill in the meta information for the specified glyph
+void glyph_t_init(const font_t *f, glyph_t *ginfo, const unsigned int glyph)
+{
+	uint8_t * glyphptr = font_t_glyph_pointer(f, glyph);
+
+	ginfo->width = glyphptr[0];
+	ginfo->data = glyphptr + 1;
+	ginfo->byte_width = (ginfo->width + 7) >> 3;
+}
+
+size_t font_t_glyph_width(const font_t *f, const unsigned int glyph)
+{
+	glyph_t ginfo;
+	glyph_t_init(f, &ginfo, glyph);
+
+	return ginfo.width;
+}
+
+// Figure out the width of a string in a given font
+size_t font_t_str_width(const font_t *f, const char * str)
+{
+	size_t w = 0;
+
+	while (*str)
+	{
+		w += font_t_glyph_width(f, *str);
+		++str;
+	}
+
+	return w;
 }
 
 
@@ -158,21 +166,47 @@ void glyph_t_span(const font_t *f, glyph_t *g, unsigned i, cover_type *m_span)
 	//return m_span;
 }
 
-
-// Figure out the width of a string in a given font
-size_t font_t_str_width(const font_t *f, const char * str)
+int scan_glyph(pb_rgba *pb, font_t *font, glyph_t *glyph, int x, int y)
 {
-	size_t w = 0;
+	cover_type m_span[32];
+	int line = font->height;
 
-	while (*str)
+	while (line--)
 	{
-		w += font_t_glyph_width(f, *str);
-		++str;
+		glyph_t_span(font, glyph, line, m_span);
+
+		// transfer the span to the bitmap
+		int spanwidth = glyph->width;
+		while (spanwidth--) {
+			if (m_span[spanwidth] == cover_full) {
+				pb_rgba_cover_pixel(pb, x + spanwidth, y + font->height - line, pBlack);
+			}
+		}
+		memset(m_span, 0, 32);
 	}
 
-	return w;
+	return glyph->width;
+
 }
 
+int scan_str(pb_rgba *pb, font_t *font, const int x, const int y, const char *chars)
+{
+	glyph_t ginfo;
+
+	int idx = 0;
+	int dx = x;
+	int dy = y;
+
+	while (chars[idx])
+	{
+		glyph_t_init(font, &ginfo, chars[idx]);
+		scan_glyph(pb, font, &ginfo, dx, dy);
+		dx += ginfo.width;
+		idx++;
+	}
+
+	return dx;
+}
 
 
 
@@ -215,28 +249,7 @@ void test_prepare_glyph()
 	printf("PREPARED ('H'): %d, %d  %d, %d\n", r.x1, r.y1, r.x2, r.y2);
 }
 
-int scan_glyph(pb_rgba *pb, font_t *font, glyph_t *glyph, int x, int y)
-{
-	cover_type m_span[32];
-	int line = font->height;
-	
-	while (line--)
-	{
-		glyph_t_span(font, glyph, line, m_span);
 
-		// transfer the span to the bitmap
-		int spanwidth = glyph->width;
-		while (spanwidth--) {
-			if (m_span[spanwidth] == cover_full) {
-				pb_rgba_cover_pixel(pb, x+spanwidth, y+font->height - line, pBlack);
-			}
-		}
-		memset(m_span, 0, 32);
-	}
-	
-	return glyph->width;
-
-}
 
 void test_glyph_scan()
 {
@@ -261,24 +274,47 @@ void test_glyph_scan()
 	glyph_t_prepare(&vd12, &ginfo, &r, x, y, flip);
 
 	scan_glyph(&pb, &vd12, &ginfo, 0, 0);
-/*
-	// scan out glyph lines
-	cover_type m_span[32];
-	int line = vd12.height;
-	while (line--)
-	{
-		glyph_t_span(&vd12, &ginfo, line, m_span);
-		
-		// transfer the span to the bitmap
-		for (int sx = 0; sx < ginfo.width; sx++) {
-			if (m_span[sx] == cover_full) {
-				pb_rgba_cover_pixel(&pb, sx, vd12.height-line, pBlack);
-			}
-		}
-		memset(m_span, 0, 32);
-	}
-*/
+
 	int err = write_PPM("test_glyph_scan.ppm", &pb);
+}
+
+void test_str_print()
+{
+	font_t font;
+	glyph_t ginfo;
+
+	//font_t_init(&vd12, verdana12);
+	//font_t_init(&font, verdana12_bold);
+	//font_t_init(&font, verdana18);
+	font_t_init(&font, verdana18_bold);
+
+	//char words[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890!@#$%^&*()";
+	//char words[] = "Hello, World!";
+	//char words[] = "He";
+	char CAPS[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+	char LOWS[] = "abcdefghijklmnopqrstuvwxyz";
+	char NUMS[] = "1234567890";
+	char SYMS[] = "!@#$%^&*()_+-={}|[]\\:\"; '<>?,./~`";
+	char *chars = LOWS;
+
+
+	// Allocate a color buffer based on the size of the string
+	size_t pbwidth = 640;
+	size_t pbheight = 480;
+
+	pb_rgba pb;
+	//pb_rgba_init(&pb, pbwidth, pbheight);
+	pb_rgba_init(&pb, pbwidth, pbheight);
+	raster_rgba_rect_fill(&pb, 0, 0, pbwidth - 1, pbheight - 1, pWhite);
+
+	scan_str(&pb, &font, 0, 0, CAPS);
+	scan_str(&pb, &font, 0, font.height * 1, LOWS);
+	scan_str(&pb, &font, 0, font.height * 2, NUMS);
+	scan_str(&pb, &font, 0, font.height * 3, SYMS);
+
+
+	int err = write_PPM("test_str_print.ppm", &pb);
+
 }
 
 int main(int argc, char **argv)
@@ -293,7 +329,8 @@ int main(int argc, char **argv)
 
 	//test_font_info();
 	//test_prepare_glyph();
-	test_glyph_scan();
+	//test_glyph_scan();
+	test_str_print();
 
 	int err = write_PPM("test_agg_raster_fonts.ppm", &pb);
 
