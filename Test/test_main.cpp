@@ -47,7 +47,7 @@ static int numintervals = 0;
 static int numcolors = 0;
 
 static int bargap = 4;
-static int numbars = 20;
+static int numbars = 10;
 static int barwidth = 0;
 
 
@@ -162,11 +162,11 @@ void drawTriangles()
 {
 	stroke(pBlack);
 	fill((uint8_t)255);
-	//triangle(30, 75, 58, 20, 86, 75);
+	triangle(30, 75, 58, 20, 86, 75);
 
 	stroke(pBlack);
 	fill(pWhite);
-	triangle(38, 31, 86, 20, 30, 76);
+	//triangle(38, 31, 86, 20, 30, 76);
 
 }
 
@@ -175,7 +175,7 @@ void drawRandomTriangles()
 	//noStroke();
 	stroke(pBlack);
 
-	for (int cnt = 10001; cnt; cnt--)
+	for (int cnt = 1001; cnt; cnt--)
 	{
 		uint8_t r = rand() % 255;
 		uint8_t g = rand() % 255;
@@ -282,12 +282,12 @@ void draw()
 	//drawPoints();
 	//drawRects();
 	//drawTriangles();
-	//drawQuads();
+	drawQuads();
 
-	//drawRandomRectangles();
-	//drawRandomLines();
+	drawRandomRectangles();
+	drawRandomLines();
 	drawRandomTriangles();
-	drawBars();
+	//drawBars();
 
 	drawMouse();
 

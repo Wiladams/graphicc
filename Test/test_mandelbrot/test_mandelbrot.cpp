@@ -77,7 +77,7 @@ void drawMandelbrot()
 	}
 }
 
-LRESULT CALLBACK OnMouseDown(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
+LRESULT CALLBACK mouseDown(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
 	// calculate the rectangle boundaries
 
@@ -98,7 +98,7 @@ LRESULT CALLBACK OnMouseDown(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPar
 	return 0;
 }
 
-LRESULT CALLBACK OnMouseWheel(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
+LRESULT CALLBACK mouseWheel(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
 	int fwKeys = GET_KEYSTATE_WPARAM(wParam);
 	int zDelta = GET_WHEEL_DELTA_WPARAM(wParam);
@@ -124,8 +124,8 @@ void setup()
 	size(1024, 768);
 	background(pLightGray);
 
-	setOnMouseWheelHandler(OnMouseWheel);
-	setOnMouseDownHandler(OnMouseDown);
+	setOnMouseWheelHandler(mouseWheel);
+	setOnMouseDownHandler(mouseDown);
 }
 
 extern "C"
