@@ -4,7 +4,7 @@ References:
 	http://warp.povusers.org/Mandelbrot/
 
 	Runs from -2 - 1 in the x direction
-	Runs from 
+	Runs from -1.2 => 1.2 in the y direction
 */
 
 #include "animwin32.h"
@@ -15,8 +15,9 @@ References:
 double MinRe = -2.0;	// -2.0
 double MaxRe = 1.0;		// 1.0
 double MinIm = -1.2;
+double MaxIm = MinIm;
 
-static unsigned int MaxIterations = 60;
+static unsigned int MaxIterations = 50;
 
 // Mouse box parameters
 static int mWidth = 64;
@@ -25,21 +26,7 @@ static int mHeight = 64;
 
 
 void drawMouse()
-{
-	// calculate the rectangle boundaries
-	int x1 = mouseX, y1 = mouseY;
-	int rwidth = 0, rheight = 0;
-
-	x1 = mouseX - mWidth / 2;
-	y1 = mouseY - mHeight / 2;
-	rwidth = mWidth;
-	rheight = mHeight;
-
-	pb_rect crect;
-	pb_rect_intersection(crect, pixelFrame, { x1, y1, rwidth, rheight });
-	
-	// map that to the real and imaginary parts of the image
-	
+{	
 	rectMode(CENTER);
 	stroke(pBlack);
 	fill(RGBA(0, 127, 255, 127));
@@ -48,11 +35,10 @@ void drawMouse()
 
 void drawMandelbrot()
 {
-
 	// Parameters for mandelbrot drawing
-	double MaxIm = MinIm + (MaxRe - MinRe)*height / width;
+	MaxIm = MinIm + (MaxRe - MinRe)*height / width;
 	double Re_factor = (MaxRe - MinRe) / (width - 1);
-	double Im_factor = (MaxIm - MinIm) / (height - 1);
+	double Im_factor = (MaxIm - MinIm) / (height - 1);	// How much to increment by row
 
 	for (unsigned y = 0; y<height; ++y)
 	{
@@ -91,9 +77,24 @@ void drawMandelbrot()
 	}
 }
 
-int OnMouseDown(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
+LRESULT CALLBACK OnMouseDown(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
-	// use the mouse rectangle to zoom
+	// calculate the rectangle boundaries
+
+	int x1 = mouseX - mWidth / 2;
+	int y1 = mouseY - mHeight / 2;
+	int rwidth = mWidth;
+	int rheight = mHeight;
+
+	pb_rect crect;
+	pb_rect_intersection(crect, pixelFrame, { x1, y1, rwidth, rheight });
+
+	// map that to the real and imaginary parts of the image
+	MinRe = MAP(crect.x, 0, width - 1, MinRe, MaxRe);
+	MaxRe = MAP(crect.x + crect.x + crect.width, 0, width - 1, MinRe, MaxRe);
+
+	MinIm = MAP(crect.y, 0, height - 1, MinIm, MaxIm);
+
 	return 0;
 }
 
@@ -120,10 +121,11 @@ LRESULT CALLBACK OnMouseWheel(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPa
 extern "C"
 void setup()
 {
-	size(640, 480);
+	size(1024, 768);
 	background(pLightGray);
 
 	setOnMouseWheelHandler(OnMouseWheel);
+	setOnMouseDownHandler(OnMouseDown);
 }
 
 extern "C"
