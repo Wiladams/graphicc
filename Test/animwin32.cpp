@@ -636,6 +636,14 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
 
 		case WM_KEYDOWN:
+			keyCode = wParam;
+			isKeyPressed = 1;
+
+			if (gkbdOnPressedHandler) {
+				return gkbdOnPressedHandler(hWnd, message, wParam, lParam);
+			}
+		break;
+
 		case WM_KEYUP:
 			if (gkbdHandler != nullptr)
 			{
@@ -643,11 +651,10 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 			} else {
 				// raw keycodes
 				keyCode = wParam;
-				if (message == WM_KEYDOWN)
-				{
-					isKeyPressed = 1;
-				} else {
-					isKeyPressed = 0;
+				isKeyPressed = 0;
+			
+				if (gkbdOnReleasedHandler) {
+					return gkbdOnReleasedHandler(hWnd, message, wParam, lParam);
 				}
 			}
 		break;

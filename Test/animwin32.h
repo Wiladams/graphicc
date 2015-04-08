@@ -34,7 +34,7 @@ typedef LRESULT(CALLBACK*MouseHandler)(HWND hWnd, UINT message, WPARAM wParam, L
 
 void setKeyboardHandler(KeyboardHandler handler);
 void setOnKeyPressed(KeyboardHandler handler);
-void setOnKeyReleased(KeyboardHandler handler);
+void setOnKeyReleasedHandler(KeyboardHandler handler);
 void setOnKeyTyped(KeyboardHandler handler);
 
 void setMouseHandler(MouseHandler handler);
@@ -74,6 +74,7 @@ typedef enum GEOMETRY {
 extern size_t width;
 extern size_t height;
 
+extern pb_rgba *gpb;
 extern pb_rect pixelFrame;
 
 

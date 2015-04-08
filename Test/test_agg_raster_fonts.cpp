@@ -1,7 +1,52 @@
 #include "test_common.h"
 #include "agg_embedded_raster_fonts.h"
+#include "animwin32.h"
+
+struct font_entry {
+	char *name;
+	const uint8_t *data;
+};
 
 
+struct font_entry fontlist[] = {
+	{"gse4x6", gse4x6 },
+	{ "gse4x8", gse4x8 },
+	{ "gse5x7", gse5x7 },
+	{ "gse5x9", gse5x9 },
+	{ "gse6x12", gse6x12 },
+	{ "gse6x9", gse6x9 },
+	{ "gse7x11", gse7x11 },
+	{ "gse7x11_bold", gse7x11_bold },
+	{ "gse7x15", gse7x15 },
+	{ "gse7x15_bold", gse7x15_bold },
+	{ "gse8x16", gse8x16 },
+	{ "gse8x16_bold", gse8x16_bold },
+	{ "mcs11_prop", mcs11_prop },
+	{ "mcs11_prop_condensed", mcs11_prop_condensed },
+	{ "mcs12_prop", mcs12_prop },
+	{ "mcs13_prop", mcs13_prop },
+	{ "mcs5x10_mono", mcs5x10_mono },
+	{ "mcs5x11_mono", mcs5x11_mono },
+	{ "mcs6x10_mono", mcs6x10_mono },
+	{ "mcs6x11_mono", mcs6x11_mono },
+	{ "mcs7x12_mono_high", mcs7x12_mono_high },
+	{ "mcs7x12_mono_low", mcs7x12_mono_low },
+	{ "verdana12", verdana12 },
+	{ "verdana12_bold", verdana12_bold },
+	{ "verdana13", verdana13 },
+	{ "verdana13_bold", verdana13_bold },
+	{ "verdana14", verdana14 },
+	{ "verdana14_bold", verdana14_bold },
+	{ "verdana16", verdana16 },
+	{ "verdana16_bold", verdana16_bold },
+	{ "verdana17", verdana17 },
+	{ "verdana17_bold", verdana17_bold },
+	{ "verdana18", verdana18 },
+	{ "verdana18_bold", verdana18_bold }
+
+};
+static const int numfonts = sizeof(fontlist) / sizeof(fontlist[0]);
+static int fontidx = 0;
 
 void test_font_info()
 {
@@ -71,63 +116,65 @@ void test_glyph_scan()
 	int err = write_PPM("test_glyph_scan.ppm", &pb);
 }
 
-void test_str_print()
+LRESULT CALLBACK keyReleased(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
-	font_t font;
-	glyph_t ginfo;
+	switch (wParam)
+	{
+		case VK_UP:
+			fontidx--;
+			if (fontidx < 0) {
+				fontidx = numfonts - 1;
+			}
+		break;
 
-	//font_t_init(&vd12, verdana12);
-	//font_t_init(&font, verdana12_bold);
-	//font_t_init(&font, verdana18);
-	font_t_init(&font, verdana18_bold);
+		case VK_DOWN:
+			fontidx++;
+			if (fontidx >= numfonts){
+				fontidx = 0;
+			}
+		break;
+	}
 
-	//char words[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890!@#$%^&*()";
-	//char words[] = "Hello, World!";
-	//char words[] = "He";
-	char TITLE[] = "Verdana 18 Bold";
+	return 0;
+}
+
+void setup()
+{
+	size(640, 480);
+	background(pWhite);
+
+	setOnKeyReleasedHandler(keyReleased);
+}
+
+void draw()
+{
+	// Allocate a color buffer based on the size of the string
+	//size_t pbwidth = 640;
+	//size_t pbheight = 480;
+
+	//pb_rgba pb;
+	//pb_rgba_init(&pb, pbwidth, pbheight);
+	//pb_rgba_init(&pb, pbwidth, pbheight);
+	//raster_rgba_rect_fill(&pb, 0, 0, pbwidth - 1, pbheight - 1, pWhite);
+
 	char CAPS[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 	char LOWS[] = "abcdefghijklmnopqrstuvwxyz";
 	char NUMS[] = "1234567890";
 	char SYMS[] = "!@#$%^&*()_+-={}|[]\\:\"; '<>?,./~`";
-	char *chars = LOWS;
+	char SOME[] = "The quick brown fox jumped over the lazy dog.";
 
+	font_t font;
 
-	// Allocate a color buffer based on the size of the string
-	size_t pbwidth = 640;
-	size_t pbheight = 480;
+	font_t_init(&font, fontlist[fontidx].data);
 
-	pb_rgba pb;
-	//pb_rgba_init(&pb, pbwidth, pbheight);
-	pb_rgba_init(&pb, pbwidth, pbheight);
-	raster_rgba_rect_fill(&pb, 0, 0, pbwidth - 1, pbheight - 1, pWhite);
+	scan_str(gpb, &font, 0, 0, fontlist[fontidx].name, pBlack);
+	scan_str(gpb, &font, 0, font.height * 1, CAPS, pBlack);
+	scan_str(gpb, &font, 0, font.height * 2, LOWS, pRed);
+	scan_str(gpb, &font, 0, font.height * 3, NUMS, pGreen);
+	scan_str(gpb, &font, 0, font.height * 4, SYMS, pBlue);
+	scan_str(gpb, &font, 0, font.height * 5, SOME, pBlack);
 
-	scan_str(&pb, &font, 0, 0, TITLE, pBlack);
-	scan_str(&pb, &font, 0, font.height * 1, CAPS, pBlack);
-	scan_str(&pb, &font, 0, font.height * 2, LOWS, pRed);
-	scan_str(&pb, &font, 0, font.height * 3, NUMS, pGreen);
-	scan_str(&pb, &font, 0, font.height * 4, SYMS, pBlue);
-
-
-	int err = write_PPM("test_str_print.ppm", &pb);
 
 }
 
-int main(int argc, char **argv)
-{
-	size_t pbwidth = 640;
-	size_t pbheight = 480;
 
-	pb_rgba pb;
-	pb_rgba_init(&pb, pbwidth, pbheight);
-
-	raster_rgba_rect_fill(&pb, 0, 0, pbwidth-1, pbheight-1, pBlue);
-
-	//test_font_info();
-	//test_prepare_glyph();
-	//test_glyph_scan();
-	test_str_print();
-
-	int err = write_PPM("test_agg_raster_fonts.ppm", &pb);
-
-	return 0;
-}
