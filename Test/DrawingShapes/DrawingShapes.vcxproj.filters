@@ -15,24 +15,21 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="test_main.cpp">
+    <ClCompile Include="..\agg_embedded_raster_fonts.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="animwin32.cpp">
+    <ClCompile Include="..\animwin32.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="agg_embedded_raster_fonts.cpp">
+    <ClCompile Include="drawshapes.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="animwin32.h">
+    <ClInclude Include="..\agg_embedded_raster_fonts.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="test_common.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="agg_embedded_raster_fonts.h">
+    <ClInclude Include="..\animwin32.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

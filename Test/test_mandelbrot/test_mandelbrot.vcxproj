@@ -82,12 +82,16 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\agg_embedded_raster_fonts.cpp" />
     <ClCompile Include="..\animwin32.cpp" />
     <ClCompile Include="test_mandelbrot.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="small.ico" />
     <Image Include="test_mandelbrot.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\agg_embedded_raster_fonts.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

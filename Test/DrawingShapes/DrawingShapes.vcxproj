@@ -11,8 +11,8 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{0928624A-00F2-40E1-99F9-2F4FC9028794}</ProjectGuid>
-    <RootNamespace>Test</RootNamespace>
+    <ProjectGuid>{ADE31A59-7EC8-404B-87CC-D4B44ADA0891}</ProjectGuid>
+    <RootNamespace>DrawingShapes</RootNamespace>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -39,17 +39,14 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>..\..\graphicc;$(IncludePath)</IncludePath>
     <LibraryPath>C:\repos\graphicc\Debug;$(LibraryPath)</LibraryPath>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <IncludePath>C:\repos\graphicc;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
+      <AdditionalIncludeDirectories>C:\repos\graphicc\Test;C:\repos\graphicc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -70,19 +67,13 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="agg_embedded_raster_fonts.cpp" />
-    <ClCompile Include="animwin32.cpp" />
-    <ClCompile Include="test_main.cpp" />
+    <ClCompile Include="..\agg_embedded_raster_fonts.cpp" />
+    <ClCompile Include="..\animwin32.cpp" />
+    <ClCompile Include="drawshapes.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\graphicc.vcxproj">
-      <Project>{5856a423-63ab-4119-a3b7-0ed0cf7b61fe}</Project>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="agg_embedded_raster_fonts.h" />
-    <ClInclude Include="animwin32.h" />
-    <ClInclude Include="test_common.h" />
+    <ClInclude Include="..\agg_embedded_raster_fonts.h" />
+    <ClInclude Include="..\animwin32.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

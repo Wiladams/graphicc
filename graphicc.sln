@@ -30,6 +30,11 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "test_bezier", "Test\test_be
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "test_mandelbrot", "Test\test_mandelbrot\test_mandelbrot.vcxproj", "{8B7672C9-F2B2-4FA8-9C95-EAC23FD7A5CC}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DrawingShapes", "Test\DrawingShapes\DrawingShapes.vcxproj", "{ADE31A59-7EC8-404B-87CC-D4B44ADA0891}"
+	ProjectSection(ProjectDependencies) = postProject
+		{5856A423-63AB-4119-A3B7-0ED0CF7B61FE} = {5856A423-63AB-4119-A3B7-0ED0CF7B61FE}
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -84,6 +89,10 @@ Global
 		{8B7672C9-F2B2-4FA8-9C95-EAC23FD7A5CC}.Debug|Win32.Build.0 = Debug|Win32
 		{8B7672C9-F2B2-4FA8-9C95-EAC23FD7A5CC}.Release|Win32.ActiveCfg = Release|Win32
 		{8B7672C9-F2B2-4FA8-9C95-EAC23FD7A5CC}.Release|Win32.Build.0 = Release|Win32
+		{ADE31A59-7EC8-404B-87CC-D4B44ADA0891}.Debug|Win32.ActiveCfg = Debug|Win32
+		{ADE31A59-7EC8-404B-87CC-D4B44ADA0891}.Debug|Win32.Build.0 = Debug|Win32
+		{ADE31A59-7EC8-404B-87CC-D4B44ADA0891}.Release|Win32.ActiveCfg = Release|Win32
+		{ADE31A59-7EC8-404B-87CC-D4B44ADA0891}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

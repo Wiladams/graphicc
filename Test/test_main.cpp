@@ -249,11 +249,32 @@ LRESULT CALLBACK myKbHandler(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPar
 	return 0;
 }
 
+static float a;
+
+void drawLinearMotion()
+{
+	background((uint8_t)51);
+	stroke(pWhite);
+
+	int thickness = 6;
+	while (thickness--) {
+		line(0, a + thickness, width - 1, a + thickness);
+	}
+
+
+	a = a - 0.02;
+	if (a < 0) {
+		a = height;
+	}
+}
+
 extern "C"
 void setup()
 {
-	size(1920, 1200);
+	size(640, 360);
 	background(pLightGray);
+
+	a = height / 2;
 
 	// setup the array of color bars
 	numintervals = sizeof(intervals) / sizeof(intervals[0]);
@@ -282,14 +303,16 @@ void draw()
 	//drawPoints();
 	//drawRects();
 	//drawTriangles();
-	drawQuads();
+	//drawQuads();
 
 	drawRandomRectangles();
-	drawRandomLines();
-	drawRandomTriangles();
-	//drawBars();
+	//drawRandomLines();
+	//drawRandomTriangles();
+	drawBars();
+	//drawLinearMotion();
 
 	drawMouse();
+
 
 }
 

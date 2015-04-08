@@ -27,9 +27,11 @@ static KeyboardHandler gkbdOnTypedHandler = nullptr;
 
 // Mouse event handlers
 static MouseHandler gmouseHandler = nullptr;
-static MouseHandler gmouseOnDownHandler = nullptr;
+static EventObserverHandler gOnMousePressedHandler = nullptr;
+static MouseHandler gmouseOnUpHandler = nullptr;
 static MouseHandler gmouseOnWheelHandler = nullptr;
-
+static MouseHandler gmouseOnDraggedHandler = nullptr;
+static MouseHandler gmouseOnMovedHandler = nullptr;
 
 
 
@@ -56,6 +58,8 @@ int isKeyPressed = 0;
 // Mouse
 int mouseX = 0;
 int mouseY = 0;
+bool isMousePressed = false;
+int mouseButton = 0;
 
 // color setting
 uint32_t bgColor=0;
@@ -63,6 +67,8 @@ pb_rgba *bgImage = nullptr;
 uint32_t strokeColor = RGBA(0, 0, 0, 255);
 uint32_t fillColor = RGBA(255, 255, 255, 255);
 
+// Text Settings
+font_t gfont;
 
 
 // size of window
@@ -95,10 +101,20 @@ double seconds()
 	return secs;
 }
 
+// Math
+int random(const int rndMax)
+{
+	return rand() % rndMax;
+}
+
 // color setting
 void background(const uint32_t value)
 {
 	bgColor = value;
+	if ((gpb != NULL) && (width > 0) && (height > 0))
+	{
+		raster_rgba_rect_fill(gpb, 0, 0, width - 1, height - 1, bgColor);
+	}
 }
 
 void noFill()
@@ -421,9 +437,13 @@ void quad(const int x1, const int y1, const int x2, const int y2, const int x3, 
 // Text Processing
 void text(const char *str, const int x, const int y)
 {
-
+	scan_str(gpb, &gfont, x, y, str, fillColor);
 }
 
+void setFont(const uint8_t *fontdata)
+{
+	font_t_init(&gfont, fontdata);
+}
 
 
 
@@ -446,6 +466,9 @@ void InitializeInstance()
 	::QueryPerformanceCounter((LARGE_INTEGER*)&startcount);
 
 	clockfrequency = 1.0f / freq;
+
+	// Setup text
+	font_t_init(&gfont, verdana12);
 }
 
 //
@@ -463,10 +486,6 @@ HDC CreateOffscreenDC(HWND hWnd, const size_t width, const size_t height, void *
 	info.bmiHeader.biBitCount = 32;
 	info.bmiHeader.biCompression = BI_RGB;
 
-	//int bytesPerRow = width * 4;
-	//info.bmiHeader.biSizeImage = bytesPerRow * abs((int)height);
-	//info.bmiHeader.biClrImportant = 0;
-	//info.bmiHeader.biClrUsed = 0;
 
 	gbmHandle = ::CreateDIBSection(
 		NULL,
@@ -592,15 +611,31 @@ void setMouseHandler(MouseHandler handler)
 	gmouseHandler = handler;
 }
 
-void setOnMouseDownHandler(MouseHandler handler)
+void setOnMousePressedHandler(EventObserverHandler handler)
 {
-	gmouseOnDownHandler = handler;
+	gOnMousePressedHandler = handler;
+}
+
+void setOnMouseUpHandler(MouseHandler handler)
+{
+	gmouseOnUpHandler = handler;
 }
 
 void setOnMouseWheelHandler(MouseHandler handler)
 {
 	gmouseOnWheelHandler = handler;
 }
+
+void setOnMouseDraggedHandler(MouseHandler handler)
+{
+	gmouseOnDraggedHandler = handler;
+}
+
+void setOnMouseMovedHandler(MouseHandler handler)
+{
+	gmouseOnMovedHandler = handler;
+}
+
 
 //
 //  FUNCTION: WndProc(HWND, UINT, WPARAM, LPARAM)
@@ -660,24 +695,61 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		break;
 
 		case WM_MOUSEWHEEL:
+			if (gmouseHandler != nullptr) {
+				return gmouseHandler(hWnd, message, wParam, lParam);
+			}
+
 			if (gmouseOnWheelHandler != nullptr) {
-				return gmouseOnWheelHandler(hWnd, message, wParam, lParam);
+				gmouseOnWheelHandler(hWnd, message, wParam, lParam);
 			}
 		break;
 
 
 		case WM_MOUSEMOVE:
+			if (gmouseHandler != nullptr) {
+				return gmouseHandler(hWnd, message, wParam, lParam);
+			}
+
 			mouseX = GET_X_LPARAM(lParam);
 			mouseY = GET_Y_LPARAM(lParam);
-		break;
 
-		case WM_LBUTTONDOWN:
-		case WM_RBUTTONDOWN:
-			if (gmouseOnDownHandler != nullptr) {
-				return gmouseOnDownHandler(hWnd, message, wParam, lParam);
+			if (isMousePressed) {
+				if (gmouseOnDraggedHandler != nullptr) {
+					gmouseOnDraggedHandler(hWnd, message, wParam, lParam);
+				}
+			} else if (gmouseOnMovedHandler != nullptr) {
+				gmouseOnMovedHandler(hWnd, message, wParam, lParam);
 			}
 		break;
 
+		case WM_LBUTTONDOWN:
+		case WM_MBUTTONDOWN:
+		case WM_RBUTTONDOWN:
+			if (gmouseHandler != nullptr) {
+				return gmouseHandler(hWnd, message, wParam, lParam);
+			}
+
+			isMousePressed = true;
+			mouseButton = wParam;
+
+			if (gOnMousePressedHandler != nullptr) {
+				gOnMousePressedHandler();
+			}
+		break;
+
+		case WM_LBUTTONUP:
+		case WM_MBUTTONUP:
+		case WM_RBUTTONUP:
+			if (gmouseHandler != nullptr) {
+				return gmouseHandler(hWnd, message, wParam, lParam);
+			}
+
+			isMousePressed = false;
+
+			if (gmouseOnUpHandler != nullptr) {
+				gmouseOnUpHandler(hWnd, message, wParam, lParam);
+			}
+		break;
 	case WM_COMMAND:
 		wmId = LOWORD(wParam);
 		wmEvent = HIWORD(wParam);
@@ -714,9 +786,6 @@ void eventLoop(HWND hWnd)
 			DispatchMessage(&msg);
 		}
 
-		// draw the background color
-		raster_rgba_rect_fill(gpb, 0, 0, width - 1, height - 1, bgColor);
-
 		// Allow the client to do some drawing if desired
 		draw();
 
@@ -734,6 +803,9 @@ int APIENTRY _tWinMain(_In_ HINSTANCE hInstance,
 	_In_ int       nCmdShow)
 {
 	InitializeInstance();
+
+	// Call setup to get the window size
+	// any any global variables set
 	setup();
 
 	HWND hWnd = CreateWindowHandle(width, height);
@@ -746,6 +818,9 @@ int APIENTRY _tWinMain(_In_ HINSTANCE hInstance,
 	void *data;
 	ghMemDC = CreateOffscreenDC(hWnd, width, height, &data);
 	gpb = CreatePixelBuffer(width, height, data);
+
+	// paint the background at least once before beginning
+	raster_rgba_rect_fill(gpb, 0, 0, width, height, bgColor);
 
 	// Start running the event loop
 	eventLoop(hWnd);

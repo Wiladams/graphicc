@@ -1,12 +1,10 @@
 #include "test_common.h"
-#include "agg_embedded_raster_fonts.h"
 #include "animwin32.h"
 
 struct font_entry {
 	char *name;
 	const uint8_t *data;
 };
-
 
 struct font_entry fontlist[] = {
 	{"gse4x6", gse4x6 },
@@ -48,73 +46,6 @@ struct font_entry fontlist[] = {
 static const int numfonts = sizeof(fontlist) / sizeof(fontlist[0]);
 static int fontidx = 0;
 
-void test_font_info()
-{
-	font_t vd12;
-
-	// Read a font and print out info
-	font_t_init(&vd12, verdana12);
-
-
-	printf("FONT (Verdana 12) Height: %d\tbaseline: %d\tstart_char: %d\tnum_chars: %d\n", 
-		vd12.height, vd12.baseline, 
-		vd12.start_char,
-		vd12.num_chars);
-
-	size_t strwidth = font_t_str_width(&vd12, "Hello, World!");
-	printf("string width ==> 'Hello, World!' : %d\n", strwidth);
-
-	strwidth = font_t_str_width(&vd12, ".");
-	printf("string width ==> '.': %d\n", strwidth);
-
-	strwidth = font_t_str_width(&vd12, "+");
-	printf("string width ==> '+': %d\n", strwidth);
-}
-
-void test_prepare_glyph()
-{
-	font_t vd12;
-	glyph_t ginfo;
-	struct glyph_rect r;
-	double x = 0;
-	double y = 12;
-	bool flip = true;
-
-	font_t_init(&vd12, verdana12);
-	glyph_t_init(&vd12, &ginfo, 'H');
-	glyph_t_prepare(&vd12, &ginfo, &r, x, y, flip);
-
-	printf("PREPARED ('H'): %d, %d  %d, %d\n", r.x1, r.y1, r.x2, r.y2);
-}
-
-
-
-void test_glyph_scan()
-{
-	font_t vd12;
-	glyph_t ginfo;
-	struct glyph_rect r;
-	double x = 0;
-	double y = 12;
-	bool flip = false;
-
-	size_t pbwidth = 20;
-	size_t pbheight = 20;
-
-	pb_rgba pb;
-	pb_rgba_init(&pb, pbwidth, pbheight);
-
-	raster_rgba_rect_fill(&pb, 0, 0, pbwidth - 1, pbheight - 1, pWhite);
-
-
-	font_t_init(&vd12, verdana12);
-	glyph_t_init(&vd12, &ginfo, 'A');
-	glyph_t_prepare(&vd12, &ginfo, &r, x, y, flip);
-
-	scan_glyph(&pb, &vd12, &ginfo, 0, 0, pBlack);
-
-	int err = write_PPM("test_glyph_scan.ppm", &pb);
-}
 
 LRESULT CALLBACK keyReleased(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
@@ -133,6 +64,10 @@ LRESULT CALLBACK keyReleased(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPar
 				fontidx = 0;
 			}
 		break;
+
+		case VK_SPACE:
+			write_PPM("test_agg_raster_fonts.ppm", gpb);
+		break;
 	}
 
 	return 0;
@@ -146,35 +81,33 @@ void setup()
 	setOnKeyReleasedHandler(keyReleased);
 }
 
+static char CAPS[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+static char LOWS[] = "abcdefghijklmnopqrstuvwxyz";
+static char NUMS[] = "1234567890";
+static char SYMS[] = "!@#$%^&*()_+-={}|[]\\:\"; '<>?,./~`";
+static char SOME[] = "The quick brown fox jumped over the lazy dog.";
+
 void draw()
 {
-	// Allocate a color buffer based on the size of the string
-	//size_t pbwidth = 640;
-	//size_t pbheight = 480;
+	background(pWhite);
 
-	//pb_rgba pb;
-	//pb_rgba_init(&pb, pbwidth, pbheight);
-	//pb_rgba_init(&pb, pbwidth, pbheight);
-	//raster_rgba_rect_fill(&pb, 0, 0, pbwidth - 1, pbheight - 1, pWhite);
+	setFont(fontlist[fontidx].data);
 
-	char CAPS[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-	char LOWS[] = "abcdefghijklmnopqrstuvwxyz";
-	char NUMS[] = "1234567890";
-	char SYMS[] = "!@#$%^&*()_+-={}|[]\\:\"; '<>?,./~`";
-	char SOME[] = "The quick brown fox jumped over the lazy dog.";
+	fill(pBlack);
+	text(fontlist[fontidx].name, 0, 0);
+	text(CAPS, 0, gfont.height * 1);
 
-	font_t font;
+	fill(pRed);
+	text(LOWS, 0, gfont.height * 2);
 
-	font_t_init(&font, fontlist[fontidx].data);
+	fill(pGreen);
+	text(NUMS, 0, gfont.height * 3);
 
-	scan_str(gpb, &font, 0, 0, fontlist[fontidx].name, pBlack);
-	scan_str(gpb, &font, 0, font.height * 1, CAPS, pBlack);
-	scan_str(gpb, &font, 0, font.height * 2, LOWS, pRed);
-	scan_str(gpb, &font, 0, font.height * 3, NUMS, pGreen);
-	scan_str(gpb, &font, 0, font.height * 4, SYMS, pBlue);
-	scan_str(gpb, &font, 0, font.height * 5, SOME, pBlack);
+	fill(pBlue);
+	text(SYMS, 0, gfont.height * 4);
 
-
+	fill(pBlack);
+	text(SOME, 0, gfont.height * 5);
 }
 
 

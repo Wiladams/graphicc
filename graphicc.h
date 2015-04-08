@@ -302,6 +302,8 @@ extern "C" {
 #endif
 
 	void font_t_init(font_t *f, const uint8_t *data);
+
+
 	void glyph_t_prepare(const font_t *font, const glyph_t *ginfo, struct glyph_rect* r, double x, double y, bool flip);
 	void glyph_t_init(const font_t *f, glyph_t *ginfo, const unsigned int glyph);
 	size_t font_t_glyph_width(const font_t *f, const unsigned int glyph);

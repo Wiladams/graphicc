@@ -16,6 +16,7 @@
 
 #define BGR_DOMINANT 1
 #include "test_common.h"
+#include "agg_embedded_raster_fonts.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -31,6 +32,7 @@ void quit();
 typedef LRESULT(CALLBACK* WinProcHandler)(HWND, UINT, WPARAM, LPARAM);
 typedef LRESULT(CALLBACK* KeyboardHandler)(HWND, UINT, WPARAM, LPARAM);
 typedef LRESULT(CALLBACK*MouseHandler)(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
+typedef void(CALLBACK *EventObserverHandler)();
 
 void setKeyboardHandler(KeyboardHandler handler);
 void setOnKeyPressed(KeyboardHandler handler);
@@ -38,8 +40,10 @@ void setOnKeyReleasedHandler(KeyboardHandler handler);
 void setOnKeyTyped(KeyboardHandler handler);
 
 void setMouseHandler(MouseHandler handler);
-void setOnMouseDownHandler(MouseHandler handler);
+void setOnMousePressedHandler(EventObserverHandler handler);
 void setOnMouseWheelHandler(MouseHandler handler);
+void setOnMouseMovedHandler(MouseHandler handler);
+void setOnMouseDraggedHandler(MouseHandler handler);
 
 #ifdef __cplusplus
 }
@@ -150,10 +154,13 @@ void quad(const int x1, const int y1, const int x2, const int y2, const int x3, 
 void triangle(const int x1, const int y1, const int x2, const int y2, const int x3, const int y3);
 
 // Text
+extern font_t gfont;
+
 // createFont
 // loadFont()
+void setFont(const uint8_t *fontdata);
 void text(const char *str, const int x, const int y);
-// textFont()
+//void textFont(font_t *font);
 // textAlign()
 // textLeading()
 // textMode()
@@ -161,3 +168,7 @@ void text(const char *str, const int x, const int y);
 // textWidth()
 // textAscent()
 // textDescent()
+
+
+// Math
+int random(static const int);
