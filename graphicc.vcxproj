@@ -69,12 +69,11 @@
     <ClInclude Include="bezier.h" />
     <ClInclude Include="graphicc.h" />
     <ClInclude Include="linearalgebra.h" />
-    <ClInclude Include="pbm.h" />
-    <ClInclude Include="pixelbuffer.h" />
     <ClInclude Include="raster_rgba.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="bezier.cpp" />
+    <ClCompile Include="font.cpp" />
     <ClCompile Include="linearalgebra.cpp" />
     <ClCompile Include="pbm.cpp" />
     <ClCompile Include="pixelbuffer.cpp" />

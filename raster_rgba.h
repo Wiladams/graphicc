@@ -19,7 +19,7 @@ limitations under the License.
 #ifndef RASTER_RGBA_H
 #define RASTER_RGBA_H
 
-#include "pixelbuffer.h"
+#include "graphicc.h"
 
 
 #ifdef __cplusplus

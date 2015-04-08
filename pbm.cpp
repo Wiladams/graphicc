@@ -14,7 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-#include "pbm.h"
+#include "graphicc.h"
 
 #include <stdio.h>
 

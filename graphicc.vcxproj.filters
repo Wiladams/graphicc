@@ -15,13 +15,7 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="pbm.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="linearalgebra.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="pixelbuffer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="raster_rgba.h">
@@ -51,6 +45,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="bezier.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="font.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

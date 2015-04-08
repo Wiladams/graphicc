@@ -71,14 +71,12 @@ inline double MAP(double a, double rlo, double rhi, double slo, double shi) {ret
 #define div255(num) ((num + (num >> 8)) >> 8)
 #define lerp255(bg, fg, a) ((uint8_t)div255((fg*a+bg*(255-a))))
 
+
+
 #ifdef _MSC_VER
 #pragma warning(push)
 #pragma warning(disable: 4201)  // nonstandard extension used : nameless struct/union
 #endif
-
-
-
-
 
 
 enum pixellayouts {
@@ -212,4 +210,119 @@ typedef REAL mat4x4[4][4];
 #pragma warning(pop)
 #endif
 
+#endif
+
+/*
+A pixel buffer is an array of pixels.
+
+The pixelformat determines the layout of the
+individual elements.
+
+data - pointer to the beginning of the data
+pformat - some indication of the pixel layout
+width - number of pixels wide
+height - number of pixels high
+pixelpitch - number of pixels between rows
+*/
+
+typedef struct _pb_rgba {
+	uint8_t *		data;
+	unsigned int		pixelpitch;
+	int					owndata;
+	pb_rect				frame;
+} pb_rgba;
+
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+	int pb_rgba_init(pb_rgba *pb, const unsigned int width, const unsigned int height);
+	int pb_rgba_free(pb_rgba *pb);
+
+	int pb_rgba_get_frame(pb_rgba *pb, const unsigned int x, const unsigned int y, const unsigned int width, const unsigned int height, pb_rgba *pf);
+
+	void pb_rgba_cover_pixel(pb_rgba *pb, const unsigned int x, const unsigned int y, const uint32_t value);
+
+#ifdef __cplusplus
+}
+#endif
+
+#define pb_rgba_get_pixel(pb, x, y, value) *value = ((uint32_t *)(pb)->data)[(y*(pb)->pixelpitch)+x]
+#define pb_rgba_set_pixel(pb, x, y, value) ((uint32_t *)(pb)->data)[(y*(pb)->pixelpitch)+x] = value
+
+
+
+
+// Font information
+typedef uint8_t cover_type;    //----cover_type
+enum cover_scale_e
+{
+	cover_none = 0,                 //----cover_none 
+	cover_shift = 8,                 //----cover_shift
+	cover_size = 1 << cover_shift,  //----cover_size 
+	cover_mask = cover_size - 1,    //----cover_mask 
+	cover_full = cover_mask         //----cover_full 
+};
+
+inline bool isBigEndian() {
+	int t = 1;
+	return (*(char*)&t == 0);
+}
+
+
+typedef struct _font {
+	uint8_t	height;			// height in pixels of all characters
+	uint8_t baseline;		// baseline offset of character
+	uint8_t start_char;		// ordinal of first character in the set
+	uint8_t num_chars;		// number of characters in the font
+
+	bool bigendian;			// endianness of current machine
+	uint8_t *charbits;		// pointer to where the bits for the chars start
+
+} font_t;
+
+// Rectangle representing the boundary of a glyph
+struct glyph_rect
+{
+	int x1, y1, x2, y2;
+	double dx, dy;
+};
+
+typedef struct _glyph {
+	size_t width;
+	size_t byte_width;
+
+	uint8_t *data;
+} glyph_t;
+
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+	void font_t_init(font_t *f, const uint8_t *data);
+	void glyph_t_prepare(const font_t *font, const glyph_t *ginfo, struct glyph_rect* r, double x, double y, bool flip);
+	void glyph_t_init(const font_t *f, glyph_t *ginfo, const unsigned int glyph);
+	size_t font_t_glyph_width(const font_t *f, const unsigned int glyph);
+	size_t font_t_str_width(const font_t *f, const char * str);
+
+	void glyph_t_span(const font_t *f, glyph_t *g, unsigned i, cover_type *m_span);
+	int scan_glyph(pb_rgba *pb, font_t *font, glyph_t *glyph, const int x, const int y, const int color);
+	int scan_str(pb_rgba *pb, font_t *font, const int x, const int y, const char *chars, const int color);
+
+#ifdef __cplusplus
+}
+#endif
+
+// PBM Handling
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+	int read_PPM(const char *filename, pb_rgba *fb);
+	int write_PPM(const char *filename, pb_rgba *fb);
+
+#ifdef __cplusplus
+}
 #endif

@@ -1,7 +1,8 @@
+#include "graphicc.h"
 #include "linearalgebra.h"
-#include "pixelbuffer.h"
 #include "raster_rgba.h"
-#include "pbm.h"
+
+
 
 
 #include <stdio.h>
