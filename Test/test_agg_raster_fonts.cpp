@@ -1,5 +1,5 @@
-#include "test_common.h"
-#include "animwin32.h"
+
+#include "drawproc.h"
 
 struct font_entry {
 	char *name;

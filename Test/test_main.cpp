@@ -13,9 +13,10 @@
 	will grow from size zero, the height of window, within that second.
 */
 
-#include "animwin32.h"
-#include "linearalgebra.h"
 #include <math.h>
+
+#include "drawproc.h"
+#include "test_common.h"
 
 
 static uint32_t colors[] = {
@@ -271,7 +272,7 @@ void drawLinearMotion()
 extern "C"
 void setup()
 {
-	size(640, 360);
+	size(1024, 768);
 	background(pLightGray);
 
 	a = height / 2;
@@ -306,8 +307,8 @@ void draw()
 	//drawQuads();
 
 	drawRandomRectangles();
-	//drawRandomLines();
-	//drawRandomTriangles();
+	drawRandomLines();
+	drawRandomTriangles();
 	drawBars();
 	//drawLinearMotion();
 

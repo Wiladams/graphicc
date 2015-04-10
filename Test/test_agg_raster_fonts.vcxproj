@@ -71,6 +71,7 @@
   <ItemGroup>
     <ClCompile Include="agg_embedded_raster_fonts.cpp" />
     <ClCompile Include="animwin32.cpp" />
+    <ClCompile Include="drawproc.cpp" />
     <ClCompile Include="test_agg_raster_fonts.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -81,6 +82,7 @@
   <ItemGroup>
     <ClInclude Include="agg_embedded_raster_fonts.h" />
     <ClInclude Include="animwin32.h" />
+    <ClInclude Include="drawproc.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
