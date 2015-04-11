@@ -220,6 +220,24 @@ void drawBars()
 	}
 }
 
+void drawPolygon()
+{
+	int nverts = 6;
+	int a[][2] = {
+		{12, 12},
+		{12,18},
+		{18,22},
+		{30,12},
+		{30,18},
+		{24,12}
+	};
+
+	fill(pYellow);
+	polygon(nverts, a);
+
+
+}
+
 void drawMouse()
 {
 	int mWidth = 128;
@@ -269,6 +287,7 @@ void drawLinearMotion()
 	}
 }
 
+
 extern "C"
 void setup()
 {
@@ -299,17 +318,20 @@ void setup()
 extern "C"
 void draw()
 {
+	background(pLightGray);
+
 	//drawEllipses();
 	//drawLines();
 	//drawPoints();
 	//drawRects();
 	//drawTriangles();
 	//drawQuads();
+	drawPolygon();
 
-	drawRandomRectangles();
-	drawRandomLines();
-	drawRandomTriangles();
-	drawBars();
+	//drawRandomRectangles();
+	//drawRandomLines();
+	//drawRandomTriangles();
+	//drawBars();
 	//drawLinearMotion();
 
 	drawMouse();

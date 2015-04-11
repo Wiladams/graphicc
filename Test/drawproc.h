@@ -122,7 +122,8 @@ void point(const int x, const int y);
 void rect(const int a, const int b, const int c, const int d);
 void quad(const int x1, const int y1, const int x2, const int y2, const int x3, const int y3, const int x4, const int y4);
 void triangle(const int x1, const int y1, const int x2, const int y2, const int x3, const int y3);
-
+//void polygon(int polyCorners, int polyX[], int polyY[]);
+void polygon(int nverts, int **a);
 // Text
 extern font_t gfont;
 
