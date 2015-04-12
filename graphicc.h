@@ -56,6 +56,8 @@ typedef double	REAL;
 
 #define G_EULER			0.577215664901532860606
 
+// A really small value
+#define EPSILON		0.0000000001
 
 
 

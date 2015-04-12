@@ -27,9 +27,6 @@
     <ClCompile Include="drawproc.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="triangulate.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="animwin32.h">
@@ -42,9 +39,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="drawproc.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="triangulate.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

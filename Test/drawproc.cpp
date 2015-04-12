@@ -1,7 +1,8 @@
 
 #include "drawproc.h"
-#include "triangulate.h"
+//#include "triangulate.h"
 
+#include <vector>
 #include <math.h>
 
 
@@ -134,6 +135,8 @@ void ellipse(const int a, const int b, const int c, const int d)
 
 	uint32_t cx = a + xradius;
 	uint32_t cy = b + yradius;
+
+	raster_rgba_ellipse_fill(gpb, cx, cy, xradius, yradius, fillColor);
 	raster_rgba_ellipse_stroke(gpb, cx, cy, xradius, yradius, strokeColor);
 }
 
@@ -410,12 +413,6 @@ void quad(const int x1, const int y1, const int x2, const int y2, const int x3, 
 
 
 // polygon
-//  public-domain code by Darel Rex Finley, 2007
-// http://alienryderflex.com/polygon_fill/
-//
-#define MAX_POLY_CORNERS 256
-
-
 //  Globals which should be set before calling this function:
 //
 //  int    polyCorners  =  how many corners the polygon has
@@ -424,11 +421,10 @@ void quad(const int x1, const int y1, const int x2, const int y2, const int x3, 
 //  float  x, y         =  point to be tested
 //
 //
-//  The function will return YES if the point x,y is inside the polygon, or
-//  NO if it is not.  If the point is exactly on the edge of the polygon,
+//  The function will return 1 if the point x,y is inside the polygon, or
+//  0 if it is not.  If the point is exactly on the edge of the polygon,
 //  then the function may return YES or NO.
 //
-
 
 int pointInPolygon(int polyCorners, int polyX[], int polyY[], const int x, const int y) 
 {
@@ -452,35 +448,201 @@ int pointInPolygon(int polyCorners, int polyX[], int polyY[], const int x, const
 
 
 
+// Draw a polygon
 
-void polygon(int nverts, int verts[][2])
+
+class Vector2d
+{
+public:
+	Vector2d(float x, float y)
+	{
+		Set(x, y);
+	};
+
+	float GetX(void) const { return mX; };
+
+	float GetY(void) const { return mY; };
+
+	void  Set(float x, float y)
+	{
+		mX = x;
+		mY = y;
+	};
+private:
+	float mX;
+	float mY;
+};
+
+// Typedef an STL vector of vertices which are used to represent
+// a polygon/contour and a series of triangles.
+typedef std::vector< Vector2d > Vector2dVector;
+
+
+float triangle_area(const Vector2dVector &contour)
+{
+	int n = contour.size();
+
+	float A = 0.0f;
+
+	for (int p = n - 1, q = 0; q<n; p = q++)
+	{
+		A += contour[p].GetX()*contour[q].GetY() - contour[q].GetX()*contour[p].GetY();
+	}
+	return A*0.5f;
+}
+
+/*
+triangulate_inside_triangle
+decides if a point P is Inside of the triangle
+defined by A, B, C.
+*/
+bool triangle_pt_inside(float Ax, float Ay,
+	float Bx, float By,
+	float Cx, float Cy,
+	float Px, float Py)
+
+{
+	float ax, ay, bx, by, cx, cy, apx, apy, bpx, bpy, cpx, cpy;
+	float cCROSSap, bCROSScp, aCROSSbp;
+
+	ax = Cx - Bx;  ay = Cy - By;
+	bx = Ax - Cx;  by = Ay - Cy;
+	cx = Bx - Ax;  cy = By - Ay;
+	apx = Px - Ax;  apy = Py - Ay;
+	bpx = Px - Bx;  bpy = Py - By;
+	cpx = Px - Cx;  cpy = Py - Cy;
+
+	aCROSSbp = ax*bpy - ay*bpx;
+	cCROSSap = cx*apy - cy*apx;
+	bCROSScp = bx*cpy - by*cpx;
+
+	return ((aCROSSbp >= 0.0f) && (bCROSScp >= 0.0f) && (cCROSSap >= 0.0f));
+};
+
+bool triangulate_snip(const Vector2dVector &contour, int u, int v, int w, int n, int *V)
+{
+	int p;
+	float Ax, Ay, Bx, By, Cx, Cy, Px, Py;
+
+	Ax = contour[V[u]].GetX();
+	Ay = contour[V[u]].GetY();
+
+	Bx = contour[V[v]].GetX();
+	By = contour[V[v]].GetY();
+
+	Cx = contour[V[w]].GetX();
+	Cy = contour[V[w]].GetY();
+
+	if (EPSILON > (((Bx - Ax)*(Cy - Ay)) - ((By - Ay)*(Cx - Ax)))) return false;
+
+	for (p = 0; p<n; p++)
+	{
+		if ((p == u) || (p == v) || (p == w)) continue;
+		Px = contour[V[p]].GetX();
+		Py = contour[V[p]].GetY();
+		if (triangle_pt_inside(Ax, Ay, Bx, By, Cx, Cy, Px, Py)) return false;
+	}
+
+	return true;
+}
+
+bool triangulate_process(const Vector2dVector &contour, Vector2dVector &result)
+{
+	/* allocate and initialize list of Vertices in polygon */
+	int n = contour.size();
+	if (n < 3) return false;
+
+	int *V = new int[n];
+
+	/* we want a counter-clockwise polygon in V */
+
+	if (0.0f < triangle_area(contour))
+	for (int v = 0; v<n; v++) 
+		V[v] = v;
+	else
+		for (int v = 0; v<n; v++) 
+			V[v] = (n - 1) - v;
+
+	int nv = n;
+
+	/*  remove nv-2 Vertices, creating 1 triangle every time */
+	int count = 2 * nv;   /* error detection */
+
+	for (int m = 0, v = nv - 1; nv>2;)
+	{
+		/* if we loop, it is probably a non-simple polygon */
+		if (0 >= (count--))
+		{
+			//** Triangulate: ERROR - probable bad polygon!
+			return false;
+		}
+
+		/* three consecutive vertices in current polygon, <u,v,w> */
+		int u = v; if (nv <= u) u = 0;     /* previous */
+		v = u + 1; if (nv <= v) v = 0;     /* new v    */
+		int w = v + 1; if (nv <= w) w = 0;     /* next     */
+
+		if (triangulate_snip(contour, u, v, w, nv, V))
+		{
+			int a, b, c, s, t;
+
+			/* true names of the vertices */
+			a = V[u]; b = V[v]; c = V[w];
+
+			/* output Triangle */
+			triangle(contour[a].GetX(), contour[a].GetY(), 
+				contour[b].GetX(), contour[b].GetY(), 
+				contour[c].GetX(), contour[c].GetY());
+
+			//result.push_back(contour[a]);
+			//result.push_back(contour[b]);
+			//result.push_back(contour[c]);
+
+			m++;
+
+			/* remove v from remaining polygon */
+			for (s = v, t = v + 1; t<nv; s++, t++) 
+				V[s] = V[t]; 
+			nv--;
+
+			/* resest error detection counter */
+			count = 2 * nv;
+		}
+	}
+
+	delete V;
+
+	return true;
+}
+
+void polygon(int nverts, int *verts)
 {
 	Vector2dVector a;
 	for (int idx = 0; idx < nverts; idx++){
-		a.push_back(Vector2d(verts[idx][0], verts[idx][1]));
+		a.push_back(Vector2d(verts[idx*2+0], verts[idx*2+1]));
 	}
 
 	// allocate an STL vector to hold the answer.
 	Vector2dVector result;
 
 	//  Invoke the triangulator to triangulate this polygon.
-	Triangulate::Process(a, result);
+	noStroke();
+	triangulate_process(a, result);
 
 	// print out the results.
 	// draw the results
-	int tcount = result.size() / 3;
+	//int tcount = result.size() / 3;
 
-	noStroke();
 	//stroke(pBlack);
-	fill(fillColor);
+	//fill(fillColor);
 
-	for (int i = 0; i<tcount; i++)
-	{
-		const Vector2d &p1 = result[i * 3 + 0];
-		const Vector2d &p2 = result[i * 3 + 1];
-		const Vector2d &p3 = result[i * 3 + 2];
-		triangle(p1.GetX(), p1.GetY(), p2.GetX(), p2.GetY(), p3.GetX(), p3.GetY());
-	}
+	//for (int i = 0; i<tcount; i++)
+	//{
+	//	const Vector2d &p1 = result[i * 3 + 0];
+	//	const Vector2d &p2 = result[i * 3 + 1];
+	//	const Vector2d &p3 = result[i * 3 + 2];
+	//	triangle(p1.GetX(), p1.GetY(), p2.GetX(), p2.GetY(), p3.GetX(), p3.GetY());
+	//}
 
 	// draw the outline
 	stroke(strokeColor);

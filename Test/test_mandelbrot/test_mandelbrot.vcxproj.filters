@@ -27,6 +27,9 @@
     <ClCompile Include="..\agg_embedded_raster_fonts.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\drawproc.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Image Include="small.ico">
@@ -38,6 +41,9 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\agg_embedded_raster_fonts.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\drawproc.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

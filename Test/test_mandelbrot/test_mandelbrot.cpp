@@ -7,8 +7,8 @@ References:
 	Runs from -1.2 => 1.2 in the y direction
 */
 
-#include "animwin32.h"
-#include "linearalgebra.h"
+#include "drawproc.h"
+//#include "linearalgebra.h"
 #include <math.h>
 
 // Mandelbrot parameters
@@ -77,7 +77,7 @@ void drawMandelbrot()
 	}
 }
 
-LRESULT CALLBACK mouseDown(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
+void CALLBACK mouseDown()
 {
 	// calculate the rectangle boundaries
 
@@ -95,7 +95,6 @@ LRESULT CALLBACK mouseDown(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam
 
 	MinIm = MAP(crect.y, 0, height - 1, MinIm, MaxIm);
 
-	return 0;
 }
 
 LRESULT CALLBACK mouseWheel(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
@@ -125,7 +124,8 @@ void setup()
 	background(pLightGray);
 
 	setOnMouseWheelHandler(mouseWheel);
-	setOnMouseDownHandler(mouseDown);
+	//setOnMouseDownHandler(mouseDown);
+	setOnMousePressedHandler(mouseDown);
 }
 
 extern "C"

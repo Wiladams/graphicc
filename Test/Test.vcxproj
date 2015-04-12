@@ -74,7 +74,6 @@
     <ClCompile Include="animwin32.cpp" />
     <ClCompile Include="drawproc.cpp" />
     <ClCompile Include="test_main.cpp" />
-    <ClCompile Include="triangulate.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\graphicc.vcxproj">
@@ -86,7 +85,6 @@
     <ClInclude Include="animwin32.h" />
     <ClInclude Include="drawproc.h" />
     <ClInclude Include="test_common.h" />
-    <ClInclude Include="triangulate.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

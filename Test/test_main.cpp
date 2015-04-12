@@ -34,14 +34,14 @@ static uint32_t colors[] = {
 
 static double intervals[] = {
 //	1.0 / 0.125,
-//	1.0 / 0.25,
-//	1.0 / 0.333,
-//	1.0 / 0.5,
+	1.0 / 0.25,
+	1.0 / 0.333,
+	1.0 / 0.5,
 	1.0 / 0.75,
 	1.0 / 1.0,
-	1.0 / 1.25,
-	1.0 / 2.0,
-	1.0 / 3.0
+//	1.0 / 1.25,
+//	1.0 / 2.0,
+//	1.0 / 3.0
 };
 
 static int numintervals = 0;
@@ -156,7 +156,12 @@ void drawRandomLines()
 void drawEllipses()
 {
 	stroke(pBlack);
+	fill(pRed);
 	ellipse(10, 10, 160, 120);
+
+	stroke(pBlue);
+	fill(pYellow);
+	ellipse(150, 200, 60, 150);
 }
 
 void drawTriangles()
@@ -211,41 +216,66 @@ void drawBars()
 	//nostroke();
 	stroke(pBlack);
 
+	int *b = (int *)malloc(sizeof(int)* 2 * (numbars+2));
+
+	// first anchor point
+	int polyidx = 0;
+	b[(polyidx*2)+0] = bargap;
+	b[(polyidx*2)+1] = height-1;
+	
 	for (int offset = 0; offset < numbars; offset++)
 	{
+		polyidx++;
+
 		double secfrag = fmod(seconds(), bars[offset].interval);
 		int barheight = MAP(secfrag, 0, bars[offset].interval, 4, height - 1);
 		fill(bars[offset].color);
-		rect(offset*(bargap + barwidth) + bargap, height - barheight, barwidth, barheight);
+		int x1 = offset*(bargap + barwidth) + bargap;
+		int y1 = height - barheight;
+		rect(x1, y1, barwidth, barheight);
+
+		b[(polyidx*2) + 0] = x1+(barwidth/2);
+		b[(polyidx*2) + 1] = y1;
 	}
+
+	// anchor point
+	polyidx++;
+	b[(polyidx * 2) + 0] = width - 1;
+	b[(polyidx * 2) + 1] = height - 1;
+
+	//fill(RGBA(127, 127, 127, 80));
+	fill(RGBA(0, 127, 255, 120));
+	polygon(numbars + 2, b);
+
+	free(b);
 }
 
 void drawPolygon()
 {
-	int a[][2] = {
-		{5,5},
-		{150,5},
-		{150,25},
-		{640,25},
-		{640,480},
-		{5,480}
+	int a[] = {
+		5,5,
+		150,5,
+		150,25,
+		640,25,
+		640,480,
+		5,480
 	};
-	int nverts = sizeof(a) / sizeof(a[0]);
+	int nverts = (sizeof(a) / sizeof(a[0]))/2;
 
 	fill(pYellow);
 	polygon(nverts, a);
 
-	int b[][2] = {
-		{5,25},
-		{160,25},
-		{ 160, 5 },
-		{ 250, 5 },
-		{ 250, 25 },
-		{ 640, 25 },
-		{ 640, 480 },
-		{ 5, 480 }
+	int b[] = {
+		5,25,
+		160,25,
+		 160, 5 ,
+		 250, 5 ,
+		 250, 25 ,
+		 640, 25 ,
+		 640, 480 ,
+		 5, 480 
 	};
-	int bverts = sizeof(b) / sizeof(b[0]);
+	int bverts = (sizeof(b) / sizeof(b[0]))/2;
 
 	fill(pGreen);
 	polygon(bverts, b);
@@ -263,24 +293,6 @@ void drawMouse()
 	rect(mouseX, mouseY, mWidth, mHeight);
 }
 
-LRESULT CALLBACK myKbHandler(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
-{
-	switch (message)
-	{
-		case WM_CHAR:
-			// Processing regular characters, after translation of various keycodes
-			//key = wParam;
-
-			switch (wParam){
-				case 0x1B:  // ESC
-					quit();
-				break;
-			}
-		break;
-	}
-
-	return 0;
-}
 
 static float a;
 
@@ -301,11 +313,23 @@ void drawLinearMotion()
 	}
 }
 
+LRESULT CALLBACK keyReleased(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
+{
+	switch (wParam)
+	{
+
+	case VK_SPACE:
+		write_PPM("test_main.ppm", gpb);
+		break;
+	}
+
+	return 0;
+}
 
 extern "C"
 void setup()
 {
-	size(1024, 768);
+	size(640, 480);
 	background(pLightGray);
 
 	a = height / 2;
@@ -325,8 +349,7 @@ void setup()
 		bars[idx].interval = intervals[rand() % numintervals];
 	}
 
-	setKeyboardHandler(myKbHandler);
-
+	setOnKeyReleasedHandler(keyReleased);
 }
 
 extern "C"
@@ -340,15 +363,15 @@ void draw()
 	//drawRects();
 	//drawTriangles();
 	//drawQuads();
-	drawPolygon();
+	//drawPolygon();
 
 	//drawRandomRectangles();
 	//drawRandomLines();
 	//drawRandomTriangles();
-	//drawBars();
+	drawBars();
 	//drawLinearMotion();
 
-	drawMouse();
+	//drawMouse();
 
 
 }

@@ -4,8 +4,9 @@
 #include <assert.h>
 
 #include "triangulate.h"
+#include "graphicc.h"
 
-static const float EPSILON = 0.0000000001f;
+//static const float EPSILON = 0.0000000001f;
 
 float Triangulate::Area(const Vector2dVector &contour)
 {

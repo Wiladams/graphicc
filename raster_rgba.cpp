@@ -253,6 +253,12 @@ inline void Plot4EllipsePoints(pb_rgba *pb, const uint32_t cx, const uint32_t cy
 	pb_rgba_cover_pixel(pb, cx + x, cy - y, color);
 }
 
+inline void fill2EllipseLines(pb_rgba *pb, const uint32_t cx, const uint32_t cy, const unsigned int x, const unsigned int y, const uint32_t color)
+{
+	raster_rgba_hline_blend(pb, cx - x, cy + y, 2*x, color);
+	raster_rgba_hline_blend(pb, cx - x, cy - y, 2 * x, color);
+}
+
 void raster_rgba_ellipse_stroke(pb_rgba *pb, const uint32_t cx, const uint32_t cy, const size_t xradius, size_t yradius, const uint32_t color)
 {
 	int x, y;
@@ -300,6 +306,67 @@ void raster_rgba_ellipse_stroke(pb_rgba *pb, const uint32_t cx, const uint32_t c
 
 	while (stoppingx <= stoppingy) {
 		Plot4EllipsePoints(pb, cx, cy, x, y, color);
+		x++;
+		stoppingx += twobsquare;
+		ellipseerror += xchange;
+		xchange += twobsquare;
+		if ((2 * ellipseerror + ychange) > 0) {
+			y--;
+			stoppingy -= twoasquare;
+			ellipseerror += ychange;
+			ychange += twoasquare;
+		}
+	}
+}
+
+void raster_rgba_ellipse_fill(pb_rgba *pb, const uint32_t cx, const uint32_t cy, const size_t xradius, size_t yradius, const uint32_t color)
+{
+	int x, y;
+	int xchange, ychange;
+	int ellipseerror;
+	int twoasquare, twobsquare;
+	int stoppingx, stoppingy;
+
+	twoasquare = 2 * xradius*xradius;
+	twobsquare = 2 * yradius*yradius;
+
+	x = xradius;
+	y = 0;
+
+	xchange = yradius*yradius*(1 - 2 * xradius);
+	ychange = xradius*xradius;
+	ellipseerror = 0;
+	stoppingx = twobsquare*xradius;
+	stoppingy = 0;
+
+	// first set of points, sides
+	while (stoppingx >= stoppingy)
+	{
+		//Plot4EllipsePoints(pb, cx, cy, x, y, color);
+		fill2EllipseLines(pb, cx, cy, x, y, color);
+		y++;
+		stoppingy += twoasquare;
+		ellipseerror += ychange;
+		ychange += twoasquare;
+		if ((2 * ellipseerror + xchange) > 0) {
+			x--;
+			stoppingx -= twobsquare;
+			ellipseerror += xchange;
+			xchange += twobsquare;
+		}
+	}
+
+	// second set of points, top and bottom
+	x = 0;
+	y = yradius;
+	xchange = yradius*yradius;
+	ychange = xradius*xradius*(1 - 2 * yradius);
+	ellipseerror = 0;
+	stoppingx = 0;
+	stoppingy = twoasquare*yradius;
+
+	while (stoppingx <= stoppingy) {
+		fill2EllipseLines(pb, cx, cy, x, y, color);
 		x++;
 		stoppingx += twobsquare;
 		ellipseerror += xchange;

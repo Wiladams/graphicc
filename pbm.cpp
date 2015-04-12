@@ -36,10 +36,15 @@ int write_PPM(const char *filename, pb_rgba *fb)
 	fprintf(fp, "P6\n%d %d\n255\n", fb->frame.width, fb->frame.height);
 	
 	// write the individual pixel values in binary form
-	unsigned int * pixelPtr = (unsigned int *)fb->data;
+	uint32_t * pixelPtr = (unsigned int *)fb->data;
+	uint8_t rgb[3];
 
 	for (int row = 0; row < fb->frame.height; row++) {
 		for (int col = 0; col < fb->frame.width; col++){
+			rgb[0] = GET_R(*pixelPtr);
+			rgb[1] = GET_G(*pixelPtr);
+			rgb[2] = GET_B(*pixelPtr);
+			//fwrite((void *)&rgb[0], 3, 1, fp);
 			fwrite(&pixelPtr[col], 3, 1, fp);
 		}
 		pixelPtr += fb->pixelpitch;

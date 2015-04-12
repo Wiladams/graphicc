@@ -1,8 +1,7 @@
 /*
 	Drawing Shapes
 */
-#include "test_common.h"
-#include "animwin32.h"
+#include "drawproc.h"
 
 float radiusX, radiusY;
 int screenFadeValue = 20;
@@ -20,8 +19,8 @@ void fadeScreen()
 void paintShapes(bool isDragged)
 {
 	if (isDragged) {
-		//noStroke();
-		stroke(pWhite);
+		noStroke();
+		fill(pWhite);
 		ellipse(mouseX, mouseY, radiusX, radiusY);
 	}
 	else {
