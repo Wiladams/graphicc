@@ -1,5 +1,6 @@
 
 #include "drawproc.h"
+#include "triangulate.h"
 
 #include <math.h>
 
@@ -448,105 +449,44 @@ int pointInPolygon(int polyCorners, int polyX[], int polyY[], const int x, const
 	return oddNodes;
 }
 
-int FinfMax(int **a, int i)
+
+
+
+
+void polygon(int nverts, int verts[][2])
 {
-	if (a[i][1] > a[i + 1][1]) {
-		return a[i][1];
+	Vector2dVector a;
+	for (int idx = 0; idx < nverts; idx++){
+		a.push_back(Vector2d(verts[idx][0], verts[idx][1]));
 	}
-	else {
-		return a[i + 1][1];
-	}
-}
 
-int FinfMin(int **a, int **b, int i)
-{
-	if (a[i][1] < a[i + 1][1]) {
-		b[i][2] = a[i][0];
-		return a[i][1];
-	}
-	else {
-		b[i][2] = a[i + 1][0];
-		return a[i + 1][1];
-	}
-}
+	// allocate an STL vector to hold the answer.
+	Vector2dVector result;
 
-double FinSlop(int **a, float *slope, int i)
-{
-	int dy = a[i + 1][1] - a[i][1];
-	int dx = a[i + 1][0] - a[i][0];
-	if (dy == 0) { slope[i] = 1; }
-	if (dx == 0) { slope[i] = 0; }
-	if ((dy != 0) && (dx != 0)) // calculate inverse slope
-		slope[i] = ((float)dx / (float)dy);
+	//  Invoke the triangulator to triangulate this polygon.
+	Triangulate::Process(a, result);
 
-	return (float)slope[i];
-}
+	// print out the results.
+	// draw the results
+	int tcount = result.size() / 3;
 
+	noStroke();
+	//stroke(pBlack);
+	fill(fillColor);
 
-void polygon(int nverts, int **a)
-{
-
-}
-
-/*
-void polygon(int polyCorners, int polyX[], int polyY[])
-{
-	int IMAGE_TOP = 0;
-	int IMAGE_LEFT = 0;
-	int IMAGE_RIGHT = width-1;
-	int IMAGE_BOT = height-1;
-
-	int nodes;
-	int nodeX[MAX_POLY_CORNERS];
-	int pixelX, pixelY;
-	int i, j;
-	int swap;
-
-	//  Loop through the rows of the image.
-	for (pixelY = IMAGE_TOP; pixelY < IMAGE_BOT; pixelY++)
+	for (int i = 0; i<tcount; i++)
 	{
-		//  Build a list of nodes.
-		nodes = 0;
-		j = polyCorners - 1;
-		for (i = 0; i < polyCorners; i++) 
-		{
-			if (polyY[i] < (double)pixelY && polyY[j] >= (double)pixelY
-				|| polyY[j] < (double)pixelY && polyY[i] >= (double)pixelY)
-			{
-				nodeX[nodes++] = (int)(polyX[i] + (pixelY - polyY[i]) / (polyY[j] - polyY[i])*(polyX[j] - polyX[i]));
-			}
-			j = i;
-		}
-
-		//  Sort the nodes, via a simple “Bubble” sort.
-		i = 0;
-		while (i<nodes - 1)
-		{
-			if (nodeX[i]>nodeX[i + 1])
-			{
-				swap = nodeX[i];
-				nodeX[i] = nodeX[i + 1];
-				nodeX[i + 1] = swap;
-				if (i) i--;
-			}
-			else {
-				i++;
-			}
-		}
-
-		//  Fill the pixels between node pairs.
-		for (i = 0; i<nodes; i += 2) {
-			if (nodeX[i] >= IMAGE_RIGHT) break;
-			if (nodeX[i + 1]> IMAGE_LEFT) {
-				if (nodeX[i]< IMAGE_LEFT) nodeX[i] = IMAGE_LEFT;
-				if (nodeX[i + 1]> IMAGE_RIGHT) nodeX[i + 1] = IMAGE_RIGHT;
-				for (pixelX = nodeX[i]; pixelX < nodeX[i + 1]; pixelX++)
-					point(pixelX, pixelY);
-			}
-		}
+		const Vector2d &p1 = result[i * 3 + 0];
+		const Vector2d &p2 = result[i * 3 + 1];
+		const Vector2d &p3 = result[i * 3 + 2];
+		triangle(p1.GetX(), p1.GetY(), p2.GetX(), p2.GetY(), p3.GetX(), p3.GetY());
 	}
+
+	// draw the outline
+	stroke(strokeColor);
 }
-*/
+
+
 
 // Text Processing
 void text(const char *str, const int x, const int y)

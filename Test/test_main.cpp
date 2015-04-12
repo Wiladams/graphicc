@@ -17,7 +17,7 @@
 
 #include "drawproc.h"
 #include "test_common.h"
-
+#include "triangulate.h"
 
 static uint32_t colors[] = {
 	pBlack,
@@ -222,19 +222,33 @@ void drawBars()
 
 void drawPolygon()
 {
-	int nverts = 6;
 	int a[][2] = {
-		{12, 12},
-		{12,18},
-		{18,22},
-		{30,12},
-		{30,18},
-		{24,12}
+		{5,5},
+		{150,5},
+		{150,25},
+		{640,25},
+		{640,480},
+		{5,480}
 	};
+	int nverts = sizeof(a) / sizeof(a[0]);
 
 	fill(pYellow);
 	polygon(nverts, a);
 
+	int b[][2] = {
+		{5,25},
+		{160,25},
+		{ 160, 5 },
+		{ 250, 5 },
+		{ 250, 25 },
+		{ 640, 25 },
+		{ 640, 480 },
+		{ 5, 480 }
+	};
+	int bverts = sizeof(b) / sizeof(b[0]);
+
+	fill(pGreen);
+	polygon(bverts, b);
 
 }
 
