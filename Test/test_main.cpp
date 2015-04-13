@@ -17,7 +17,6 @@
 
 #include "drawproc.h"
 #include "test_common.h"
-#include "triangulate.h"
 
 static uint32_t colors[] = {
 	pBlack,
@@ -282,6 +281,69 @@ void drawPolygon()
 
 }
 
+void drawShapes()
+{
+	stroke(pBlack);
+	fill(pWhite);
+
+	/*
+	beginShape();
+	vertex(30, 40);
+	vertex(85, 40);
+	vertex(85, 95);
+	vertex(30, 95);
+	endShape(CLOSE);
+
+
+	beginShape(GR_POINTS);
+	vertex(100, 40);
+	vertex(155, 40);
+	vertex(155, 95);
+	vertex(100, 95);
+	endShape();
+*/
+/*
+	beginShape(GR_LINES);
+	vertex(30, 40);
+	vertex(85, 40);
+	vertex(85, 95);
+	vertex(30, 95);
+	endShape();
+*/
+/*
+	beginShape(GR_TRIANGLES);
+	vertex(30, 95);
+	vertex(40, 40);
+	vertex(50, 95);
+	vertex(60, 40);
+	vertex(70, 95);
+	vertex(80, 40);
+	endShape(1);
+*/
+	
+	beginShape(GR_QUADS);
+	vertex(30, 20);
+	vertex(30, 75);
+	vertex(50, 75);
+	vertex(50, 20);
+	vertex(65, 20);
+	vertex(65, 75);
+	vertex(85, 75);
+	vertex(85, 20);
+	endShape();
+
+/*
+beginShape(GR_POLYGON);
+	vertex(20, 40);
+	vertex(40, 40);
+	vertex(40, 60);
+	vertex(60, 60);
+	vertex(60, 80);
+	vertex(20, 80);
+	endShape(1);
+*/
+}
+
 void drawMouse()
 {
 	int mWidth = 128;
@@ -293,6 +355,24 @@ void drawMouse()
 	rect(mouseX, mouseY, mWidth, mHeight);
 }
 
+// Draw information about the mouse
+// location, buttons pressed, etc
+void drawMouseInfo()
+{
+	// draw a white banner across the top
+	noStroke();
+	fill(pWhite);
+	rect(0, 0, width, 24);
+
+	// select verdana font
+	setFont(verdana17);
+
+	// write some text
+	char infobuff[256];
+	sprintf_s(infobuff, "Mouse X: %3d Y: %3d\n", mouseX, mouseY);
+	fill(pBlack);
+	text(infobuff, 10, 0);
+}
 
 static float a;
 
@@ -313,23 +393,31 @@ void drawLinearMotion()
 	}
 }
 
+static bool dumpimage = false;
+
 LRESULT CALLBACK keyReleased(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
 	switch (wParam)
 	{
 
 	case VK_SPACE:
-		write_PPM("test_main.ppm", gpb);
+		dumpimage = true;
 		break;
 	}
 
 	return 0;
 }
 
+int desiredWidth = 640;
+int desiredHeight = 480;
+pb_rgba localpb;
+
 extern "C"
 void setup()
 {
-	size(640, 480);
+	//pb_rgba_init(&localpb, desiredWidth, desiredHeight);
+
+	size(desiredWidth, desiredHeight);
 	background(pLightGray);
 
 	a = height / 2;
@@ -364,16 +452,22 @@ void draw()
 	//drawTriangles();
 	//drawQuads();
 	//drawPolygon();
+	drawShapes();
 
 	//drawRandomRectangles();
 	//drawRandomLines();
 	//drawRandomTriangles();
-	drawBars();
+	//drawBars();
 	//drawLinearMotion();
 
 	//drawMouse();
+	drawMouseInfo();
 
-
+	if (dumpimage)
+	{
+		write_PPM_binary("test_main.ppm", gpb);
+		dumpimage = false;
+	}
 }
 
 

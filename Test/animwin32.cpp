@@ -4,6 +4,7 @@
 #include <windowsx.h>	// GET_X_LPARAM
 
 #include <math.h>
+#include <stdio.h>
 
 #define MAX_LOADSTRING 100
 
@@ -122,15 +123,11 @@ void * GetPixelBuffer(const int width, const int height)
 
 
 
-void CreateWindowHandle(int width, int height)
+void CreateWindowHandle(int lwidth, int lheight)
 {
 	UINT style = CS_HREDRAW | CS_VREDRAW | CS_OWNDC;
 
 	HMODULE hInst = ::GetModuleHandleA(NULL);
-
-	BOOL bMenu = 0;
-	RECT lpRect = {0,0,width,height};
-	BOOL err = AdjustWindowRect(&lpRect, style, bMenu);
 
 	WNDCLASSEXA wcex;
 	wcex.cbSize = sizeof(wcex);
@@ -161,12 +158,15 @@ void CreateWindowHandle(int width, int height)
 		return ;
 	}
 
+	RECT clientRECT = { 0, 0, lwidth, lheight };
+	BOOL err = AdjustWindowRect(&clientRECT, WS_CAPTION, 0);
+
 	ghWnd = ::CreateWindowExA(
 		0,
 		szWindowClass,
 		szTitle,
 		winstyle,
-		x, y, lpRect.right-lpRect.left, lpRect.bottom-lpRect.top,
+		x, y, clientRECT.right - clientRECT.left, clientRECT.bottom - clientRECT.top,
 		hWndParent,
 		hMenu,
 		hInst,
@@ -192,7 +192,6 @@ void * SetWindowSize(const int width, const int height)
 
 void OnPaint(HDC hdc, PAINTSTRUCT &ps)
 {
-	// TODO: Add any drawing code here...
 	// bitblt bmhandle to client area
 	if ((NULL != ghMemDC) && (nullptr != gPixelData)) {
 		::BitBlt(hdc, 0, 0, gbmWidth, gbmHeight, ghMemDC, 0, 0, SRCCOPY);
@@ -419,7 +418,7 @@ void eventLoop(HWND hWnd)
 		// Allow the client to do some drawing if desired
 		draw();
 
-		// Assume the 'step()' did something which requires the 
+		// Assume the 'draw()' did something which requires the 
 		// screen to be redrawn, so, invalidate the entire client area
 		InvalidateRect(hWnd, 0, TRUE);
 	}

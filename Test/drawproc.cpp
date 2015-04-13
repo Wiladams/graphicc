@@ -1,6 +1,5 @@
 
 #include "drawproc.h"
-//#include "triangulate.h"
 
 #include <vector>
 #include <math.h>
@@ -70,7 +69,7 @@ void size(const size_t lwidth, const size_t lheight)
 	gpb->frame.y = 0;
 
 	// paint the background at least once before beginning
-	raster_rgba_rect_fill(gpb, 0, 0, width, height, bgColor);
+	raster_rgba_rect_fill(gpb, 0, 0, width, height, RGBA(0,0,0,255));
 }
 
 
@@ -88,7 +87,7 @@ void background(const uint32_t value)
 	bgColor = value;
 	if ((gpb != NULL) && (width > 0) && (height > 0))
 	{
-		raster_rgba_rect_fill(gpb, 0, 0, width - 1, height - 1, bgColor);
+		raster_rgba_rect_fill(gpb, 0, 0, width, height, bgColor);
 	}
 }
 
@@ -546,15 +545,15 @@ bool triangulate_snip(const Vector2dVector &contour, int u, int v, int w, int n,
 	return true;
 }
 
-bool triangulate_process(const Vector2dVector &contour, Vector2dVector &result)
+bool triangulate_process(const Vector2dVector &contour)
 {
-	/* allocate and initialize list of Vertices in polygon */
+	// allocate and initialize list of Vertices in polygon
 	int n = contour.size();
 	if (n < 3) return false;
 
 	int *V = new int[n];
 
-	/* we want a counter-clockwise polygon in V */
+	// we want a counter-clockwise polygon in V
 
 	if (0.0f < triangle_area(contour))
 	for (int v = 0; v<n; v++) 
@@ -589,23 +588,19 @@ bool triangulate_process(const Vector2dVector &contour, Vector2dVector &result)
 			/* true names of the vertices */
 			a = V[u]; b = V[v]; c = V[w];
 
-			/* output Triangle */
+			// draw single triangle
 			triangle(contour[a].GetX(), contour[a].GetY(), 
 				contour[b].GetX(), contour[b].GetY(), 
 				contour[c].GetX(), contour[c].GetY());
 
-			//result.push_back(contour[a]);
-			//result.push_back(contour[b]);
-			//result.push_back(contour[c]);
-
 			m++;
 
-			/* remove v from remaining polygon */
+			// remove v from remaining polygon
 			for (s = v, t = v + 1; t<nv; s++, t++) 
 				V[s] = V[t]; 
 			nv--;
 
-			/* resest error detection counter */
+			// resest error detection counter
 			count = 2 * nv;
 		}
 	}
@@ -622,32 +617,119 @@ void polygon(int nverts, int *verts)
 		a.push_back(Vector2d(verts[idx*2+0], verts[idx*2+1]));
 	}
 
-	// allocate an STL vector to hold the answer.
-	Vector2dVector result;
 
-	//  Invoke the triangulator to triangulate this polygon.
+	//  Invoke the triangulator to render the polygon as triangles
 	noStroke();
-	triangulate_process(a, result);
-
-	// print out the results.
-	// draw the results
-	//int tcount = result.size() / 3;
-
-	//stroke(pBlack);
-	//fill(fillColor);
-
-	//for (int i = 0; i<tcount; i++)
-	//{
-	//	const Vector2d &p1 = result[i * 3 + 0];
-	//	const Vector2d &p2 = result[i * 3 + 1];
-	//	const Vector2d &p3 = result[i * 3 + 2];
-	//	triangle(p1.GetX(), p1.GetY(), p2.GetX(), p2.GetY(), p3.GetX(), p3.GetY());
-	//}
-
-	// draw the outline
+	bool processed = triangulate_process(a);
+		
 	stroke(strokeColor);
+	if (processed) {
+		// draw the outline
+	}
 }
 
+
+// Shape
+static int gShapeKind = 0;
+Vector2dVector gShape;
+
+
+
+void beginShape(const int shapeKind)
+{
+	gShapeKind = shapeKind;
+}
+
+void vertex(const int x, const int y)
+{
+	gShape.push_back(Vector2d(x,y));
+}
+
+void endShape(const int kindOfClose)
+{
+	int n = gShape.size();
+
+	switch (gShapeKind) {
+		case GR_POINTS:
+		for (int idx = 0; idx < n; idx++){
+			point(gShape[idx].GetX(), gShape[idx].GetY());
+		}
+		break;
+
+		case GR_LINES: {
+			if (kindOfClose == OPEN) {
+				int nLines = n / 2;
+				for (int idx = 0; idx < nLines; idx++)
+				{
+					line(gShape[idx * 2].GetX(), gShape[idx * 2].GetY(), gShape[(idx * 2) + 1].GetX(), gShape[(idx * 2) + 1].GetY());
+				}
+			}
+			else if (kindOfClose == CLOSE) {
+				// Polygon
+				noStroke();
+				bool processed = triangulate_process(gShape);
+			}
+		} 
+		break;
+	
+		case GR_LINE_STRIP:
+			for (int idx = 0; idx < n - 1; idx++) {
+				line(gShape[idx].GetX(), gShape[idx].GetY(), gShape[idx + 1].GetX(), gShape[idx + 1].GetY());
+			}
+		break;
+
+		case GR_LINE_LOOP:
+			for (int idx = 0; idx < n - 1; idx++) {
+				line(gShape[idx].GetX(), gShape[idx].GetY(), gShape[idx + 1].GetX(), gShape[idx + 1].GetY());
+			}
+			line(gShape[n - 1].GetX(), gShape[n - 1].GetY(), gShape[0].GetX(), gShape[0].GetY());
+		break;
+
+		case GR_POLYGON: {
+			//  Invoke the triangulator to render the polygon as triangles
+			noStroke();
+			bool processed = triangulate_process(gShape);
+
+			//stroke(strokeColor);
+			//if (processed) {
+			// draw the outline
+			//}
+		}
+		break;
+		
+		case GR_QUADS: {
+			int nTris = n / 4;
+			for (int idx = 0; idx < nTris; idx++) {
+				int offset = idx * 4;
+				quad(gShape[offset].GetX(), gShape[offset].GetY(),
+					gShape[(offset)+1].GetX(), gShape[(offset)+1].GetY(),
+					gShape[(offset)+2].GetX(), gShape[(offset)+2].GetY(),
+					gShape[(offset)+3].GetX(), gShape[(offset)+3].GetY());
+			}
+		} 
+		break;
+
+	case GR_QUAD_STRIP:
+		break;
+	case GR_TRIANGLES:
+		{
+			int nTris = n / 3;
+			for (int idx = 0; idx < nTris; idx++)
+			{
+				triangle(gShape[idx * 3].GetX(), gShape[idx * 3].GetY(), 
+					gShape[(idx * 3) + 1].GetX(), gShape[(idx * 3) + 1].GetY(), 
+					gShape[(idx * 3) + 2].GetX(), gShape[(idx * 3) + 2].GetY());
+			}
+		} 
+		break;
+	case GR_TRIANGLE_STRIP:
+		break;
+	case GR_TRIANGLE_FAN:
+		break;
+	}
+
+	gShape.clear();
+}
 
 
 // Text Processing

@@ -26,7 +26,38 @@ int read_PPM(const char *filename, pb_rgba *fb)
 	return -1;
 }
 
-int write_PPM(const char *filename, pb_rgba *fb)
+int write_PPM_ascii(const char *filename, pb_rgba *fb)
+{
+	FILE * fp = fopen(filename, "wb");
+
+	if (!fp) return -1;
+
+	// write out the image header
+	fprintf(fp, "P3\n%d %d\n255\n", fb->frame.width, fb->frame.height);
+
+	// write the individual pixel values in binary form
+	uint32_t * pixelPtr = (uint32_t *)fb->data;
+	uint8_t rgb[3];
+
+	for (int row = 0; row < fb->frame.height; row++) {
+		for (int col = 0; col < fb->frame.width; col++){
+			rgb[0] = GET_R(*pixelPtr);
+			rgb[1] = GET_G(*pixelPtr);
+			rgb[2] = GET_B(*pixelPtr);
+			fprintf(fp, "%3d %3d %3d  ", rgb[0], rgb[1], rgb[2]);
+		}
+		pixelPtr += fb->pixelpitch;
+		fprintf(fp,"\n");
+	}
+
+
+	fclose(fp);
+
+	return 0;
+}
+
+
+int write_PPM_binary(const char *filename, pb_rgba *fb)
 {
 	FILE * fp = fopen(filename, "wb");
 	
@@ -36,16 +67,16 @@ int write_PPM(const char *filename, pb_rgba *fb)
 	fprintf(fp, "P6\n%d %d\n255\n", fb->frame.width, fb->frame.height);
 	
 	// write the individual pixel values in binary form
-	uint32_t * pixelPtr = (unsigned int *)fb->data;
+	uint32_t * pixelPtr = (uint32_t *)fb->data;
 	uint8_t rgb[3];
 
 	for (int row = 0; row < fb->frame.height; row++) {
 		for (int col = 0; col < fb->frame.width; col++){
-			rgb[0] = GET_R(*pixelPtr);
-			rgb[1] = GET_G(*pixelPtr);
-			rgb[2] = GET_B(*pixelPtr);
-			//fwrite((void *)&rgb[0], 3, 1, fp);
-			fwrite(&pixelPtr[col], 3, 1, fp);
+			rgb[0] = GET_R(pixelPtr[col]);
+			rgb[1] = GET_G(pixelPtr[col]);
+			rgb[2] = GET_B(pixelPtr[col]);
+			fwrite((void *)&rgb[0], 3, 1, fp);
+			//fwrite(&pixelPtr[col], 3, 1, fp);
 		}
 		pixelPtr += fb->pixelpitch;
 	}

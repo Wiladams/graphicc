@@ -24,6 +24,9 @@ limitations under the License.
 #include <string.h>
 #include <math.h>
 
+#define BGR_DOMINANT 1
+
+
 typedef float	float32;
 typedef double	float64;
 typedef double	REAL;
@@ -89,7 +92,8 @@ enum pixellayouts {
 #define RGBA(r,g,b,a) ((uint32_t)(a<<24|r<<16|g<<8|b))
 #define GET_B(value) ((uint32_t)value &0xff)
 #define GET_G(value) (((uint32_t)value &0xff00) >> 8)
-#define GET_R(value) (((uint32_t)value &0xff0000) >> 16)
+inline uint8_t GET_R(const uint32_t value) {return (((uint32_t)value & 0xff0000) >> 16);}
+
 #define GET_A(value) (((uint32_t)value &0xff000000) >> 24)
 #else
 #define RGBA(r,g,b,a) ((uint32_t)(a<<24|b<<16|g<<8|r))
@@ -325,7 +329,8 @@ extern "C" {
 #endif
 
 	int read_PPM(const char *filename, pb_rgba *fb);
-	int write_PPM(const char *filename, pb_rgba *fb);
+	int write_PPM_binary(const char *filename, pb_rgba *fb);
+	int write_PPM_ascii(const char *filename, pb_rgba *fb);
 
 #ifdef __cplusplus
 }

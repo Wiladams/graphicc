@@ -42,6 +42,11 @@ typedef enum GEOMETRY {
 	GR_TRIANGLE_FAN
 };
 
+typedef enum KindOfClose {
+	OPEN,
+	CLOSE
+};
+
 // Global variables
 extern size_t width;
 extern size_t height;
@@ -122,8 +127,8 @@ void point(const int x, const int y);
 void rect(const int a, const int b, const int c, const int d);
 void quad(const int x1, const int y1, const int x2, const int y2, const int x3, const int y3, const int x4, const int y4);
 void triangle(const int x1, const int y1, const int x2, const int y2, const int x3, const int y3);
-//void polygon(int polyCorners, int polyX[], int polyY[]);
 void polygon(int nverts, int *a);
+
 // Text
 extern font_t gfont;
 
@@ -140,6 +145,10 @@ void text(const char *str, const int x, const int y);
 // textAscent()
 // textDescent()
 
+// Shape
+void beginShape(const int shapeKind = GR_POLYGON);
+void vertex(const int x, const int y);
+void endShape(const int kindOfClose = OPEN);
 
 // Math
 int random(static const int);
