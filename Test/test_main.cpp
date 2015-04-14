@@ -293,7 +293,7 @@ void drawShapes()
 	vertex(85, 95);
 	vertex(30, 95);
 	endShape(CLOSE);
-
+	*/
 
 	beginShape(GR_POINTS);
 	vertex(100, 40);
@@ -301,7 +301,7 @@ void drawShapes()
 	vertex(155, 95);
 	vertex(100, 95);
 	endShape();
-*/
+
 /*
 	beginShape(GR_LINES);
 	vertex(30, 40);
@@ -320,28 +320,28 @@ void drawShapes()
 	vertex(80, 40);
 	endShape(1);
 */
-	
+
 	beginShape(GR_QUADS);
-	vertex(30, 20);
-	vertex(30, 75);
-	vertex(50, 75);
-	vertex(50, 20);
-	vertex(65, 20);
-	vertex(65, 75);
-	vertex(85, 75);
-	vertex(85, 20);
+	vertex(30, 40);
+	vertex(30, 95);
+	vertex(50, 95);
+	vertex(50, 40);
+	vertex(65, 40);
+	vertex(65, 95);
+	vertex(85, 95);
+	vertex(85, 40);
 	endShape();
 
-/*
+
 beginShape(GR_POLYGON);
-	vertex(20, 40);
-	vertex(40, 40);
-	vertex(40, 60);
-	vertex(60, 60);
-	vertex(60, 80);
-	vertex(20, 80);
+	vertex(20, 140);
+	vertex(40, 140);
+	vertex(40, 160);
+	vertex(60, 160);
+	vertex(60, 180);
+	vertex(20, 180);
 	endShape(1);
-*/
+
 }
 
 void drawMouse()

@@ -36,6 +36,33 @@ uint32_t fillColor = RGBA(255, 255, 255, 255);
 // Text Settings
 font_t gfont;
 
+class Vector2d
+{
+public:
+	Vector2d(float x, float y)
+	{
+		Set(x, y);
+	};
+
+	float GetX(void) const { return mX; };
+
+	float GetY(void) const { return mY; };
+
+	void  Set(float x, float y)
+	{
+		mX = x;
+		mY = y;
+	};
+private:
+	float mX;
+	float mY;
+};
+
+// Typedef an STL vector of vertices which are used to represent
+// a polygon/contour and a series of triangles.
+typedef std::vector< Vector2d > Vector2dVector;
+
+
 void init()
 {
 	// Setup text
@@ -267,6 +294,21 @@ void line(const int x1, const int y1, const int x2, const int y2)
 	raster_rgba_line(gpb, xx1, yy1, xx2, yy2, strokeColor);
 }
 
+void lineloop(const Vector2dVector &pts)
+{
+	int nPts = pts.size();
+	
+	// we need at least 3 points to make a closed loop
+	if (nPts < 3)
+		return;
+
+	for (int idx = 0; idx < nPts - 1; idx++)
+	{
+		line(pts[idx].GetX(), pts[idx].GetY(), pts[idx + 1].GetX(), pts[idx + 1].GetY());
+	}
+	line(pts[nPts - 1].GetX(), pts[nPts - 1].GetY(), pts[0].GetX(), pts[0].GetY());
+}
+
 void lineloop(const size_t nPts, const int *pts)
 {
 	if (nPts < 2)
@@ -450,31 +492,7 @@ int pointInPolygon(int polyCorners, int polyX[], int polyY[], const int x, const
 // Draw a polygon
 
 
-class Vector2d
-{
-public:
-	Vector2d(float x, float y)
-	{
-		Set(x, y);
-	};
 
-	float GetX(void) const { return mX; };
-
-	float GetY(void) const { return mY; };
-
-	void  Set(float x, float y)
-	{
-		mX = x;
-		mY = y;
-	};
-private:
-	float mX;
-	float mY;
-};
-
-// Typedef an STL vector of vertices which are used to represent
-// a polygon/contour and a series of triangles.
-typedef std::vector< Vector2d > Vector2dVector;
 
 
 float triangle_area(const Vector2dVector &contour)
@@ -610,6 +628,20 @@ bool triangulate_process(const Vector2dVector &contour)
 	return true;
 }
 
+void polygon(const Vector2dVector &pts)
+{
+	uint32_t oldStroke = strokeColor;
+
+	//  Invoke the triangulator to render the polygon as triangles
+	noStroke();
+	bool processed = triangulate_process(pts);
+
+	stroke(oldStroke);
+	if (processed) {
+		lineloop(pts);
+	}
+}
+
 void polygon(int nverts, int *verts)
 {
 	Vector2dVector a;
@@ -625,6 +657,7 @@ void polygon(int nverts, int *verts)
 	stroke(strokeColor);
 	if (processed) {
 		// draw the outline
+		lineloop(a);
 	}
 }
 
@@ -648,6 +681,7 @@ void vertex(const int x, const int y)
 void endShape(const int kindOfClose)
 {
 	int n = gShape.size();
+	uint32_t oldStroke = strokeColor;
 
 	switch (gShapeKind) {
 		case GR_POINTS:
@@ -665,9 +699,7 @@ void endShape(const int kindOfClose)
 				}
 			}
 			else if (kindOfClose == CLOSE) {
-				// Polygon
-				noStroke();
-				bool processed = triangulate_process(gShape);
+				polygon(gShape);
 			}
 		} 
 		break;
@@ -679,21 +711,11 @@ void endShape(const int kindOfClose)
 		break;
 
 		case GR_LINE_LOOP:
-			for (int idx = 0; idx < n - 1; idx++) {
-				line(gShape[idx].GetX(), gShape[idx].GetY(), gShape[idx + 1].GetX(), gShape[idx + 1].GetY());
-			}
-			line(gShape[n - 1].GetX(), gShape[n - 1].GetY(), gShape[0].GetX(), gShape[0].GetY());
+			lineloop(gShape);
 		break;
 
 		case GR_POLYGON: {
-			//  Invoke the triangulator to render the polygon as triangles
-			noStroke();
-			bool processed = triangulate_process(gShape);
-
-			//stroke(strokeColor);
-			//if (processed) {
-			// draw the outline
-			//}
+			polygon(gShape);
 		}
 		break;
 		
