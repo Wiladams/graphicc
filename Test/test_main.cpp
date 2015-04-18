@@ -286,14 +286,14 @@ void drawShapes()
 	stroke(pBlack);
 	fill(pWhite);
 
-	/*
+	
 	beginShape();
 	vertex(30, 40);
 	vertex(85, 40);
 	vertex(85, 95);
 	vertex(30, 95);
 	endShape(CLOSE);
-	*/
+	
 
 	beginShape(GR_POINTS);
 	vertex(100, 40);
@@ -302,44 +302,44 @@ void drawShapes()
 	vertex(100, 95);
 	endShape();
 
-/*
+
 	beginShape(GR_LINES);
-	vertex(30, 40);
-	vertex(85, 40);
-	vertex(85, 95);
-	vertex(30, 95);
+	vertex(230, 40);
+	vertex(285, 40);
+	vertex(285, 95);
+	vertex(230, 95);
 	endShape();
-*/
-/*
+
+
 	beginShape(GR_TRIANGLES);
-	vertex(30, 95);
-	vertex(40, 40);
-	vertex(50, 95);
-	vertex(60, 40);
-	vertex(70, 95);
-	vertex(80, 40);
+	vertex(30, 195);
+	vertex(40, 140);
+	vertex(50, 195);
+	vertex(60, 140);
+	vertex(70, 195);
+	vertex(80, 140);
 	endShape(1);
-*/
 
+	
 	beginShape(GR_QUADS);
-	vertex(30, 40);
-	vertex(30, 95);
-	vertex(50, 95);
-	vertex(50, 40);
-	vertex(65, 40);
-	vertex(65, 95);
-	vertex(85, 95);
-	vertex(85, 40);
+	vertex(130, 140);
+	vertex(130, 195);
+	vertex(150, 195);
+	vertex(150, 140);
+	vertex(165, 140);
+	vertex(165, 195);
+	vertex(185, 195);
+	vertex(185, 140);
 	endShape();
-
+	
 
 beginShape(GR_POLYGON);
-	vertex(20, 140);
-	vertex(40, 140);
-	vertex(40, 160);
-	vertex(60, 160);
-	vertex(60, 180);
-	vertex(20, 180);
+	vertex(220, 140);
+	vertex(240, 140);
+	vertex(240, 160);
+	vertex(260, 160);
+	vertex(260, 180);
+	vertex(220, 180);
 	endShape(1);
 
 }
