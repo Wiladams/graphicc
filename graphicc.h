@@ -15,7 +15,10 @@ limitations under the License.
 */
 
 #pragma once
+
+
 #pragma comment(lib,"graphicc.lib")
+
 
 #ifndef graphicc_h
 #define graphicc_h
