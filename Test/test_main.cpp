@@ -49,7 +49,8 @@ static int numcolors = 0;
 static int bargap = 4;
 static int numbars = 10;
 static int barwidth = 0;
-
+static int frameCount = 0;
+static double starttime = 0;
 
 typedef struct {
 	uint32_t color;
@@ -135,17 +136,22 @@ void drawQuads()
 
 void drawRandomLines()
 {
-	for (int cnt = 1001; cnt; cnt--)
+	int halfsize = 20;
+
+	for (int cnt = 10001; cnt; cnt--)
 	{
 		uint8_t r = rand() % 255;
 		uint8_t g = rand() % 255;
 		uint8_t b = rand() % 255;
 		uint32_t c = RGBA(r, g, b, 255);
 
-		int x1 = rand() % width - 1;
-		int y1 = rand() % height - 1;
-		int x2 = rand() % width - 1;
-		int y2 = rand() % height - 1;
+		int x = rand() % width - 1;
+		int y = rand() % height - 1;
+
+		int x1 = x - rand() % halfsize - 1;
+		int y1 = y - rand() % halfsize - 1;
+		int x2 = x + rand() % halfsize - 1;
+		int y2 = y + rand() % halfsize - 1;
 
 		stroke(c);
 		line(x1, y1, x2, y2);
@@ -368,8 +374,10 @@ void drawMouseInfo()
 	setFont(verdana17);
 
 	// write some text
+	double fps = (double)frameCount / seconds();
+
 	char infobuff[256];
-	sprintf_s(infobuff, "Mouse X: %3d Y: %3d\n", mouseX, mouseY);
+	sprintf_s(infobuff, "Mouse X: %3d Y: %3d\tFPS: %f\n", mouseX, mouseY, fps);
 	fill(pBlack);
 	text(infobuff, 10, 0);
 }
@@ -415,7 +423,6 @@ pb_rgba localpb;
 extern "C"
 void setup()
 {
-	//pb_rgba_init(&localpb, desiredWidth, desiredHeight);
 
 	size(desiredWidth, desiredHeight);
 	background(pLightGray);
@@ -438,11 +445,14 @@ void setup()
 	}
 
 	setOnKeyReleasedHandler(keyReleased);
+	resettime();
 }
 
 extern "C"
 void draw()
 {
+	frameCount++;
+
 	background(pLightGray);
 
 	//drawEllipses();
@@ -452,10 +462,10 @@ void draw()
 	//drawTriangles();
 	//drawQuads();
 	//drawPolygon();
-	drawShapes();
+	//drawShapes();
 
 	//drawRandomRectangles();
-	//drawRandomLines();
+	drawRandomLines();
 	//drawRandomTriangles();
 	//drawBars();
 	//drawLinearMotion();
