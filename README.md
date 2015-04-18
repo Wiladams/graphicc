@@ -41,6 +41,7 @@ Interesting libraries
 2. **Netpbm** - http://netpbm.sourceforge.net/
 3. **AntiGrain** - http://antigrain.com/
 4. Paul Heckbert's **Zoom** - http://user.xmission.com/~legalize/zoom.html
+5. **caca labs** - http://caca.zoy.org/wiki
 
 Books
 ==================

@@ -15,18 +15,6 @@ int grectMode = CORNER;
 int gellipseMode = CORNER;
 
 
-/*
-// Keyboard
-int keyCode = 0;
-int key = 0;
-int isKeyPressed = 0;
-
-// Mouse
-int mouseX = 0;
-int mouseY = 0;
-bool isMousePressed = false;
-int mouseButton = 0;
-*/
 // color setting
 uint32_t bgColor = pDarkGray;
 pb_rgba *bgImage = nullptr;
@@ -109,6 +97,10 @@ void loop()
 	setDrawInLoop(true);
 }
 
+void redraw()
+{
+	forceDraw();
+}
 
 // Math
 int random(const int rndMax)

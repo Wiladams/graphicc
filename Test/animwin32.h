@@ -34,6 +34,7 @@ double seconds();
 void resettime();
 
 void setDrawInLoop(bool);
+void forceDraw();
 
 // Callback functions
 typedef LRESULT(CALLBACK* WinProcHandler)(HWND, UINT, WPARAM, LPARAM);

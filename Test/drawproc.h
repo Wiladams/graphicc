@@ -6,18 +6,8 @@
 #include "test_common.h"
 #include "agg_embedded_raster_fonts.h"
 
-/*
-#ifdef __cplusplus
-extern "C" {
-#endif
-	// MUST BE IMPLEMENTED BY TEST CASE
-	void draw();
-	void setup();
 
-#ifdef __cplusplus
-}
-#endif
-*/
+void redraw();
 
 /*
 Drawing API

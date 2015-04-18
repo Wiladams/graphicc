@@ -60,16 +60,13 @@ typedef struct {
 bar *bars;
 
 
-
-
-
 void drawPoints()
 {
 	stroke(pBlack);
-	point(130, 20);
-	point(185, 20);
-	point(185, 75);
-	point(130, 75);
+	point(130, 60);
+	point(185, 60);
+	point(185, 115);
+	point(130, 115);
 }
 
 void drawLines()
@@ -395,18 +392,36 @@ void drawLinearMotion()
 	}
 
 
-	a = a - 0.02;
+	a = a - 0.5;
 	if (a < 0) {
 		a = height;
 	}
 }
 
 static bool dumpimage = false;
+static const int nRoutines = 12;
+static int currentRoutine = 0;
+int desiredWidth = 640;
+int desiredHeight = 480;
+pb_rgba localpb;
 
 LRESULT CALLBACK keyReleased(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
 	switch (wParam)
 	{
+	case VK_RIGHT:
+		currentRoutine++;
+		if (currentRoutine >= nRoutines) {
+			currentRoutine = 0;
+		}
+		break;
+
+	case VK_LEFT:
+		currentRoutine--;
+		if (currentRoutine < 0) {
+			currentRoutine = nRoutines - 1;
+		}
+		break;
 
 	case VK_SPACE:
 		dumpimage = true;
@@ -416,9 +431,7 @@ LRESULT CALLBACK keyReleased(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPar
 	return 0;
 }
 
-int desiredWidth = 640;
-int desiredHeight = 480;
-pb_rgba localpb;
+
 
 extern "C"
 void setup()
@@ -448,6 +461,27 @@ void setup()
 	resettime();
 }
 
+typedef void (* DrawingHandler)();
+
+
+DrawingHandler gDrawRoutines[] = {
+	drawEllipses,
+	drawLines,
+	drawPoints,
+	drawRects,
+	drawTriangles,
+	drawQuads,
+	//drawPolygon,
+	drawShapes,
+
+	drawRandomRectangles,
+	drawRandomLines,
+	drawRandomTriangles,
+	drawBars,
+	drawLinearMotion
+
+};
+
 extern "C"
 void draw()
 {
@@ -455,20 +489,10 @@ void draw()
 
 	background(pLightGray);
 
-	//drawEllipses();
-	//drawLines();
-	//drawPoints();
-	//drawRects();
-	//drawTriangles();
-	//drawQuads();
-	//drawPolygon();
-	//drawShapes();
+	DrawingHandler handler = gDrawRoutines[currentRoutine];
+	handler();
 
-	//drawRandomRectangles();
-	//drawRandomLines();
-	drawRandomTriangles();
-	//drawBars();
-	//drawLinearMotion();
+
 
 	//drawMouse();
 	drawMouseInfo();

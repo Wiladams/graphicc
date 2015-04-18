@@ -414,6 +414,13 @@ void setDrawInLoop(bool doDraw)
 	gDrawDuringLoop = doDraw;
 }
 
+void forceDraw()
+{
+	// Assume the 'draw()' did something which requires the 
+	// screen to be redrawn, so, invalidate the entire client area
+	InvalidateRect(ghWnd, 0, TRUE);
+}
+
 void eventLoop(HWND hWnd)
 {
 	MSG msg;
