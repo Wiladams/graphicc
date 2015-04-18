@@ -25,8 +25,10 @@ void *gPixelData = nullptr;
 static int gbmWidth = 0;
 static int gbmHeight = 0;
 bool continueRunning = true;
+bool gDrawDuringLoop = true;
 
 
+static EventObserverHandler gOnIdleHandler = nullptr;
 
 // Keyboard event handlers
 static KeyboardHandler gkbdHandler = nullptr;
@@ -204,6 +206,10 @@ void quit()
 	continueRunning = false;
 }
 
+void setOnIdleHandler(EventObserverHandler handler)
+{
+	gOnIdleHandler = handler;
+}
 
 void setKeyboardHandler(KeyboardHandler handler)
 {
@@ -403,9 +409,18 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	return 0;
 }
 
+void setDrawInLoop(bool doDraw)
+{
+	gDrawDuringLoop = doDraw;
+}
+
 void eventLoop(HWND hWnd)
 {
 	MSG msg;
+
+	// call draw at least once before we start looping
+	draw();
+	InvalidateRect(hWnd, 0, TRUE);
 
 	while (continueRunning)
 	{
@@ -414,13 +429,24 @@ void eventLoop(HWND hWnd)
 			TranslateMessage(&msg);
 			DispatchMessage(&msg);
 		}
+		
+		// routine to be called during idle times
+		// pretty much the same as calling the draw() routine
+		// except it's a function pointer, and it won't be subject
+		// to framerate timing
+		if (gOnIdleHandler) {
+			gOnIdleHandler();
+		}
 
-		// Allow the client to do some drawing if desired
-		draw();
+		if (gDrawDuringLoop) {
+			// This should adhere to a framerate 
+			// if one is specified
+			draw();
 
-		// Assume the 'draw()' did something which requires the 
-		// screen to be redrawn, so, invalidate the entire client area
-		InvalidateRect(hWnd, 0, TRUE);
+			// Assume the 'draw()' did something which requires the 
+			// screen to be redrawn, so, invalidate the entire client area
+			InvalidateRect(hWnd, 0, TRUE);
+		}
 	}
 }
 

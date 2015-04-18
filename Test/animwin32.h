@@ -33,12 +33,15 @@ void quit();
 double seconds();
 void resettime();
 
+void setDrawInLoop(bool);
 
 // Callback functions
 typedef LRESULT(CALLBACK* WinProcHandler)(HWND, UINT, WPARAM, LPARAM);
 typedef LRESULT(CALLBACK* KeyboardHandler)(HWND, UINT, WPARAM, LPARAM);
 typedef LRESULT(CALLBACK*MouseHandler)(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
 typedef void(CALLBACK *EventObserverHandler)();
+
+void setOnIdleHandler(EventObserverHandler handler);
 
 void setKeyboardHandler(KeyboardHandler handler);
 void setOnKeyPressed(KeyboardHandler handler);
@@ -50,6 +53,7 @@ void setOnMousePressedHandler(EventObserverHandler handler);
 void setOnMouseWheelHandler(MouseHandler handler);
 void setOnMouseMovedHandler(MouseHandler handler);
 void setOnMouseDraggedHandler(MouseHandler handler);
+
 
 #ifdef __cplusplus
 }

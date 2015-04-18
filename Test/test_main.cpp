@@ -462,11 +462,11 @@ void draw()
 	//drawTriangles();
 	//drawQuads();
 	//drawPolygon();
-	drawShapes();
+	//drawShapes();
 
 	//drawRandomRectangles();
 	//drawRandomLines();
-	//drawRandomTriangles();
+	drawRandomTriangles();
 	//drawBars();
 	//drawLinearMotion();
 

@@ -99,7 +99,15 @@ void size(const size_t lwidth, const size_t lheight)
 	raster_rgba_rect_fill(gpb, 0, 0, width, height, RGBA(0,0,0,255));
 }
 
+void noLoop()
+{
+	setDrawInLoop(false);
+}
 
+void loop()
+{
+	setDrawInLoop(true);
+}
 
 
 // Math

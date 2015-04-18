@@ -66,6 +66,8 @@ extern int gellipseMode;
 
 // Initialization
 void init();
+void noLoop();
+void loop();
 
 // Drawing API
 void size(const size_t width, const size_t height);

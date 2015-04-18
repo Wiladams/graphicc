@@ -17,6 +17,7 @@ limitations under the License.
 /*
 	References:
 		http://joshbeam.com/articles/triangle_rasterization/
+		http://www.sunshine2k.de/coding/java/TriangleRasterization/TriangleRasterization.html
 */
 
 #include "raster_rgba.h"
@@ -34,7 +35,7 @@ void point2d_init(point2d &pt, const int x, const int y)
 	pt.x = x;
 	pt.y = y;
 }
-
+/*
 typedef struct _edge
 {
 	int Color1;
@@ -53,7 +54,7 @@ void edge_init(edge &e, int x1, int y1, int color1, int x2, int y2, int color2)
 	e.Y1 = y1;
 	e.Y2 = y2;
 }
-
+*/
 
 int FindTopmostPolyVertex(const point2d *poly, const size_t nelems)
 {
@@ -119,53 +120,6 @@ void sortTriangle(point2d *sorted, const int x1, const int y1, const int x2, con
 		break;
 	}
 }
-
-/*
-void raster_rgba_draw_spans_between_edges(pb_rgba *pb, const edge &e1, const edge &e2)
-{
-	// calculate difference between the y coordinates
-	// of the first edge and return if 0
-	float e1ydiff = (float)(e1.Y2 - e1.Y1);
-	if (e1ydiff == 0.0f)
-		return;
-
-	// calculate difference between the y coordinates
-	// of the second edge and return if 0
-	float e2ydiff = (float)(e2.Y2 - e2.Y1);
-	if (e2ydiff == 0.0f)
-		return;
-
-	// calculate differences between the x coordinates
-	// and colors of the points of the edges
-	float e1xdiff = (float)(e1.X2 - e1.X1);
-	float e2xdiff = (float)(e2.X2 - e2.X1);
-	int e1colordiff = (e1.Color2 - e1.Color1);
-	int e2colordiff = (e2.Color2 - e2.Color1);
-
-	// calculate factors to use for interpolation
-	// with the edges and the step values to increase
-	// them by after drawing each span
-	float factor1 = (float)(e2.Y1 - e1.Y1) / e1ydiff;
-	float factorStep1 = 1.0f / e1ydiff;
-	float factor2 = 0.0f;
-	float factorStep2 = 1.0f / e2ydiff;
-
-	// loop through the lines between the edges and draw spans
-	for (int y = e2.Y1; y < e2.Y2; y++) {
-		int spanlength = e2.X1 + (int)(e2xdiff * factor2) - e1.X1 + (int)(e1xdiff * factor1);
-		// draw the span
-		//raster_rgba_draw_span(pb, e1.X1 + (int)(e1xdiff * factor1), e1.Color1 + (e1colordiff * factor1),
-		//	e2.X1 + (int)(e2xdiff * factor2), e2.Color1 + (e2colordiff * factor2), y);
-		
-		
-		//raster_rgba_hline(pb, e1.X1 + (int)(e1xdiff * factor1), y, spanlength, e1.Color1);
-		raster_rgba_hline_blend(pb, e1.X1 + (int)(e1xdiff * factor1), y, spanlength, e1.Color1);
-		// increase factors
-		factor1 += factorStep1;
-		factor2 += factorStep2;
-	}
-}
-*/
 
 void raster_rgba_triangle_fill(pb_rgba *pb, 
 	const unsigned int x1, const unsigned int  y1, 
@@ -254,71 +208,3 @@ void raster_rgba_triangle_fill(pb_rgba *pb,
 	}
 }
 
-
-/*
-// http://www.sunshine2k.de/coding/java/TriangleRasterization/TriangleRasterization.html
-void fillBottomFlatTriangle(pb_rgba *pb,
-	const int v1x, const int v1y,
-	const int v2x, const int v2y,
-	const int v3x, const int v3y)
-{
-	float invslope1 = (v2x - v1x) / (v2y - v1y);
-	float invslope2 = (v3x - v1x) / (v3y - v1y);
-
-	float curx1 = v1x;
-	float curx2 = v1x;
-
-	for (int scanlineY = v1.y; scanlineY <= v2.y; scanlineY++)
-	{
-		line((int)curx1, scanlineY, (int)curx2, scanlineY);
-		curx1 += invslope1;
-		curx2 += invslope2;
-	}
-}
-
-
-void fillTopFlatTriangle(Vertice v1, Vertice v2, Vertice v3)
-{
-float invslope1 = (v3.x - v1.x) / (v3.y - v1.y);
-float invslope2 = (v3.x - v2.x) / (v3.y - v2.y);
-
-float curx1 = v3.x;
-float curx2 = v3.x;
-
-for (int scanlineY = v3.y; scanlineY > v1.y; scanlineY--)
-{
-curx1 -= invslope1;
-curx2 -= invslope2;
-drawLine((int)curx1, scanlineY, (int)curx2, scanlineY);
-}
-}
-*/
-/*
-void raster_triangle_fill(pb_rgba *pb,
-	const unsigned int x1, const unsigned int  y1,
-	const unsigned int  x2, const unsigned int  y2,
-	const unsigned int  x3, const unsigned int  y3,
-	int color)
-{
-	// at first sort the three vertices by y-coordinate ascending so v1 is the topmost vertice
-	point2d sorted[3];
-	sortTriangle(sorted, x1, y1, x2, y2, x3, y3);
-
-	// here we know that v1.y <= v2.y <= v3.y
-	// check for trivial case of bottom-flat triangle
-	if (sorted[1].y == sorted[2].y)
-	{
-		fillBottomFlatTriangle(pb_rgba *pb, v1, v2, v3, color);
-	} else if (vt1.y == vt2.y)
-	{
-		// check for trivial case of top-flat triangle
-		fillTopFlatTriangle(g, vt1, vt2, vt3);
-	} else {
-		// general case - split the triangle in a topflat and bottom-flat one
-		Vertice v4 = new Vertice(
-		(int)(vt1.x + ((float)(vt2.y - vt1.y) / (float)(vt3.y - vt1.y)) * (vt3.x - vt1.x)), vt2.y);
-		fillBottomFlatTriangle(g, vt1, vt2, v4);
-		fillTopFlatTriangle(g, vt2, v4, vt3);
-	}
-}
-*/
