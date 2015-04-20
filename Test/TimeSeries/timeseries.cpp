@@ -11,6 +11,9 @@ static const int COLUMN_COFFEE = 3;
 
 bool isValid(const int row, const int col);
 void drawDataPoints(const int col);
+void drawTitle();
+void drawYearLabels();
+
 LRESULT CALLBACK keyPressed(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
 
 // Data ranges
@@ -20,6 +23,7 @@ float dataMax;
 // year ranges
 int yearMin;
 int yearMax;
+int yearInterval = 10;
 
 // plot area
 float plotX1, plotY1;
@@ -116,7 +120,6 @@ void setup()
 
 	size(720, 405);
 
-	//noLoop();
 	dataMin = 0;
 	dataMax = getDataMax();
 	columnCount = 3;
@@ -129,7 +132,7 @@ void setup()
 	plotY1 = 60;
 	plotY2 = height - plotY1;
 
-	setFont(verdana18_bold);
+	//setFont(verdana18_bold);
 
 	//smooth();
 }
@@ -144,19 +147,27 @@ void draw()
 	noStroke();
 	rect(plotX1, plotY1, plotX2, plotY2);
 
-	// draw title of current plot
-	fill((uint8_t)0);
-	//textSize(20);
-	const char * title = getColumnName(currentColumn);
-	text(title, plotX1, plotY1 - 20);
+	drawTitle();
 
 	// plot the actual columnar data
 	stroke(RGBA(0x56, 0x79, 0xc1, 255));
 	strokeWeight(5);
 	drawDataPoints(currentColumn);
+
+	drawYearLabels();
 }
 
 
+void drawTitle()
+{
+	setFont(verdana18_bold);
+
+	// draw title of current plot
+	fill((uint8_t)0);
+	//textSize(20);
+	const char * title = getColumnName(currentColumn);
+	text(title, plotX1, plotY1 - 20);
+}
 
 void drawDataPoints(const int col)
 {
@@ -166,6 +177,29 @@ void drawDataPoints(const int col)
 			float x = MAP(data[row].year, yearMin, yearMax, plotX1, plotX2);
 			float y = MAP(value, dataMin, dataMax, plotY2, plotY1);
 			point(x, y);
+		}
+	}
+}
+
+void drawYearLabels()
+{
+	char yearstr[10];
+
+	setFont(gse7x11);
+
+	stroke(RGBA(224, 224, 224,255));
+	strokeWeight(1);
+	
+	fill(pBlack);
+	//textSize(10);
+	//textAlign(CENTER, TOP);
+
+	for (int row = 0; row < rowCount; row++) {
+		if (data[row].year % yearInterval == 0) {
+			float x = MAP(data[row].year, yearMin, yearMax, plotX1, plotX2);
+			sprintf_s(yearstr, "%4d", data[row].year);
+			text(yearstr, x, plotY2 + 10);
+			line(x, plotY1, x, plotY2);
 		}
 	}
 }
@@ -188,6 +222,8 @@ LRESULT CALLBACK keyPressed(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 		}
 		break;
 	}
+
+
 
 	return 0;
 }
