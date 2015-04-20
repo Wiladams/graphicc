@@ -19,6 +19,7 @@ int gellipseMode = CORNER;
 uint32_t bgColor = pDarkGray;
 pb_rgba *bgImage = nullptr;
 uint32_t strokeColor = RGBA(0, 0, 0, 255);
+float gstrokeWeight = 1;
 uint32_t fillColor = RGBA(255, 255, 255, 255);
 
 // Text Settings
@@ -136,6 +137,11 @@ void stroke(const uint8_t value)
 void stroke(const uint32_t value)
 {
 	strokeColor = value;
+}
+
+void strokeWeight(const float weight)
+{
+	gstrokeWeight = weight;
 }
 
 void fill(const uint8_t value)
@@ -337,7 +343,14 @@ void point(const int x, const int y)
 	if (!pb_rect_contains_point(pixelFrame, x, y))
 		return;
 
-	pb_rgba_cover_pixel(gpb, x, y, strokeColor);
+	if (gstrokeWeight <= 1) {
+		pb_rgba_cover_pixel(gpb, x, y, strokeColor);
+	}
+	else {
+		// draw an ellipse centered at the specified point
+		// with a width of the strokeWeight
+		raster_rgba_ellipse_fill(gpb, x, y, gstrokeWeight / 2, gstrokeWeight / 2, strokeColor);
+	}
 }
 
 void rectMode(const int mode)

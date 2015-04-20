@@ -298,6 +298,10 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 			// Processing regular characters, after translation of various keycodes
 			key = wParam;
 
+			if (gkbdOnTypedHandler) {
+				gkbdOnTypedHandler(hWnd, message, wParam, lParam);
+			}
+
 			switch (key){
 				case 0x1B:  // ESC
 					quit();

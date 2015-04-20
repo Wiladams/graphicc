@@ -107,7 +107,7 @@ void rectMode(const int mode);
 //void smooth();
 //void strokeCap();
 //void strokeJoin();
-//void strokeWeight();
+void strokeWeight(const float weight);
 
 
 // 2D primitives

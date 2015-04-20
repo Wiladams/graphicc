@@ -47,7 +47,7 @@ void setOnIdleHandler(EventObserverHandler handler);
 void setKeyboardHandler(KeyboardHandler handler);
 void setOnKeyPressed(KeyboardHandler handler);
 void setOnKeyReleasedHandler(KeyboardHandler handler);
-void setOnKeyTyped(KeyboardHandler handler);
+void setOnKeyTypedHandler(KeyboardHandler handler);
 
 void setMouseHandler(MouseHandler handler);
 void setOnMousePressedHandler(EventObserverHandler handler);

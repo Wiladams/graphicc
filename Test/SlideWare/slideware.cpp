@@ -1,5 +1,14 @@
 /*
 Drawing Shapes on a click
+
+This code tests the noLoop() function of the drawproc routines.
+The draw() function should only be called once, at the very beginning.  Nothing 
+is done in this draw routine.
+
+All drawing is driven by the mousePressed() routine.  In this case, we
+cycle through a series of simple drawings.  Each time the mouse is pressed
+a shape is drawn, and the redraw() function is called to force the image
+to be updated.
 */
 #include "drawproc.h"
 
@@ -43,12 +52,9 @@ void CALLBACK mousePressed()
 }
 
 
-
-
-
 void setup()
 {
-	size(640, 480);
+	size(1024, 768);
 	background(pLightGray);
 	noLoop();
 
@@ -57,5 +63,4 @@ void setup()
 
 void draw()
 {
-
 }

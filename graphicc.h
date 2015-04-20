@@ -331,9 +331,9 @@ extern "C" {
 extern "C" {
 #endif
 
-	int read_PPM(const char *filename, pb_rgba *fb);
-	int write_PPM_binary(const char *filename, pb_rgba *fb);
-	int write_PPM_ascii(const char *filename, pb_rgba *fb);
+	int read_PPM(const char *filename, pb_rgba *fb);			// will read P3 or P6
+	int write_PPM_binary(const char *filename, pb_rgba *fb);	// write a P6 file
+	int write_PPM_ascii(const char *filename, pb_rgba *fb);		// write a P3 file
 
 #ifdef __cplusplus
 }
