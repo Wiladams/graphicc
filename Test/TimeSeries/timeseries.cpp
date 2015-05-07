@@ -25,9 +25,15 @@ int yearMin;
 int yearMax;
 int yearInterval = 10;
 
+// volume information
+int volumeInterval = 10;
+int volumeIntervalMinor = 5;
+
+
 // plot area
 float plotX1, plotY1;
 float plotX2, plotY2;
+int labelX, labelY;
 
 int currentColumn = COLUMN_MILK;
 int columnCount = 3;
@@ -121,40 +127,22 @@ void setup()
 	size(720, 405);
 
 	dataMin = 0;
-	dataMax = getDataMax();
+	dataMax = ceil(getDataMax()/volumeInterval) * volumeInterval;
 	columnCount = 3;
 
 	yearMin = data[0].year;
 	yearMax = data[rowCount - 1].year;
 
-	plotX1 = 50;
-	plotX2 = width - plotX1;
+	plotX1 = 120;
+	plotX2 = width - 80;
+	labelX = 50;
 	plotY1 = 60;
-	plotY2 = height - plotY1;
+	plotY2 = height - 70;
+	labelY = height - 25;
 
 	//setFont(verdana18_bold);
 
 	//smooth();
-}
-
-void draw()
-{
-	background(pLightGray);
-
-	// plot area as white box
-	fill((uint8_t)255);
-	rectMode(CORNERS);
-	noStroke();
-	rect(plotX1, plotY1, plotX2, plotY2);
-
-	drawTitle();
-
-	// plot the actual columnar data
-	stroke(RGBA(0x56, 0x79, 0xc1, 255));
-	strokeWeight(5);
-	drawDataPoints(currentColumn);
-
-	drawYearLabels();
 }
 
 
@@ -163,8 +151,9 @@ void drawTitle()
 	setFont(verdana18_bold);
 
 	// draw title of current plot
-	fill((uint8_t)0);
-	//textSize(20);
+	fillGray(0);
+	textSize(20);
+	textAlign(TX_LEFT, TX_BOTTOM);
 	const char * title = getColumnName(currentColumn);
 	text(title, plotX1, plotY1 - 20);
 }
@@ -181,18 +170,34 @@ void drawDataPoints(const int col)
 	}
 }
 
+void drawAxisLabels()
+{
+	fillGray(0);
+	textSize(13);
+	//textLeading(15);
+
+	int yLabel = (plotY1 + plotY2) / 2;
+	textAlign(TX_CENTER, TX_CENTER);
+	text("Gallons", labelX, yLabel );
+	text("consumed", labelX, yLabel+12);
+	text("per capita", labelX, yLabel+24);
+
+	textAlign(TX_CENTER, TX_BOTTOM);
+	text("Year", (plotX1 + plotX2) / 2, labelY);
+}
+
 void drawYearLabels()
 {
 	char yearstr[10];
 
 	setFont(gse7x11);
 
-	stroke(RGBA(224, 224, 224,255));
+	stroke(RGBA(224, 224, 224, 255));
 	strokeWeight(1);
-	
+
 	fill(pBlack);
 	//textSize(10);
-	//textAlign(CENTER, TOP);
+	textAlign(TX_CENTER, TX_TOP);
 
 	for (int row = 0; row < rowCount; row++) {
 		if (data[row].year % yearInterval == 0) {
@@ -203,6 +208,73 @@ void drawYearLabels()
 		}
 	}
 }
+
+void drawVolumeLabels()
+{
+	char numbuff[256];
+
+	fillGray(0);
+	textSize(10);
+	textAlign(TX_RIGHT, TX_CENTER);
+
+	stroke((uint8_t)128);
+	strokeWeight(1);
+
+	for (float v = dataMin; v <= dataMax; v += volumeIntervalMinor) {		
+		if (int(v) % volumeIntervalMinor == 0) {
+			float y = MAP(v, dataMin, dataMax, plotY2, plotY1);
+			if (int(v) % volumeInterval == 0)
+			{
+				if (v == dataMin) {
+					textAlign(TX_RIGHT);
+				}
+				else if (v == dataMax) {
+					textAlign(TX_RIGHT, TX_TOP);
+				}
+				else {
+					textAlign(TX_RIGHT, TX_CENTER);
+				}
+
+				sprintf_s(numbuff, "%d", (int)floor(v));
+				text(numbuff, plotX1 - 10, y);
+				line(plotX1 - 4, y, plotX1, y);		// draw a major tick
+			}
+
+			line(plotX1 - 2, y, plotX1, y);			// draw a minor tick
+		}
+	}
+}
+
+void draw()
+{
+	background(RGBA(224,224,224,255));
+	//background(pLightGray);
+	//background(aliceblue);
+
+	// plot area as white box
+	fillGray(255);
+	rectMode(CORNERS);
+	noStroke();
+	rect(plotX1, plotY1, plotX2, plotY2);
+
+	drawTitle();
+
+	// plot the actual columnar data
+	stroke(RGBA(0x56, 0x79, 0xc1, 255));
+	strokeWeight(5);
+	drawDataPoints(currentColumn);
+
+	drawYearLabels();
+	drawVolumeLabels();
+	drawAxisLabels();
+}
+
+
+
+
+
+
+
 
 LRESULT CALLBACK keyPressed(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {

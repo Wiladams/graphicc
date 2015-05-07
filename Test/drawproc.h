@@ -19,6 +19,14 @@ enum {
 	CENTER
 };
 
+typedef enum ALIGNMENT {
+	TX_CENTER	= 0x00,
+	TX_LEFT		= 0x01,
+	TX_RIGHT	= 0x04,
+	TX_TOP		= 0x10,
+	TX_BOTTOM	= 0x40
+
+};
 typedef enum GEOMETRY {
 	GR_POINTS,
 	GR_LINES,
@@ -35,6 +43,28 @@ typedef enum GEOMETRY {
 typedef enum KindOfClose {
 	OPEN,
 	CLOSE
+};
+
+class Vector2d
+{
+public:
+	Vector2d(float x, float y)
+	{
+		Set(x, y);
+	};
+
+	float GetX(void) const { return mX; };
+
+	float GetY(void) const { return mY; };
+
+	void  Set(float x, float y)
+	{
+		mX = x;
+		mY = y;
+	};
+private:
+	float mX;
+	float mY;
 };
 
 // Global variables
@@ -94,7 +124,8 @@ void background(const uint32_t value);
 //void clear();
 //void colorMode();
 void fill(const uint32_t value);
-void fill(const uint8_t gray);
+//void fill(const uint8_t gray);
+void fillGray(const uint8_t gray);
 void noFill();
 void noStroke();
 void stroke(const uint32_t value);
@@ -129,10 +160,10 @@ extern font_t gfont;
 void setFont(const uint8_t *fontdata);
 void text(const char *str, const int x, const int y);
 //void textFont(font_t *font);
-// textAlign()
+void textAlign(const int alignX=TX_LEFT, const int alignY = TX_BOTTOM);
 // textLeading()
 // textMode()
-// textSize()
+void textSize(const int size);
 // textWidth()
 // textAscent()
 // textDescent()

@@ -317,6 +317,7 @@ extern "C" {
 	void glyph_t_init(const font_t *f, glyph_t *ginfo, const unsigned int glyph);
 	size_t font_t_glyph_width(const font_t *f, const unsigned int glyph);
 	size_t font_t_str_width(const font_t *f, const char * str);
+	//void font_str_box(const font_t *f, const char * str, int *x, int *y, int *swidth, int *sheight);
 
 	void glyph_t_span(const font_t *f, glyph_t *g, unsigned i, cover_type *m_span);
 	int scan_glyph(pb_rgba *pb, font_t *font, glyph_t *glyph, const int x, const int y, const int color);

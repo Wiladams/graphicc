@@ -24,28 +24,9 @@ uint32_t fillColor = RGBA(255, 255, 255, 255);
 
 // Text Settings
 font_t gfont;
-
-class Vector2d
-{
-public:
-	Vector2d(float x, float y)
-	{
-		Set(x, y);
-	};
-
-	float GetX(void) const { return mX; };
-
-	float GetY(void) const { return mY; };
-
-	void  Set(float x, float y)
-	{
-		mX = x;
-		mY = y;
-	};
-private:
-	float mX;
-	float mY;
-};
+int gTextSize;
+int gTextAlignX;
+int gTextAlignY;
 
 // Typedef an STL vector of vertices which are used to represent
 // a polygon/contour and a series of triangles.
@@ -56,6 +37,9 @@ void init()
 {
 	// Setup text
 	font_t_init(&gfont, verdana12);
+	gTextSize = 10;
+	gTextAlignX = TX_LEFT;
+	gTextAlignY = TX_BOTTOM;
 }
 
 // size of window
@@ -144,7 +128,7 @@ void strokeWeight(const float weight)
 	gstrokeWeight = weight;
 }
 
-void fill(const uint8_t value)
+void fillGray(const uint8_t value)
 {
 	fillColor = RGBA(value, value, value, 255);
 }
@@ -177,11 +161,11 @@ void ellipse(const int a, const int b, const int c, const int d)
 //
 typedef int OutCode;
 
-static const int INSIDE = 0; // 0000
-static const int LEFT = 1;   // 0001
-static const int RIGHT = 2;  // 0010
-static const int BOTTOM = 4; // 0100
-static const int TOP = 8;    // 1000
+static const int LN_INSIDE = 0; // 0000
+static const int LN_LEFT = 1;   // 0001
+static const int LN_RIGHT = 2;  // 0010
+static const int LN_BOTTOM = 4; // 0100
+static const int LN_TOP = 8;    // 1000
 
 // Compute the bit code for a point (x, y) using the clip rectangle
 // bounded diagonally by (xmin, ymin), and (xmax, ymax)
@@ -194,16 +178,16 @@ OutCode ComputeOutCode(const pb_rect &rct, const int x, const int y)
 	double ymin = rct.y;
 	double ymax = rct.y + rct.height - 1;
 
-	code = INSIDE;          // initialised as being inside of clip window
+	code = LN_INSIDE;          // initialised as being inside of clip window
 
 	if (x < xmin)           // to the left of clip window
-		code |= LEFT;
+		code |= LN_LEFT;
 	else if (x > xmax)      // to the right of clip window
-		code |= RIGHT;
+		code |= LN_RIGHT;
 	if (y < ymin)           // below the clip window
-		code |= BOTTOM;
+		code |= LN_BOTTOM;
 	else if (y > ymax)      // above the clip window
-		code |= TOP;
+		code |= LN_TOP;
 
 	return code;
 }
@@ -241,19 +225,19 @@ bool ClipLine(const pb_rect &bounds, int &x0, int &y0, int &x1, int &y1)
 
 			// Now find the intersection point;
 			// use formulas y = y0 + slope * (x - x0), x = x0 + (1 / slope) * (y - y0)
-			if (outcodeOut & TOP) {           // point is above the clip rectangle
+			if (outcodeOut & LN_TOP) {           // point is above the clip rectangle
 				x = x0 + (x1 - x0) * (ymax - y0) / (y1 - y0);
 				y = ymax;
 			}
-			else if (outcodeOut & BOTTOM) { // point is below the clip rectangle
+			else if (outcodeOut & LN_BOTTOM) { // point is below the clip rectangle
 				x = x0 + (x1 - x0) * (ymin - y0) / (y1 - y0);
 				y = ymin;
 			}
-			else if (outcodeOut & RIGHT) {  // point is to the right of clip rectangle
+			else if (outcodeOut & LN_RIGHT) {  // point is to the right of clip rectangle
 				y = y0 + (y1 - y0) * (xmax - x0) / (x1 - x0);
 				x = xmax;
 			}
-			else if (outcodeOut & LEFT) {   // point is to the left of clip rectangle
+			else if (outcodeOut & LN_LEFT) {   // point is to the left of clip rectangle
 				y = y0 + (y1 - y0) * (xmin - x0) / (x1 - x0);
 				x = xmin;
 			}
@@ -770,7 +754,50 @@ void endShape(const int kindOfClose)
 // Text Processing
 void text(const char *str, const int x, const int y)
 {
-	scan_str(gpb, &gfont, x, y, str, fillColor);
+	int tx = x;
+	int ty = y;
+
+	// determine the box within which the string would draw
+	// based on alignment
+	size_t fwidth = font_t_str_width(&gfont, str);
+	switch (gTextAlignX) {
+	case TX_LEFT:
+		tx = x;
+		break;
+
+	case TX_CENTER:
+		tx = x - fwidth / 2;
+		break;
+
+	case TX_RIGHT:
+		tx = x - fwidth;
+		break;
+	}
+
+	switch (gTextAlignY)
+	{
+	case TX_TOP:
+		ty = y;
+		break;
+	case TX_CENTER:
+		ty = y - (gfont.height / 2);
+		break;
+	case TX_BOTTOM:
+		ty = y - gfont.height;
+		break;
+	}
+	scan_str(gpb, &gfont, tx, ty, str, fillColor);
+}
+
+void textAlign(const int alignX, const int alignY)
+{
+	gTextAlignX = alignX;
+	gTextAlignY = alignY;
+}
+
+void textSize(const int size)
+{
+	gTextSize = size;
 }
 
 void setFont(const uint8_t *fontdata)
