@@ -41,7 +41,7 @@ typedef enum GEOMETRY {
 };
 
 typedef enum KindOfClose {
-	OPEN,
+	STROKE,
 	CLOSE
 };
 
@@ -171,7 +171,28 @@ void textSize(const int size);
 // Shape
 void beginShape(const int shapeKind = GR_POLYGON);
 void vertex(const int x, const int y);
-void endShape(const int kindOfClose = OPEN);
+void endShape(const int kindOfClose = STROKE);
 
 // Math
 int random(static const int);
+
+// Some color manipulation routines
+inline uint32_t darker(const uint32_t acolor, const float factor = 0.60)
+{
+	uint8_t red = GET_R(acolor) *factor;
+	uint8_t green = GET_G(acolor) * factor;
+	uint8_t blue = GET_B(acolor) * factor;
+	uint8_t alpha = GET_A(acolor);
+
+	return RGBA(red, green, blue, alpha);
+}
+
+inline uint32_t brighter(const uint32_t acolor, const float factor=0.80)
+{
+	uint8_t red = (min(GET_R(acolor) *(1.0 / factor), 255));
+	uint8_t green = (min(GET_G(acolor) * (1.0 / 0.85), 255));
+	uint8_t blue = (min(GET_B(acolor) * (1.0 / factor), 255));
+	uint8_t alpha = GET_A(acolor);
+
+	return RGBA(red, green, blue, alpha);
+}

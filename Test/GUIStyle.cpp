@@ -1,108 +1,81 @@
 
-//local Colors = require "Colors"
-//local ColorUtils = require "ColorUtils"
+#include "guistyle.h"
+#include "drawproc.h"
 
 
-enum FrameStyle = {
-	Sunken = 0x01,
-	Raised = 0x02
-};
 
-
-struct GUIStyle {
-	GUIStyle();
-
-	void SetBaseColor(const int color);
-
-	int baseColor;
-	int highlightColor;
-	int shadowColor;
-	int backgroundColor;
-	int textBackgroundColor;
-};
-
-
-GUIStyle::GUIStyle()
+void GUIStyle::SetBaseColor(const int acolor)	 
 {
-
+	this->baseColor = acolor;
+	this->highlightColor = brighter(this->baseColor);
+	this->shadowColor = darker(this->baseColor);
+	this->backgroundColor = brighter(this->highlightColor);
+	this->textBackgroundColor = this->baseColor;
 }
 
-GUIStyle::SetBaseColor(const int acolor)	 
-{
-	self.BaseColor = acolor;
-	self.HighlightColor = ColorUtils.brighter(self.BaseColor);
-	self.ShadowColor = ColorUtils.darker(self.BaseColor);
-	self.Background = ColorUtils.brighter(self.HighlightColor);
-	self.TextBackground = self.BaseColor;
-}
-
-void GUIStyle : _init()
-		self.BorderWidth = 2;
-	self.Padding = 2;
-}
 
 /*
 self:SetBaseColor(Colors.LtGray)
 
-self.Foreground = Colors.LtGray;
+this->Foreground = Colors.LtGray;
 
-self.BottomShadow = ColorUtils.darker(self.Foreground);
-self.BottomShadowTopLiner = ColorUtils.brighter(self.BottomShadow);
+this->BottomShadow = ColorUtils.darker(this->Foreground);
+this->BottomShadowTopLiner = ColorUtils.brighter(this->BottomShadow);
 
-self.TopShadow = ColorUtils.brighter(self.Foreground);
+this->TopShadow = ColorUtils.brighter(this->Foreground);
 
 	 --Calculated
-		 self.SunkenColor = self.Foreground;
-	 self.RaisedColor = self.Foreground;
+		 this->SunkenColor = this->Foreground;
+	 this->RaisedColor = this->Foreground;
 }
 */
 
-void GUIStyle::DrawFrame(aPort, x, y, w, h, style)
-		 local n = 0;
+void GUIStyle::DrawFrame(int x, int y, int w, int h, int style)
+{	
+	if (style == Sunken) {
+		for (int n = 0; n < this->borderWidth; n++)
+		{
+			stroke(this->highlightColor);
+			line(x + n, y + h - n, x + w - n, y + h - n);		// bottom shadow
+			line(x + w - n, y + n, x + w - n, y + h);			// right shadow
+		}
 
-	 if style == FrameStyle.Sunken then
-	 for n = 0, self.BorderWidth - 1 do
- aPort:SetStrokeColor(self.HighlightColor)
- aPort : DrawLine(x + n, y + h - n, x + w - n, y + h - n);    --bottom shadow
-	 aPort : DrawLine(x + w - n, y + n, x + w - n, y + h);	    --right shadow
-			 end
+		for (int n = 0; n < this->borderWidth; n++) {
+			stroke(this->shadowColor);
+			line(x + n, y + n, x + w - n, y + n);	    // top edge
+			line(x + n, y + n, x + n, y + h - n);	    // left edge
+		}
+	} else if (style == Raised) {
+		for (int n = 0; n < this->borderWidth - 1; n++) {
+			stroke(this->shadowColor);
+			line(x + n, y + h - n, x + w - n, y + h - n);   // bottom shadow
+			line(x + w - n, y + n, x + w - n, y + h);	    // right shadow
+		}
 
-	   for n = 0, self.BorderWidth - 1 do
-   aPort:SetStrokeColor(self.ShadowColor)
-   aPort : DrawLine(x + n, y + n, x + w - n, y + n);	    --top edge
-	   aPort : DrawLine(x + n, y + n, x + n, y + h - n);	    --left edge
-			   end
-			   elseif style == FrameStyle.Raised then
-		 for n = 0, self.BorderWidth - 1 do
-	 aPort:SetStrokeColor(self.ShadowColor)
-	 aPort : DrawLine(x + n, y + h - n, x + w - n, y + h - n);      --bottom shadow
-		 aPort : DrawLine(x + w - n, y + n, x + w - n, y + h);	    --right shadow
-				 end
-
-		   for n = 0, self.BorderWidth - 1 do
-	   aPort:SetStrokeColor(self.HighlightColor)
-	   aPort : DrawLine(x + n, y + n, x + w - n, y + n);	    --top edge
-		   aPort : DrawLine(x + n, y + n, x + n, y + h - n);	    --left edge
+		for (int n = 0; n < this->borderWidth; n++) {
+			stroke(this->highlightColor);
+			line(x + n, y + n, x + w - n, y + n);	    //top edge
+			line(x + n, y + n, x + n, y + h - n);	    //left edge
 		}
 	}
 }
 
-void GUIStyle::DrawSunkenRect(self, aPort, x, y, w, h)
+void GUIStyle::DrawSunkenRect(const int x, const int y, const int w, const int h)
 {			   
-	aPort:SetStrokeColor(Colors.Transparent)
-	aPort : SetFillColor(self.BaseColor)
-	aPort : DrawRect(x, y, w, h);
+	noStroke();
 
-	self:DrawFrame(aPort, x, y, w, h, Sunken);
+	fill(this->baseColor);
+	rect(x, y, w, h);
+
+	self:DrawFrame(x, y, w, h, Sunken);
 }
 
-void GUIStyle::DrawRaisedRect(aPort, const int x, const int y, const int w, const int h)
+void GUIStyle::DrawRaisedRect(const int x, const int y, const int w, const int h)
 {
-	aPort:SetStrokeColor(Colors.Transparent)
-	aPort : SetFillColor(self.BaseColor)
-	aPort : DrawRect(x, y, w, h);
-
-	self:DrawFrame(aPort, x, y, w, h, Raised);
+	noStroke();
+	fill(this->baseColor);
+	rect(x, y, w, h);
+	self:DrawFrame(x, y, w, h, Raised);
 }
 
 

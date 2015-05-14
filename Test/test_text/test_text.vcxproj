@@ -69,6 +69,7 @@
     <ClCompile Include="..\agg_embedded_raster_fonts.cpp" />
     <ClCompile Include="..\animwin32.cpp" />
     <ClCompile Include="..\drawproc.cpp" />
+    <ClCompile Include="..\GUIStyle.cpp" />
     <ClCompile Include="test_text.cpp" />
   </ItemGroup>
   <ItemGroup>

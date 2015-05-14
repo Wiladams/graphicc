@@ -293,6 +293,12 @@ LRESULT CALLBACK keyPressed(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 			currentColumn = COLUMN_COFFEE;
 		}
 		break;
+
+
+	case VK_SPACE:
+		write_PPM_binary("test_text.ppm", gpb);
+		break;
+
 	}
 
 

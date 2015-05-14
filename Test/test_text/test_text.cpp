@@ -5,7 +5,9 @@
 
 */
 #include "drawproc.h"
+#include "GUIStyle.h"
 
+static GUIStyle styler;
 static const int gMaxMode = 3;
 static int gMode = 0;
 
@@ -22,6 +24,17 @@ void CALLBACK mousePressed()
 	draw();
 }
 
+LRESULT CALLBACK keyReleased(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
+{
+	switch (wParam)
+	{
+	case VK_SPACE:
+		write_PPM_binary("test_text.ppm", gpb);
+		break;
+	}
+
+	return 0;
+}
 
 void setup()
 {
@@ -29,13 +42,18 @@ void setup()
 	background(pLightGray);
 	noLoop();
 
-	setOnMousePressedHandler(mousePressed);
+	//setOnMousePressedHandler(mousePressed);
+	setOnKeyReleasedHandler(keyReleased);
 }
 
 void draw()
 {
 	background(pLightGray);
 
+	styler.SetBaseColor(pLightGray);
+	styler.DrawFrame(20, 20, 100, 100, Sunken);
+	styler.DrawSunkenRect(60, 60, 100, 100);
+	styler.DrawRaisedRect(100, 100, 100, 100);
 
 	// Draw some lines
 	stroke(pBlack);
@@ -68,6 +86,14 @@ void draw()
 	textAlign(TX_LEFT, TX_BOTTOM);
 	text("LEFT BOTTOM",0,height);
 
+	stroke(pRed);
+	line(midx - 6, midy, midx + 6, midy);
+	line(midx, midy - 6, midx, midy + 6);
+
+	fill(pWhite);
 	textAlign(TX_CENTER, TX_CENTER);
 	text("CENTER CENTER", midx, midy);
+
+
+
 }

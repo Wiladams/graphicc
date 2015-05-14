@@ -675,7 +675,7 @@ void vertex(const int x, const int y)
 	gShape.push_back(Vector2d(x,y));
 }
 
-void endShape(const int kindOfClose)
+void endShape(const int kindOfFinish)
 {
 	int n = gShape.size();
 	uint32_t oldStroke = strokeColor;
@@ -688,14 +688,14 @@ void endShape(const int kindOfClose)
 		break;
 
 		case GR_LINES: {
-			if (kindOfClose == OPEN) {
+			if (kindOfFinish == STROKE) {
 				int nLines = n / 2;
 				for (int idx = 0; idx < nLines; idx++)
 				{
 					line(gShape[idx * 2].GetX(), gShape[idx * 2].GetY(), gShape[(idx * 2) + 1].GetX(), gShape[(idx * 2) + 1].GetY());
 				}
 			}
-			else if (kindOfClose == CLOSE) {
+			else if (kindOfFinish == CLOSE) {
 				polygon(gShape);
 			}
 		} 

@@ -27,6 +27,9 @@
     <ClCompile Include="test_text.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\GUIStyle.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\agg_embedded_raster_fonts.h">
