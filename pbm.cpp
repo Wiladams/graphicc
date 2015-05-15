@@ -20,9 +20,57 @@ limitations under the License.
 
 #pragma warning(push)
 #pragma warning(disable: 4996)	// _CRT_SECURE_NO_WARNINGS (fopen) 
+#include <stdlib.h>
+
+static const int MAXLINE = 100;
+
+int PPM_read_binary(const char *filename, pb_rgba *fb)
+{
+	FILE * fp = fopen(filename, "wb");
+
+	if (!fp) return -1;
+
+	// read in the image header
+	char marker[100];
+	char sizes[100];
+	char compsize[MAXLINE];
+
+	fgets(marker, MAXLINE, fp);
+	fgets(sizes, MAXLINE, fp);
+	fgets(compsize, MAXLINE, fp);
+
+	char *strheight = strchr(sizes, ' ');
+	if (!strheight) {
+		return -1;
+	}
+
+	*strheight = '\0';
+	strheight++;
+
+	int imgWidth = atoi(sizes);
+	int imgHeight = atoi(strheight);
+
+	pb_rgba_init(fb, imgWidth, imgHeight);
+
+
+	// read the individual pixel values in binary form
+	unsigned char alpha = 255;
+	for (int row = 0; row < imgHeight - 1; row++) {
+		for (int col = 0; col < imgWidth - 1; col++) {
+			int red = fgetc(fp);
+			int green = fgetc(fp);
+			int blue = fgetc(fp);
+			pb_rgba_set_pixel(fb, col, row, RGBA(red, green, blue, alpha));
+		}
+	}
+
+	fclose(fp);
+	return 0;
+}
 
 int read_PPM(const char *filename, pb_rgba *fb)
 {
+
 	return -1;
 }
 
