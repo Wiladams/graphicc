@@ -18,15 +18,61 @@ limitations under the License.
 
 #include <stdio.h>
 
+#include <stdlib.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+
+
 #pragma warning(push)
 #pragma warning(disable: 4996)	// _CRT_SECURE_NO_WARNINGS (fopen) 
-#include <stdlib.h>
 
 static const int MAXLINE = 100;
 
+int CR = '\r';
+int LF = '\n';
+
+int readOneLine(FILE * f, char *buffer, const int size)
+{
+	int nchars = 0;
+	int byteread;
+	int err;
+	bool sawcr = false;
+
+	while (nchars < size-1) {
+		byteread = fgetc(f);
+
+		if (byteread == EOF) break;
+
+		if (byteread == LF) {
+			break;
+		}
+		else if (byteread == CR) {
+			// swallow it and continue on
+			break;
+			sawcr = true;
+		}
+		else {
+			// Just a regular character, so save it
+			buffer[nchars] = byteread;
+			nchars = nchars + 1;
+		}
+	}
+
+	buffer[nchars] = '\0';
+
+	return nchars;
+}
+
+
+
+
 int PPM_read_binary(const char *filename, pb_rgba *fb)
 {
-	FILE * fp = fopen(filename, "wb");
+	struct stat buf;
+	int ret = stat(filename, &buf);
+	printf("res: %d\n", ret, buf.st_size);
+
+	FILE * fp = fopen(filename, "r");
 
 	if (!fp) return -1;
 
@@ -34,10 +80,17 @@ int PPM_read_binary(const char *filename, pb_rgba *fb)
 	char marker[100];
 	char sizes[100];
 	char compsize[MAXLINE];
+	char * res;
 
-	fgets(marker, MAXLINE, fp);
-	fgets(sizes, MAXLINE, fp);
-	fgets(compsize, MAXLINE, fp);
+
+	ret = readOneLine(fp, marker, MAXLINE);
+	ret = readOneLine(fp, sizes, MAXLINE);
+	ret = readOneLine(fp,  compsize, MAXLINE);
+
+	printf("Marker: %s\n", marker);
+	printf("sizes: %s\n", sizes);
+	printf("compsize: %s\n", compsize);
+
 
 	char *strheight = strchr(sizes, ' ');
 	if (!strheight) {
@@ -55,8 +108,8 @@ int PPM_read_binary(const char *filename, pb_rgba *fb)
 
 	// read the individual pixel values in binary form
 	unsigned char alpha = 255;
-	for (int row = 0; row < imgHeight - 1; row++) {
-		for (int col = 0; col < imgWidth - 1; col++) {
+	for (int row = 0; row < imgHeight; row++) {
+		for (int col = 0; col < imgWidth; col++) {
 			int red = fgetc(fp);
 			int green = fgetc(fp);
 			int blue = fgetc(fp);
@@ -65,6 +118,7 @@ int PPM_read_binary(const char *filename, pb_rgba *fb)
 	}
 
 	fclose(fp);
+
 	return 0;
 }
 

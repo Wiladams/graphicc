@@ -11,6 +11,8 @@ static GUIStyle styler;
 static const int gMaxMode = 3;
 static int gMode = 0;
 
+pb_rgba fb;
+
 void draw();
 
 
@@ -44,10 +46,13 @@ void setup()
 
 	//setOnMousePressedHandler(mousePressed);
 	setOnKeyReleasedHandler(keyReleased);
+
+	int ret = PPM_read_binary("c:/repos/graphicc/Test/windows-keyboard-60-keys.ppm", &fb);
 }
 
 void draw()
 {
 	background(pLightGray);
 
+	raster_rgba_blit(gpb, 0, 0, &fb);
 }
