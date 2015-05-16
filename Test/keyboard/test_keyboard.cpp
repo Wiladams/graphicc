@@ -40,19 +40,24 @@ LRESULT CALLBACK keyReleased(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPar
 
 void setup()
 {
-	size(1024, 768);
+	int ret = PPM_read_binary("c:/repos/graphicc/Test/windows-keyboard-60-keys.ppm", &fb);
+
+	size(fb.frame.width+4, fb.frame.height+4+20);
 	background(pLightGray);
 	noLoop();
 
-	//setOnMousePressedHandler(mousePressed);
+	setOnMousePressedHandler(mousePressed);
 	setOnKeyReleasedHandler(keyReleased);
-
-	int ret = PPM_read_binary("c:/repos/graphicc/Test/windows-keyboard-60-keys.ppm", &fb);
 }
 
 void draw()
 {
 	background(pLightGray);
 
-	raster_rgba_blit(gpb, 0, 0, &fb);
+	noStroke();
+	fill(pRed);
+	rect(0, 0, width, height);
+
+	raster_rgba_blit(gpb, 2, 2, &fb);
+	
 }

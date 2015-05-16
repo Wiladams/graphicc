@@ -19,7 +19,7 @@ limitations under the License.
 #include <math.h>
 #include <string.h>
 #include <stdlib.h>
-
+#include <stdio.h>
 
 // Some helpful macros
 #define lerp255(bg, fg, a) ((uint8_t)div255((fg*a+bg*(255-a))))
@@ -230,8 +230,8 @@ void raster_rgba_blit(pb_rgba *pb, unsigned int x, unsigned int y, pb_rgba *src)
 
 	// IMPROVE
 	// use _span
-
-	for (int srcrow = 0; srcrow < src->frame.height; srcrow++)
+	int srcrow = 0;
+	for (srcrow = 0; srcrow < src->frame.height; srcrow++)
 	{
 		// for each row of the source
 		// copy to the destination

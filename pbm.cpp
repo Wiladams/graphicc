@@ -21,7 +21,7 @@ limitations under the License.
 #include <stdlib.h>
 #include <sys/types.h>
 #include <sys/stat.h>
-
+#include "raster_rgba.h"
 
 #pragma warning(push)
 #pragma warning(disable: 4996)	// _CRT_SECURE_NO_WARNINGS (fopen) 
@@ -72,7 +72,7 @@ int PPM_read_binary(const char *filename, pb_rgba *fb)
 	int ret = stat(filename, &buf);
 	printf("res: %d\n", ret, buf.st_size);
 
-	FILE * fp = fopen(filename, "r");
+	FILE * fp = fopen(filename, "rb");
 
 	if (!fp) return -1;
 
@@ -87,9 +87,9 @@ int PPM_read_binary(const char *filename, pb_rgba *fb)
 	ret = readOneLine(fp, sizes, MAXLINE);
 	ret = readOneLine(fp,  compsize, MAXLINE);
 
-	printf("Marker: %s\n", marker);
-	printf("sizes: %s\n", sizes);
-	printf("compsize: %s\n", compsize);
+	//printf("Marker: %s\n", marker);
+	//printf("sizes: %s\n", sizes);
+	//printf("compsize: %s\n", compsize);
 
 
 	char *strheight = strchr(sizes, ' ');
@@ -104,6 +104,8 @@ int PPM_read_binary(const char *filename, pb_rgba *fb)
 	int imgHeight = atoi(strheight);
 
 	pb_rgba_init(fb, imgWidth, imgHeight);
+	raster_rgba_rect_fill(fb, 0, 0, imgWidth, imgHeight, RGBA(255, 255, 0, 255));
+															
 
 
 	// read the individual pixel values in binary form
