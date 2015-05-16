@@ -42,7 +42,7 @@ static EventObserverHandler gOnMousePressedHandler = nullptr;
 static MouseHandler gmouseOnUpHandler = nullptr;
 static MouseHandler gmouseOnWheelHandler = nullptr;
 static MouseHandler gmouseOnDraggedHandler = nullptr;
-static MouseHandler gmouseOnMovedHandler = nullptr;
+static EventObserverHandler gmouseOnMovedHandler = nullptr;
 
 
 // for time keeping
@@ -257,7 +257,7 @@ void setOnMouseDraggedHandler(MouseHandler handler)
 	gmouseOnDraggedHandler = handler;
 }
 
-void setOnMouseMovedHandler(MouseHandler handler)
+void setOnMouseMovedHandler(EventObserverHandler handler)
 {
 	gmouseOnMovedHandler = handler;
 }
@@ -358,7 +358,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 					gmouseOnDraggedHandler(hWnd, message, wParam, lParam);
 				}
 			} else if (gmouseOnMovedHandler != nullptr) {
-				gmouseOnMovedHandler(hWnd, message, wParam, lParam);
+				gmouseOnMovedHandler();
 			}
 		break;
 

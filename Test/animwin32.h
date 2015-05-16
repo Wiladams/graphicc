@@ -52,7 +52,7 @@ void setOnKeyTypedHandler(KeyboardHandler handler);
 void setMouseHandler(MouseHandler handler);
 void setOnMousePressedHandler(EventObserverHandler handler);
 void setOnMouseWheelHandler(MouseHandler handler);
-void setOnMouseMovedHandler(MouseHandler handler);
+void setOnMouseMovedHandler(EventObserverHandler handler);
 void setOnMouseDraggedHandler(MouseHandler handler);
 
 

@@ -40,10 +40,9 @@ void CALLBACK mousePressed()
 
 }
 
-LRESULT CALLBACK mouseMoved(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
+void CALLBACK mouseMoved()
 {
 	paintShapes(false);
-	return 0;
 }
 
 LRESULT CALLBACK mouseDragged(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
