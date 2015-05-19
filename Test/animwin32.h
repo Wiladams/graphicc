@@ -40,21 +40,9 @@ void forceDraw();
 typedef LRESULT(CALLBACK* WinProcHandler)(HWND, UINT, WPARAM, LPARAM);
 typedef LRESULT(CALLBACK* KeyboardHandler)(HWND, UINT, WPARAM, LPARAM);
 typedef LRESULT(CALLBACK*MouseHandler)(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
-typedef void(CALLBACK *EventObserverHandler)();
-
-void setOnIdleHandler(EventObserverHandler handler);
 
 void setKeyboardHandler(KeyboardHandler handler);
-void setOnKeyPressed(KeyboardHandler handler);
-void setOnKeyReleasedHandler(KeyboardHandler handler);
-void setOnKeyTypedHandler(KeyboardHandler handler);
-
 void setMouseHandler(MouseHandler handler);
-void setOnMousePressedHandler(EventObserverHandler handler);
-void setOnMouseWheelHandler(MouseHandler handler);
-void setOnMouseMovedHandler(EventObserverHandler handler);
-void setOnMouseDraggedHandler(MouseHandler handler);
-
 
 #ifdef __cplusplus
 }

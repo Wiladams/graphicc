@@ -10,6 +10,18 @@
 
 #include "agg_embedded_raster_fonts.h"
 
+typedef void(CALLBACK *EventObserverHandler)();
+
+// IO Event Handlers
+void setOnKeyPressed(KeyboardHandler handler);
+void setOnKeyReleasedHandler(KeyboardHandler handler);
+void setOnKeyTypedHandler(KeyboardHandler handler);
+
+void setOnMousePressedHandler(EventObserverHandler handler);
+void setOnMouseWheelHandler(MouseHandler handler);
+void setOnMouseMovedHandler(EventObserverHandler handler);
+void setOnMouseDraggedHandler(MouseHandler handler);
+
 
 void redraw();
 
@@ -84,6 +96,7 @@ extern uint64_t startcount;	// for time keeping
 extern uint64_t frequency;
 
 extern uint32_t bgColor;
+extern pb_rgba *bgImage;
 
 extern int grectMode;
 extern int gellipseMode;
@@ -125,7 +138,9 @@ extern int isKeyPressed;
 
 // Setting colors
 void background(const uint32_t value);
+void backgroundImage(pb_rgba *bg);
 //void clear();
+
 //void colorMode();
 void fill(const uint32_t value);
 //void fill(const uint8_t gray);

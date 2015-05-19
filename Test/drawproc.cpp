@@ -1,5 +1,6 @@
 
 #include "drawproc.h"
+//#include <windowsx.h>	// GET_X_LPARAM
 
 #include <vector>
 #include <math.h>
@@ -28,9 +29,179 @@ int gTextSize;
 int gTextAlignX;
 int gTextAlignY;
 
+// Keyboard
+int keyCode = 0;
+int key = 0;
+int isKeyPressed = 0;
+
+// Mouse
+#define GET_X_LPARAM(lp)                        ((int)(short)LOWORD(lp))
+#define GET_Y_LPARAM(lp)                        ((int)(short)HIWORD(lp))
+
+int mouseX = 0;
+int mouseY = 0;
+bool isMousePressed = false;
+int mouseButton = 0;
+
+
 // Typedef an STL vector of vertices which are used to represent
 // a polygon/contour and a series of triangles.
 typedef std::vector< Vector2d > Vector2dVector;
+
+static KeyboardHandler gkbdOnPressedHandler = nullptr;
+static KeyboardHandler gkbdOnReleasedHandler = nullptr;
+static KeyboardHandler gkbdOnTypedHandler = nullptr;
+
+
+static EventObserverHandler gOnMousePressedHandler = nullptr;
+static MouseHandler gmouseOnUpHandler = nullptr;
+static MouseHandler gmouseOnWheelHandler = nullptr;
+static MouseHandler gmouseOnDraggedHandler = nullptr;
+static EventObserverHandler gmouseOnMovedHandler = nullptr;
+
+
+void setOnKeyPressedHandler(KeyboardHandler handler)
+{
+	gkbdOnPressedHandler = handler;
+}
+
+void setOnKeyReleasedHandler(KeyboardHandler handler)
+{
+	gkbdOnReleasedHandler = handler;
+}
+
+void setOnKeyTypedHandler(KeyboardHandler handler)
+{
+	gkbdOnTypedHandler = handler;
+}
+
+
+void setOnMousePressedHandler(EventObserverHandler handler)
+{
+	gOnMousePressedHandler = handler;
+}
+
+void setOnMouseUpHandler(MouseHandler handler)
+{
+	gmouseOnUpHandler = handler;
+}
+
+void setOnMouseWheelHandler(MouseHandler handler)
+{
+	gmouseOnWheelHandler = handler;
+}
+
+void setOnMouseDraggedHandler(MouseHandler handler)
+{
+	gmouseOnDraggedHandler = handler;
+}
+
+void setOnMouseMovedHandler(EventObserverHandler handler)
+{
+	gmouseOnMovedHandler = handler;
+}
+
+LRESULT CALLBACK keyHandler(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
+{
+	switch (message)
+	{
+
+		case WM_CHAR:
+			// Processing regular characters, after translation of various keycodes
+			key = wParam;
+
+			if (gkbdOnTypedHandler) {
+				gkbdOnTypedHandler(hWnd, message, wParam, lParam);
+			}
+
+			switch (key){
+				case 0x1B:  // ESC
+					quit();
+				break;
+			}
+		break;
+
+		case WM_KEYDOWN:
+			keyCode = wParam;
+			isKeyPressed = 1;
+
+			if (gkbdOnPressedHandler) {
+				return gkbdOnPressedHandler(hWnd, message, wParam, lParam);
+			}
+		break;
+
+		case WM_KEYUP:
+			// raw keycodes
+			keyCode = wParam;
+			isKeyPressed = 0;
+
+			if (gkbdOnReleasedHandler) {
+				return gkbdOnReleasedHandler(hWnd, message, wParam, lParam);
+			}
+		break;
+
+
+		default:
+			return DefWindowProc(hWnd, message, wParam, lParam);
+	}
+
+	return 0;
+}
+
+
+
+LRESULT CALLBACK mouseHandler(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
+{
+	switch (message)
+	{
+		case WM_MOUSEWHEEL:
+			if (gmouseOnWheelHandler != nullptr) {
+				gmouseOnWheelHandler(hWnd, message, wParam, lParam);
+			}
+		break;
+
+
+		case WM_MOUSEMOVE:
+			mouseX = GET_X_LPARAM(lParam);
+			mouseY = GET_Y_LPARAM(lParam);
+
+			if (isMousePressed) {
+				if (gmouseOnDraggedHandler != nullptr) {
+					gmouseOnDraggedHandler(hWnd, message, wParam, lParam);
+				}
+			} else if (gmouseOnMovedHandler != nullptr) {
+				gmouseOnMovedHandler();
+			}
+		break;
+
+		case WM_LBUTTONDOWN:
+		case WM_MBUTTONDOWN:
+		case WM_RBUTTONDOWN:
+			isMousePressed = true;
+			mouseButton = wParam;
+
+			if (gOnMousePressedHandler != nullptr) {
+				gOnMousePressedHandler();
+			}
+		break;
+
+		case WM_LBUTTONUP:
+		case WM_MBUTTONUP:
+		case WM_RBUTTONUP:
+			isMousePressed = false;
+
+			if (gmouseOnUpHandler != nullptr) {
+				gmouseOnUpHandler(hWnd, message, wParam, lParam);
+			}
+		break;
+
+		default:
+			return DefWindowProc(hWnd, message, wParam, lParam);
+	}
+
+	return 0;
+}
+
 
 
 void init()
@@ -40,6 +211,9 @@ void init()
 	gTextSize = 10;
 	gTextAlignX = TX_LEFT;
 	gTextAlignY = TX_BOTTOM;
+
+	setKeyboardHandler(keyHandler);
+	setMouseHandler(mouseHandler);
 }
 
 // size of window
@@ -101,6 +275,11 @@ void background(const uint32_t value)
 	{
 		raster_rgba_rect_fill(gpb, 0, 0, width, height, bgColor);
 	}
+}
+
+void backgroundImage(pb_rgba *bg)
+{
+	raster_rgba_blit(gpb, 0, 0, bg);
 }
 
 void noFill()

@@ -97,8 +97,7 @@ void drawMouseInfo()
 void draw()
 {
 	background(pLightGray);
-
-	raster_rgba_blit(gpb, 0, 0, &fb);
+	backgroundImage(&fb);
 
 	drawMouseInfo();
 }

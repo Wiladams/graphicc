@@ -1,6 +1,7 @@
 #include "milk-tea-coffee.h"
 #include "drawproc.h"
 #include <cfloat>
+#include <stdio.h>
 
 int rowCount = sizeof(data) / sizeof(data[0]);
 

@@ -1,7 +1,6 @@
 
 
 #include "animwin32.h"
-#include <windowsx.h>	// GET_X_LPARAM
 
 #include <math.h>
 #include <stdio.h>
@@ -28,21 +27,12 @@ bool continueRunning = true;
 bool gDrawDuringLoop = true;
 
 
-static EventObserverHandler gOnIdleHandler = nullptr;
 
 // Keyboard event handlers
 static KeyboardHandler gkbdHandler = nullptr;
-static KeyboardHandler gkbdOnPressedHandler = nullptr;
-static KeyboardHandler gkbdOnReleasedHandler = nullptr;
-static KeyboardHandler gkbdOnTypedHandler = nullptr;
 
 // Mouse event handlers
 static MouseHandler gmouseHandler = nullptr;
-static EventObserverHandler gOnMousePressedHandler = nullptr;
-static MouseHandler gmouseOnUpHandler = nullptr;
-static MouseHandler gmouseOnWheelHandler = nullptr;
-static MouseHandler gmouseOnDraggedHandler = nullptr;
-static EventObserverHandler gmouseOnMovedHandler = nullptr;
 
 
 // for time keeping
@@ -206,29 +196,10 @@ void quit()
 	continueRunning = false;
 }
 
-void setOnIdleHandler(EventObserverHandler handler)
-{
-	gOnIdleHandler = handler;
-}
 
 void setKeyboardHandler(KeyboardHandler handler)
 {
 	gkbdHandler = handler;
-}
-
-void setOnKeyPressedHandler(KeyboardHandler handler)
-{
-	gkbdOnPressedHandler = handler;
-}
-
-void setOnKeyReleasedHandler(KeyboardHandler handler)
-{
-	gkbdOnReleasedHandler = handler;
-}
-
-void setOnKeyTypedHandler(KeyboardHandler handler)
-{
-	gkbdOnTypedHandler = handler;
 }
 
 
@@ -237,30 +208,6 @@ void setMouseHandler(MouseHandler handler)
 	gmouseHandler = handler;
 }
 
-void setOnMousePressedHandler(EventObserverHandler handler)
-{
-	gOnMousePressedHandler = handler;
-}
-
-void setOnMouseUpHandler(MouseHandler handler)
-{
-	gmouseOnUpHandler = handler;
-}
-
-void setOnMouseWheelHandler(MouseHandler handler)
-{
-	gmouseOnWheelHandler = handler;
-}
-
-void setOnMouseDraggedHandler(MouseHandler handler)
-{
-	gmouseOnDraggedHandler = handler;
-}
-
-void setOnMouseMovedHandler(EventObserverHandler handler)
-{
-	gmouseOnMovedHandler = handler;
-}
 
 
 //
@@ -274,16 +221,7 @@ void setOnMouseMovedHandler(EventObserverHandler handler)
 //
 //
 
-// Keyboard
-int keyCode = 0;
-int key = 0;
-int isKeyPressed = 0;
 
-// Mouse
-int mouseX = 0;
-int mouseY = 0;
-bool isMousePressed = false;
-int mouseButton = 0;
 
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
@@ -293,121 +231,43 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
 	switch (message)
 	{
-
 		case WM_CHAR:
-			// Processing regular characters, after translation of various keycodes
-			key = wParam;
-
-			if (gkbdOnTypedHandler) {
-				gkbdOnTypedHandler(hWnd, message, wParam, lParam);
-			}
-
-			switch (key){
-				case 0x1B:  // ESC
-					quit();
-				break;
-			}
-		break;
-
-
 		case WM_KEYDOWN:
-			keyCode = wParam;
-			isKeyPressed = 1;
-
-			if (gkbdOnPressedHandler) {
-				return gkbdOnPressedHandler(hWnd, message, wParam, lParam);
-			}
-		break;
-
 		case WM_KEYUP:
 			if (gkbdHandler != nullptr)
 			{
 				return gkbdHandler(hWnd, message, wParam, lParam);
-			} else {
-				// raw keycodes
-				keyCode = wParam;
-				isKeyPressed = 0;
-			
-				if (gkbdOnReleasedHandler) {
-					return gkbdOnReleasedHandler(hWnd, message, wParam, lParam);
-				}
-			}
+			}				
 		break;
+
 
 		case WM_MOUSEWHEEL:
-			if (gmouseHandler != nullptr) {
-				return gmouseHandler(hWnd, message, wParam, lParam);
-			}
-
-			if (gmouseOnWheelHandler != nullptr) {
-				gmouseOnWheelHandler(hWnd, message, wParam, lParam);
-			}
-		break;
-
-
 		case WM_MOUSEMOVE:
-			if (gmouseHandler != nullptr) {
-				return gmouseHandler(hWnd, message, wParam, lParam);
-			}
-
-			mouseX = GET_X_LPARAM(lParam);
-			mouseY = GET_Y_LPARAM(lParam);
-
-			if (isMousePressed) {
-				if (gmouseOnDraggedHandler != nullptr) {
-					gmouseOnDraggedHandler(hWnd, message, wParam, lParam);
-				}
-			} else if (gmouseOnMovedHandler != nullptr) {
-				gmouseOnMovedHandler();
-			}
-		break;
-
 		case WM_LBUTTONDOWN:
 		case WM_MBUTTONDOWN:
 		case WM_RBUTTONDOWN:
-			if (gmouseHandler != nullptr) {
-				return gmouseHandler(hWnd, message, wParam, lParam);
-			}
-
-			isMousePressed = true;
-			mouseButton = wParam;
-
-			if (gOnMousePressedHandler != nullptr) {
-				gOnMousePressedHandler();
-			}
-		break;
-
 		case WM_LBUTTONUP:
 		case WM_MBUTTONUP:
 		case WM_RBUTTONUP:
 			if (gmouseHandler != nullptr) {
 				return gmouseHandler(hWnd, message, wParam, lParam);
 			}
-
-			isMousePressed = false;
-
-			if (gmouseOnUpHandler != nullptr) {
-				gmouseOnUpHandler(hWnd, message, wParam, lParam);
-			}
-		break;
-	case WM_COMMAND:
-		wmId = LOWORD(wParam);
-		wmEvent = HIWORD(wParam);
-
 		break;
 
-	case WM_PAINT:
-		hdc = BeginPaint(hWnd, &ps);
+		case WM_PAINT:
+			hdc = BeginPaint(hWnd, &ps);
 
-		OnPaint(hdc, ps);
+			OnPaint(hdc, ps);
 
-		EndPaint(hWnd, &ps);
+			EndPaint(hWnd, &ps);
 		break;
-	case WM_DESTROY:
-		quit();
+
+		case WM_DESTROY:
+			quit();
 		break;
-	default:
-		return DefWindowProc(hWnd, message, wParam, lParam);
+		
+		default:
+			return DefWindowProc(hWnd, message, wParam, lParam);
 	}
 
 	return 0;
@@ -440,14 +300,7 @@ void eventLoop(HWND hWnd)
 			TranslateMessage(&msg);
 			DispatchMessage(&msg);
 		}
-		
-		// routine to be called during idle times
-		// pretty much the same as calling the draw() routine
-		// except it's a function pointer, and it won't be subject
-		// to framerate timing
-		if (gOnIdleHandler) {
-			gOnIdleHandler();
-		}
+
 
 		if (gDrawDuringLoop) {
 			// This should adhere to a framerate 
