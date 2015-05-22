@@ -44,7 +44,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>C:\repos\graphicc;C:\repos\graphicc\Test;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\repos\graphicc;C:\repos\graphicc\drawproc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -66,16 +66,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\agg_embedded_raster_fonts.cpp" />
-    <ClCompile Include="..\animwin32.cpp" />
-    <ClCompile Include="..\drawproc.cpp" />
-    <ClCompile Include="..\GUIStyle.cpp" />
     <ClCompile Include="test_text.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="..\agg_embedded_raster_fonts.h" />
-    <ClInclude Include="..\animwin32.h" />
-    <ClInclude Include="..\drawproc.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

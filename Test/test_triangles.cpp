@@ -20,7 +20,7 @@ void test_writebitmap()
 	raster_rgba_triangle_fill(&pb, midx, midy, 0, height-1, width - 1, height - 1, pDarkGray);
 
 	// Now we have a simple image, so write it to a file
-	int err = write_PPM("test_triangle.ppm", &pb);
+	int err = write_PPM_binary("test_triangle.ppm", &pb);
 
 }
 

@@ -21,15 +21,6 @@
     <ClCompile Include="test_mandelbrot.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\animwin32.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\agg_embedded_raster_fonts.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\drawproc.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Image Include="small.ico">
@@ -38,13 +29,5 @@
     <Image Include="test_mandelbrot.ico">
       <Filter>Resource Files</Filter>
     </Image>
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="..\agg_embedded_raster_fonts.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\drawproc.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
   </ItemGroup>
 </Project>

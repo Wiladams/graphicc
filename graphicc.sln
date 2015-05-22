@@ -25,6 +25,9 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "test_triangles", "Test\test_triangles.vcxproj", "{4C75B0DF-31FA-4945-AD62-0D02EC231CB5}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "test_agg_raster_fonts", "Test\test_agg_raster_fonts.vcxproj", "{582B2684-FF90-4CA1-8F54-F43A0CC2E1A2}"
+	ProjectSection(ProjectDependencies) = postProject
+		{22E0AE80-590C-4C3F-AB8E-15437D25E2D2} = {22E0AE80-590C-4C3F-AB8E-15437D25E2D2}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "test_bezier", "Test\test_bezier.vcxproj", "{D3B71495-3887-4A3A-A5D1-9C041FF8FCAF}"
 EndProject
@@ -33,11 +36,13 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DrawingShapes", "Test\DrawingShapes\DrawingShapes.vcxproj", "{ADE31A59-7EC8-404B-87CC-D4B44ADA0891}"
 	ProjectSection(ProjectDependencies) = postProject
 		{5856A423-63AB-4119-A3B7-0ED0CF7B61FE} = {5856A423-63AB-4119-A3B7-0ED0CF7B61FE}
+		{22E0AE80-590C-4C3F-AB8E-15437D25E2D2} = {22E0AE80-590C-4C3F-AB8E-15437D25E2D2}
 	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SlideWare", "Test\SlideWare\SlideWare.vcxproj", "{62B09398-DEC5-46C1-99FF-D7192FC48B99}"
 	ProjectSection(ProjectDependencies) = postProject
 		{5856A423-63AB-4119-A3B7-0ED0CF7B61FE} = {5856A423-63AB-4119-A3B7-0ED0CF7B61FE}
+		{22E0AE80-590C-4C3F-AB8E-15437D25E2D2} = {22E0AE80-590C-4C3F-AB8E-15437D25E2D2}
 	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TimeSeries", "Test\TimeSeries\TimeSeries.vcxproj", "{ABF0EF55-A433-4208-9319-124ABF65D7EC}"
@@ -45,6 +50,12 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "test_text", "Test\test_text\test_text.vcxproj", "{7F4CC594-1AA3-4EAF-B599-2471345B32D2}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "keyboard", "Test\keyboard\keyboard.vcxproj", "{B134EA74-F328-4D23-9B77-2918EBF04D86}"
+	ProjectSection(ProjectDependencies) = postProject
+		{5856A423-63AB-4119-A3B7-0ED0CF7B61FE} = {5856A423-63AB-4119-A3B7-0ED0CF7B61FE}
+		{22E0AE80-590C-4C3F-AB8E-15437D25E2D2} = {22E0AE80-590C-4C3F-AB8E-15437D25E2D2}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "drawproc", "drawproc\drawproc.vcxproj", "{22E0AE80-590C-4C3F-AB8E-15437D25E2D2}"
 	ProjectSection(ProjectDependencies) = postProject
 		{5856A423-63AB-4119-A3B7-0ED0CF7B61FE} = {5856A423-63AB-4119-A3B7-0ED0CF7B61FE}
 	EndProjectSection
@@ -123,6 +134,10 @@ Global
 		{B134EA74-F328-4D23-9B77-2918EBF04D86}.Debug|Win32.Build.0 = Debug|Win32
 		{B134EA74-F328-4D23-9B77-2918EBF04D86}.Release|Win32.ActiveCfg = Release|Win32
 		{B134EA74-F328-4D23-9B77-2918EBF04D86}.Release|Win32.Build.0 = Release|Win32
+		{22E0AE80-590C-4C3F-AB8E-15437D25E2D2}.Debug|Win32.ActiveCfg = Debug|Win32
+		{22E0AE80-590C-4C3F-AB8E-15437D25E2D2}.Debug|Win32.Build.0 = Debug|Win32
+		{22E0AE80-590C-4C3F-AB8E-15437D25E2D2}.Release|Win32.ActiveCfg = Release|Win32
+		{22E0AE80-590C-4C3F-AB8E-15437D25E2D2}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

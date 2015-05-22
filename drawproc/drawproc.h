@@ -10,6 +10,9 @@
 
 #include "agg_embedded_raster_fonts.h"
 
+#pragma comment(lib,"drawproc.lib")
+
+
 typedef void(CALLBACK *EventObserverHandler)();
 
 // IO Event Handlers

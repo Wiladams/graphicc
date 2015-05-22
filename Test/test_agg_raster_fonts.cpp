@@ -66,7 +66,7 @@ LRESULT CALLBACK keyReleased(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPar
 		break;
 
 		case VK_SPACE:
-			write_PPM("test_agg_raster_fonts.ppm", gpb);
+			write_PPM_binary("test_agg_raster_fonts.ppm", gpb);
 		break;
 	}
 
