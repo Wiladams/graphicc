@@ -12,6 +12,8 @@ REAL pts1[] = {
 	0,3,0,1
 };
 
+size_t nrows = sizeof(pts1) / sizeof(REAL) / 4;
+
 void realn_write_array(const size_t nelems, const REAL *c)
 {
 	printf("[");
@@ -112,19 +114,19 @@ void test_screen_transform()
 	//printf("screen: %4.3f, %4.3f\n", screenx, screeny);
 
 	// write color buffer to file
-	int err = write_PPM("test_screentransform.ppm", &pb);
+	int err = write_PPM_binary("test_screentransform.ppm", &pb);
 }
 
 void test_model_view_transform()
 {
 	REAL res[32];
 
-	real4 eye = {-10, 3, 2, 1};
-	real4 lookAt = {0,0,0,1};
-	real4 up = { 0, 1, 0, 1 };
+	real4 eye = {-10, 3, 2};
+	real4 lookAt = {0,0,0};
+	real4 up = { 0, 1, 0};
 	mat4 mviewmat;
 
-	size_t nrows = sizeof(pts1) / sizeof(REAL) / 4;
+
 
 	ogl_lookat(mviewmat, eye, lookAt, up);
 
@@ -136,7 +138,7 @@ void test_model_view_transform()
 int main(int argc, char **argv)
 {
 	//test_scale();
-	test_screen_transform();
-	//test_model_view_transform();
+	//test_screen_transform();
+	test_model_view_transform();
 	//test_translate();
 }

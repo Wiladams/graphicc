@@ -141,45 +141,34 @@ void ogl_set_rotation(mat4 &c, const mat3 &rot)
 
 }
 
-void ogl_lookat(mat4 &mat, const real3 eyexyz, const real3 atxyz, const real3 upxyz)
+void ogl_lookat(mat4 &mat, const real3 eye, const real3 center, const real3 up)
 {
 	REAL * m = (REAL*)&mat;
-	REAL *xaxis = &m[0];
-	REAL *up = &m[4];
-	REAL *at = &m[8];
+	//REAL *xaxis = &m[0];
+	//REAL *up = &m[4];
+	//REAL *at = &m[8];
 	real3 tmpreal3;
+	real3 f;
+	real3 upN;
+	real3 s;
+	real3 u;
 
 	// Compute our new look at vector, which will be
 	//   the new negative Z axis of our transformed object.
-	real3_sub(tmpreal3, atxyz, eyexyz);
-	real3_normalize(at, tmpreal3);
+	real3_sub(tmpreal3, center, eye);
+	real3_normalize(f, tmpreal3);
 
-	// Make a useable copy of the current up vector.
-	up[0] = upxyz[0]; up[1] = upxyz[1]; up[2] = upxyz[2];
+	real3_normalize(upN, up);
 
-	// Cross product of the new look at vector and the current
-	//   up vector will produce a vector which is the new
-	//   positive X axis of our transformed object.
-	real3_cross(tmpreal3, at, up);
-	real3_normalize(xaxis, tmpreal3);
+	real3_cross(s, f, upN);
+	real3_cross(u, s, f);
 
-	// Calculate the new up vector, which will be the
-	//   positive Y axis of our transformed object. Note
-	//   that it will lie in the same plane as the new
-	//   look at vector and the old up vector.
-	real3_cross(up, xaxis, at);
+	m[0]  = s[0];    m[1]  = s[1];     m[2]  = s[2];     m[3]  = 0;
+	m[4]  = u[0];    m[5]  = u[1];     m[6]  = u[2];     m[7]  = 0;
+	m[8]  = -f[0];   m[9]  = -f[1];    m[10] = -f[2];    m[11] = 0;
+	m[12] = -eye[0]; m[13] = -eye[1];  m[14] = -eye[2];  m[15] = 1;
 
-	// Account for the fact that the geometry will be defined to
-	//   point along the negative Z axis.
-	//scale(at, -1.f);
-	real3_mul_scalar(at, at, -1);
 
-	// Fill out the rest of the 4x4 matrix
-	m[3] = 0.f;     // xaxis is m[0..2]
-	m[7] = 0.f;     // up is m[4..6]
-	m[11] = 0.f;    // -at is m[8..10]
-	m[12] = eyexyz[0]; m[13] = eyexyz[1]; m[14] = eyexyz[2];
-	m[15] = 1.0f;
 }
 
 /*

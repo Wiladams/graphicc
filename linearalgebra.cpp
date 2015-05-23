@@ -81,7 +81,7 @@ REAL realn_dot(const int dim, const REAL * a, const REAL * b)
 	REAL c = 0;
 	for (int i = 0; i < dim; i++)
 	{
-		c += a[i] * b[0];
+		c += a[i] * b[i];
 	}
 
 	return c;
