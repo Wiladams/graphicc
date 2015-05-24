@@ -7,7 +7,7 @@
 // convenience
 // Multiply rows against transformation matrix
 // assume columnar vectors on the right of the matrix
-void ogl_transform_rows(const size_t nrows, REAL *res, const REAL *inpts, const mat4 &tmat)
+void ogl_transform_rows(REAL *res, const mat4 &tmat, const REAL *inpts, const size_t nrows)
 {
 	for (size_t idx = 0; idx < nrows; idx++)
 	{
@@ -144,20 +144,21 @@ void ogl_set_rotation(mat4 &c, const mat3 &rot)
 void ogl_lookat(mat4 &mat, const real3 eye, const real3 center, const real3 up)
 {
 	REAL * m = (REAL*)&mat;
-	//REAL *xaxis = &m[0];
-	//REAL *up = &m[4];
-	//REAL *at = &m[8];
+
 	real3 tmpreal3;
 	real3 f;
 	real3 upN;
+
 	real3 s;
+	//REAL *s = &m[0];
+
 	real3 u;
+	//REAL *u = &m[4];
 
 	// Compute our new look at vector, which will be
 	//   the new negative Z axis of our transformed object.
 	real3_sub(tmpreal3, center, eye);
 	real3_normalize(f, tmpreal3);
-
 	real3_normalize(upN, up);
 
 	real3_cross(s, f, upN);
@@ -170,36 +171,6 @@ void ogl_lookat(mat4 &mat, const real3 eye, const real3 center, const real3 up)
 
 
 }
-
-/*
-void ogl_lookat(mat4 &c, const real3 eye, const real3 lookAt, const real3 up)
-{
-	real3 tmp1Real3;
-
-	
-	real3 viewDir;
-	real3 upN;
-	real3 viewSide;
-	real3 viewUp;
-	mat4 M;
-
-	real3_sub(tmp1Real3, lookAt, eye);
-	real3_normalize(viewDir, tmp1Real3);
-
-	real3_normalize(upN, up);
-	real3_cross(viewSide, viewDir, upN);
-	real3_cross(viewUp, viewSide, viewDir);
-
-	M.m11 = viewSide[0]; M.m12 = viewUp[0]; M.m13 = -viewDir[0]; M.m14 = 0;
-	M.m21 = viewSide[1]; M.m22 = viewUp[1]; M.m23 = -viewDir[1]; M.m24 = 0;
-	M.m31 = viewSide[2]; M.m32 = viewUp[2]; M.m33 = -viewDir[2]; M.m34 = 0;
-
-	// final translation
-	M.m41 = -eye[0]; M.m42 = -eye[1]; M.m43 = -eye[2]; M.m44 = 1;
-}
-*/
-
-
 
 // Render pipeline transformation matrices
 void ogl_perspective(mat4 &c, const REAL zoomx, const REAL zoomy, const REAL near, const REAL far)
@@ -227,9 +198,20 @@ void ogl_orthographic(mat4 &c, const REAL zoomx, const REAL zoomy, const REAL ne
 	c.m44 = 1;
 }
 
+mat4 ogl_ortho(REAL left, REAL right, REAL bottom, REAL top, REAL n, REAL f)
+{
+	mat4 r;
+	r.m11 = 2.0f / (right - left);           r.m12 = 0,                               r.m13 = 0;                 r.m14 = 0;
+	r.m21 = 0;                               r.m22 = 2.0 / (top - bottom);            r.m23 = 0.0f;              r.m24 = 0.0f;
+	r.m31 = 0.0f;                            r.m32 = 0.0f;                            r.m33 = 2.0f / (n - f);    r.m34 = 0.0f;
+	r.m41 = (left + right) / (left - right); r.m42 = (bottom + top) / (bottom - top); r.m43 = (n + f) / (f - n); r.m44 = 1.0f;
+
+	return r;
+}
+
 // receives normalized coords
-// x := -1 (left), 1 (right)
-// y := -1 (bottom), 1 (top)
+// clipx := -1 (left), 1 (right)
+// clipy := -1 (bottom), 1 (top)
 //
 void ogl_map_to_window(REAL &screenx, REAL &screeny, 
 	const REAL clipx, const REAL clipy, const REAL clipw, 
@@ -238,7 +220,6 @@ void ogl_map_to_window(REAL &screenx, REAL &screeny,
 {
 	screenx = ((clipx*winResx) / (2 * clipw)) + winCenterx;
 	screeny = -((clipy*winResy) / (2 * clipw)) + winCentery;
-
 }
 
 void ogl_create_ndc_to_window(const REAL Ds,

@@ -12,7 +12,7 @@ size_t width = 0;
 size_t height = 0;
 pb_rect pixelFrame;
 
-int grectMode = CORNER;
+RECTMODE grectMode = CORNER;
 int gellipseMode = CORNER;
 
 
@@ -516,7 +516,7 @@ void point(const int x, const int y)
 	}
 }
 
-void rectMode(const int mode)
+void rectMode(const RECTMODE mode)
 {
 	grectMode = mode;
 }

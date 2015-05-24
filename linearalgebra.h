@@ -26,7 +26,7 @@ extern "C" {
 #endif
 
 // Basic geometric vector type routines
-void realn_assign(const size_t dim, REAL *c, const REAL *a);
+void realn_assign(const int dim, REAL *c, const REAL *a);
 void realn_add(const int dim, REAL * c, const REAL * a, const REAL * b);
 void realn_sub(const int dim, REAL * c, const REAL * a, const REAL * b);
 void realn_mul_scalar(const int dim, REAL * c, const REAL * a, const REAL scalar);

@@ -16,7 +16,7 @@
 typedef void(CALLBACK *EventObserverHandler)();
 
 // IO Event Handlers
-void setOnKeyPressed(KeyboardHandler handler);
+void setOnKeyPressedHandler(KeyboardHandler handler);
 void setOnKeyReleasedHandler(KeyboardHandler handler);
 void setOnKeyTypedHandler(KeyboardHandler handler);
 
@@ -31,7 +31,7 @@ void redraw();
 /*
 Drawing API
 */
-enum {
+typedef enum RECTMODE{
 	CORNER,
 	CORNERS,
 	RADIUS,
@@ -101,7 +101,7 @@ extern uint64_t frequency;
 extern uint32_t bgColor;
 extern pb_rgba *bgImage;
 
-extern int grectMode;
+extern RECTMODE grectMode;
 extern int gellipseMode;
 
 // Initialization
@@ -156,7 +156,7 @@ void stroke(const uint8_t gray);
 // attributes
 void ellipseMode(const int mode);
 //void noSmooth();
-void rectMode(const int mode);
+void rectMode(const RECTMODE mode);
 //void smooth();
 //void strokeCap();
 //void strokeJoin();

@@ -23,9 +23,9 @@ limitations under the License.
 // general methods
 // copy 
 // c = a
-void realn_assign(const size_t dim, REAL *c, const REAL *a)
+void realn_assign(const int dim, REAL *c, const REAL *a)
 {
-	for (size_t idx = 0; idx < dim; idx++) {
+	for (int idx = 0; idx < dim; idx++) {
 		c[idx] = a[idx];
 	}
 }

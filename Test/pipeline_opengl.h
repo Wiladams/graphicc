@@ -26,7 +26,7 @@ limitations under the License.
 extern "C" {
 #endif
 
-void ogl_transform_rows(const size_t nrows, REAL *res, const REAL *inpts, const mat4 &tmat);
+	void ogl_transform_rows(REAL *res, const mat4 &tmat, const REAL *inpts, const size_t nrows);
 
 void ogl_translate(mat4 &c, const REAL dx, const REAL dy, const REAL dz);
 
@@ -46,8 +46,11 @@ void ogl_lookat(mat4 &c, const real3 eye, const real3 lookAt, const real3 up);
 // Create a projection matrix
 void ogl_perspective(mat4 &c, const REAL zoomx, const REAL zoomy, const REAL near, const REAL far);
 void ogl_orthographic(mat4 &c, const REAL zoomx, const REAL zoomy, const REAL near, const REAL far);
+mat4 ogl_ortho(REAL left, REAL right, REAL bottom, REAL top, REAL n, REAL f);
 
 // Create matrix to map from normalized (projection) space to actual physical screen
+// screenx, screeny contain the transformed values
+// clipx, clipy represent the input point
 void ogl_map_to_window(REAL &screenx, REAL &screeny,
 	const REAL clipx, const REAL clipy, const REAL clipw,
 	const REAL winResx, const REAL winResy,

@@ -48,7 +48,7 @@ void test_scale()
 
 	size_t nrows = sizeof(pts1) / sizeof(REAL) / 4;
 
-	ogl_transform_rows(nrows, res, pts1, scalemat);
+	ogl_transform_rows(res, scalemat, pts1, nrows);
 
 	print_rows(nrows, res);
 }
@@ -121,16 +121,28 @@ void test_model_view_transform()
 {
 	REAL res[32];
 
-	real4 eye = {-10, 3, 2};
-	real4 lookAt = {0,0,0};
+	// For model view matrix
+	mat4 mv_matrix;
+	real4 eye = { -1, 3, 2 };
+	real4 center = {0,0,0};
 	real4 up = { 0, 1, 0};
-	mat4 mviewmat;
+	ogl_lookat(mv_matrix, eye, center, up);
 
+	// for projection matrix
+	REAL left = -10;
+	REAL right = 10;
+	REAL bottom = -10;
+	REAL top = 10;
+	REAL n = -100;
+	REAL f = 100;
 
+	mat4 proj_matrix = ogl_ortho(left, right, bottom, top, n, f);
 
-	ogl_lookat(mviewmat, eye, lookAt, up);
+	//gl_Position = proj_matrix * mv_matrix * position;
+	mat4 posMatrix;
+	mat4_mul_mat4(posMatrix, proj_matrix, mv_matrix);
 
-	ogl_transform_rows(nrows, res, pts1, mviewmat);
+	ogl_transform_rows(res, posMatrix, pts1, nrows);
 
 	print_rows(nrows, res);
 }
