@@ -35,7 +35,6 @@ int readOneLine(FILE * f, char *buffer, const int size)
 {
 	int nchars = 0;
 	int byteread;
-	int err;
 	bool sawcr = false;
 
 	while (nchars < size-1) {
@@ -80,16 +79,11 @@ int PPM_read_binary(const char *filename, pb_rgba *fb)
 	char marker[100];
 	char sizes[100];
 	char compsize[MAXLINE];
-	char * res;
 
 
 	ret = readOneLine(fp, marker, MAXLINE);
 	ret = readOneLine(fp, sizes, MAXLINE);
 	ret = readOneLine(fp,  compsize, MAXLINE);
-
-	//printf("Marker: %s\n", marker);
-	//printf("sizes: %s\n", sizes);
-	//printf("compsize: %s\n", compsize);
 
 
 	char *strheight = strchr(sizes, ' ');

@@ -4,6 +4,7 @@
 
 #include <math.h>
 #include <stdio.h>
+#include <stdint.h>
 
 #define MAX_LOADSTRING 100
 
@@ -225,7 +226,6 @@ void setMouseHandler(MouseHandler handler)
 
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
-	int wmId, wmEvent;
 	PAINTSTRUCT ps;
 	HDC hdc;
 

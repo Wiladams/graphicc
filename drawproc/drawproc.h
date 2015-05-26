@@ -64,6 +64,8 @@ typedef enum KindOfClose {
 	CLOSE
 };
 
+typedef float coord;
+
 class Vector2d
 {
 public:
@@ -84,6 +86,16 @@ public:
 private:
 	float mX;
 	float mY;
+};
+
+struct Vector3d
+{
+	union {
+		struct {
+			coord _x, _y, _z;
+		};
+		coord _v[3];
+	};
 };
 
 // Global variables
@@ -196,7 +208,7 @@ void vertex(const int x, const int y);
 void endShape(const int kindOfClose = STROKE);
 
 // Math
-int random(static const int);
+int random(const int);
 
 // Some color manipulation routines
 inline uint32_t darker(const uint32_t acolor, const float factor = 0.60)
