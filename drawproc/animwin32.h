@@ -33,13 +33,16 @@ void setDrawInLoop(bool);
 void forceDraw();
 
 // Callback functions
+typedef void(*CallToHandler)();
+
 typedef LRESULT(CALLBACK* WinProcHandler)(HWND, UINT, WPARAM, LPARAM);
 typedef LRESULT(CALLBACK* KeyboardHandler)(HWND, UINT, WPARAM, LPARAM);
 typedef LRESULT(CALLBACK*MouseHandler)(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
 
 void setKeyboardHandler(KeyboardHandler handler);
 void setMouseHandler(MouseHandler handler);
-
+CallToHandler setSetupRoutine(CallToHandler handler);
+CallToHandler setLoopRoutine(CallToHandler handler);
 #ifdef __cplusplus
 }
 #endif

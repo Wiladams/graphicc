@@ -1,8 +1,61 @@
 // AART.h
+/*
+	Inspired by interfaces found in the book: 
+	Real-Time Animation Toolkit in C++
+	By: Rex E. Bradford
+
+	Basically setting up a classic software 3D Rendering pipeline
+	Some more modern C++ constructs are used than what the book
+	presents.
+	Ex: Using unions for certain data structures
+	Liberal usage of 'const'
+	caml casing of function names
+
+	The Perspective Viewing Pipeline
+	1. Rotate polygon to its desired orientation in world coordinates.
+	2. Translate polygon from local coordinates to world coordinates.
+	3. Translate polygon from world coordinates to view coordinates.
+	4. Rotate polygon about camera's orientation
+	5. Scale polygon based on viewport aspect ratio and field-of-view
+	6. Project polygon's view coordinates onto screen coordinates
+	7. Draw the projected polygon.
+
+	This is a much simpler rendering pipleline compared to say OpenGL
+	It does not require the usage of homogeneous coordinates.
+	It does not support partial polygon drawing though, so clipping
+	is an all or nothing affair.
+*/
 #include <memory.h>
 #include <math.h>
+#include <stdint.h>
+
 
 typedef float real;
+
+struct APolyVertex {
+	real x;
+	real y;
+};
+
+static const int  MAX_POLY_VERTICES = 8;
+
+typedef enum POLY_SHADING_TYPE {
+	FLAT = 0,
+	TMAP = 1
+};
+
+
+struct APolygon {
+	union {
+		uint32_t colorNative;
+		// ABitmap *tmap;
+	};
+	uint16_t	shading;	// What kind of shading
+	short		numVerts;
+	APolyVertex *pVerts;
+	uint8_t		vertIndex[MAX_POLY_VERTICES];
+	//ATmapCoord  *pTmapCoords;		// Texture map coordinates
+};
 
 // Representation of a 3D vector/point
 // Use this union formulation so that elements
@@ -117,4 +170,57 @@ struct AMatrix {
 	AMatrix & scaleXYZ(const AVector &v);
 	friend AVector operator*(const AVector &v, const AMatrix &m);
 	friend AMatrix operator*(const AMatrix &a, const AMatrix &b);
+};
+
+
+static const real FOV_90 = 1.5708;
+
+struct ACamera {
+	AVector loc;		// Camera location
+	AVector dir;		// Camera pitch, head, bank
+	real fov;
+	int viewportW;
+	int viewportH;
+	real viewportAspect;
+	AMatrix m;			// matrix to transform world->view coordinates
+
+	void CalcViewMatrix();
+
+	ACamera(){}
+	ACamera(const AVector &loc_, const AVector &dir_, int vpw, int vph, real fov_ = FOV_90)
+	{
+		setViewport(vpw, vph, fov_, false);
+		setLocAndDir(loc_, dir_);
+	}
+
+	AVector getLocation() { return loc; }
+	AVector getDirection() { return dir; }
+	real getFOV() { return fov; }
+	int getViewportWidth() { return viewportW; }
+	int getViewportHeight() { return viewportH; }
+	real getViewportAspect() { return viewportAspect; }
+
+	// Set Camera properties
+	void setLocation(const AVector &loc_) { loc = loc_; CalcViewMatrix(); }
+	void setDirection(const AVector &dir_) { dir = dir_; CalcViewMatrix(); }
+	
+	void setLocAndDir(const AVector &loc_, const AVector &dir_) {
+		loc = loc_; dir = dir_;
+		CalcViewMatrix();
+	}
+
+	void setViewport(const int w, const int h, real fov_, bool recalc = true)
+	{
+		viewportW = w; viewportH = h; fov = fov_;
+		viewportAspect = float(h) / float(w);
+		if (recalc) CalcViewMatrix();
+	}
+	void setFOV(real fov_) { fov = fov_; CalcViewMatrix(); }
+
+	// Transform and project points
+	void worldToView(const AVector &ptsrc, AVector &ptdest);
+	bool project(const AVector &ptsrc, APolyVertex &pvdest);
+
+	// Check if transformed poly (screen coords) is facing forward
+	static bool isFacing(APolyVertex &v1, APolyVertex &v2, APolyVertex &v3);
 };

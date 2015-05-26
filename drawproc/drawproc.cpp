@@ -48,6 +48,8 @@ int mouseButton = 0;
 // a polygon/contour and a series of triangles.
 typedef std::vector< Vector2d > Vector2dVector;
 
+
+
 static KeyboardHandler gkbdOnPressedHandler = nullptr;
 static KeyboardHandler gkbdOnReleasedHandler = nullptr;
 static KeyboardHandler gkbdOnTypedHandler = nullptr;

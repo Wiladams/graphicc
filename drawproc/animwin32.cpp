@@ -28,6 +28,11 @@ bool continueRunning = true;
 bool gDrawDuringLoop = true;
 
 
+static CallToHandler gSetupRoutine = nullptr;
+static CallToHandler gLoopRoutine = nullptr;
+
+
+
 
 // Keyboard event handlers
 static KeyboardHandler gkbdHandler = nullptr;
@@ -35,6 +40,30 @@ static KeyboardHandler gkbdHandler = nullptr;
 // Mouse event handlers
 static MouseHandler gmouseHandler = nullptr;
 
+CallToHandler setSetupRoutine(CallToHandler handler)
+{
+	CallToHandler oldRoutine = gSetupRoutine;
+	gSetupRoutine = handler;
+	return oldRoutine;
+}
+
+CallToHandler setLoopRoutine(CallToHandler handler)
+{
+	CallToHandler oldRoutine = gLoopRoutine;
+	gLoopRoutine = handler;
+	return oldRoutine;
+}
+
+void setKeyboardHandler(KeyboardHandler handler)
+{
+	gkbdHandler = handler;
+}
+
+
+void setMouseHandler(MouseHandler handler)
+{
+	gmouseHandler = handler;
+}
 
 // for time keeping
 uint64_t startcount = 0;
@@ -198,16 +227,6 @@ void quit()
 }
 
 
-void setKeyboardHandler(KeyboardHandler handler)
-{
-	gkbdHandler = handler;
-}
-
-
-void setMouseHandler(MouseHandler handler)
-{
-	gmouseHandler = handler;
-}
 
 
 
@@ -290,7 +309,11 @@ void eventLoop(HWND hWnd)
 	MSG msg;
 
 	// call draw at least once before we start looping
+	if (gLoopRoutine != nullptr) {
+		gLoopRoutine();
+	}
 	draw();
+
 	InvalidateRect(hWnd, 0, TRUE);
 
 	while (continueRunning)
@@ -305,6 +328,9 @@ void eventLoop(HWND hWnd)
 		if (gDrawDuringLoop) {
 			// This should adhere to a framerate 
 			// if one is specified
+			if (gLoopRoutine != nullptr) {
+				gLoopRoutine();
+			}
 			draw();
 
 			// Assume the 'draw()' did something which requires the 
@@ -325,6 +351,9 @@ int APIENTRY _tWinMain(_In_ HINSTANCE hInstance,
 
 	// Call setup to get the window size
 	// any any global variables set
+	if (gSetupRoutine != nullptr) {
+		gSetupRoutine();
+	}
 	setup();
 
 	// Start running the event loop

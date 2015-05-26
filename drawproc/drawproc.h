@@ -15,6 +15,7 @@
 
 typedef void(CALLBACK *EventObserverHandler)();
 
+
 // IO Event Handlers
 void setOnKeyPressedHandler(KeyboardHandler handler);
 void setOnKeyReleasedHandler(KeyboardHandler handler);
@@ -241,6 +242,7 @@ inline uint32_t brighter(const uint32_t acolor, const float factor=0.80)
 #define pYellow		RGBA(255, 255, 0, 255)
 #define pTurquoise	RGBA(0, 255, 255, 255)
 #define pDarkGray	RGBA(93, 93, 93, 255)
+#define pGray		RGBA(127,127,127,255)
 #define pLightGray	RGBA(163, 163, 163, 255)
 
 #define aliceblue	RGBA(240, 248, 255, 255)

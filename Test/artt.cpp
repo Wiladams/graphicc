@@ -32,3 +32,60 @@ AMatrix operator*(const AMatrix &a, const AMatrix &b)
 
 	return r;
 }
+
+
+/*
+*/
+
+void ACamera::CalcViewMatrix()
+{
+	AVector rdir(-dir.x, -dir.y, -dir.z);
+
+	// Combine all three rotations all at once
+	m.m[0] = cos(rdir.y) * cos(rdir.z);
+	m.m[1] = cos(rdir.y)*sin(rdir.z);
+	m.m[2] = -sin(rdir.y);
+
+	m.m[3] = (sin(rdir.x)*sin(rdir.y)*cos(rdir.z)) - (cos(rdir.x)*sin(rdir.z));
+	m.m[4] = (sin(rdir.x)*sin(rdir.y)*sin(rdir.z)) + (cos(rdir.x)*cos(rdir.z));
+	m.m[5] = sin(rdir.x)*cos(rdir.y);
+
+	m.m[6] = (cos(rdir.x)*sin(rdir.y)*cos(rdir.z)) + (sin(rdir.x)*sin(rdir.z));
+	m.m[7] = (cos(rdir.x)*sin(rdir.y)*sin(rdir.z)) - (sin(rdir.x)*cos(rdir.z));
+	m.m[8] = cos(rdir.x)*cos(rdir.y);
+
+	// scale by viewport apsect ratio and field of view
+	AVector vscale(1.0*viewportAspect, 1.0, fov / FOV_90);
+	m.scaleXYZ(vscale);
+}
+
+void ACamera::worldToView(const AVector &ptsrc, AVector &ptdest)
+{
+	ptdest = (ptsrc - loc) * m;		// translate, then rotate/scale;
+}
+
+bool ACamera::project(const AVector &ptsrc, APolyVertex &pvdest)
+{
+	// if behind camera, then reject it
+	if (ptsrc.z >= 0) {
+		return false;
+	}
+
+	pvdest.x = ((ptsrc.x / -ptsrc.z)*viewportW) + (viewportW / 2) + 0.5;
+	pvdest.y = viewportH - (((ptsrc.y / -ptsrc.z)*viewportH) + (viewportH / 2) + 0.5);
+
+	return true;
+}
+
+bool ACamera::isFacing(APolyVertex &v1, APolyVertex &v2, APolyVertex &v3)
+{
+	// Compute z-compontent of cross product
+	// if < 0, then polygon is facing 'forward' (toward camera)
+	float x1 = v3.x - v2.x;
+	float x2 = v1.x - v2.x;
+	float y1 = v3.y = v2.y;
+	float y2 = v1.y - v2.y;
+
+	return ((x1*y2 - y1*x2) < 0);
+}
+
