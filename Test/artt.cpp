@@ -89,3 +89,15 @@ bool ACamera::isFacing(APolyVertex &v1, APolyVertex &v2, APolyVertex &v3)
 	return ((x1*y2 - y1*x2) < 0);
 }
 
+
+
+/*
+	ACanvas
+*/
+
+ACanvas::ACanvas(pb_rgba *pbm)
+{
+	bm = pbm;
+	setClipRect(pbm->frame);
+	colorValue = CBlack;
+}

@@ -33,6 +33,7 @@ limitations under the License.
 typedef float	float32;
 typedef double	float64;
 typedef double	REAL;
+typedef float real;
 
 // There are various sources for high precision numbers.  The well known
 // CRC books are one.  The ones used here come variously from the Graphics Gems
@@ -67,8 +68,8 @@ typedef double	REAL;
 
 
 
-inline REAL DEGREES(const REAL radians) {return ((180 / G_PI) * radians);}
-inline REAL RADIANS(const REAL degrees) {return ((G_PI / 180)*degrees);}
+inline real DEGREES(const real radians) {return ((180 / G_PI) * radians);}
+inline real RADIANS(const real degrees) {return ((G_PI / 180)*degrees);}
 
 // map a value (a) from between rlo <= a <= rhi to  shi <= b <= slo
 inline double MAP(double a, double rlo, double rhi, double slo, double shi) {return slo + ((double)(a - rlo) / (rhi - rlo)) * (shi - slo);}
@@ -183,37 +184,37 @@ inline void pb_rect_clear(pb_rect &rect)
 	memset(&rect, 0, sizeof(pb_rect));
 }
 
-typedef REAL real2[2];
-typedef REAL real3[3];
-typedef REAL real4[4];
+typedef real real2[2];
+typedef real real3[3];
+typedef real real4[4];
 
 typedef struct {
-	REAL x;
-	REAL y;
-	REAL z;
+	real x;
+	real y;
+	real z;
 } Pt3;
 
 
 typedef struct _mat2 {
-	REAL m11, m12;
-	REAL m21, m22;
+	real m11, m12;
+	real m21, m22;
 } mat2;
 
 typedef struct _mat3 {
-	REAL m11, m12, m13;
-	REAL m21, m22, m23;
-	REAL m31, m32, m33;
+	real m11, m12, m13;
+	real m21, m22, m23;
+	real m31, m32, m33;
 } mat3;
 
 
 typedef struct _mat4 {
-	REAL m11, m12, m13, m14;
-	REAL m21, m22, m23, m24;
-	REAL m31, m32, m33, m34;
-	REAL m41, m42, m43, m44;
+	real m11, m12, m13, m14;
+	real m21, m22, m23, m24;
+	real m31, m32, m33, m34;
+	real m41, m42, m43, m44;
 } mat4;
 
-typedef REAL mat4x4[4][4];
+typedef real mat4x4[4][4];
 
 #ifdef _MSC_VER
 #pragma warning(pop)

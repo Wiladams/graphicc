@@ -26,52 +26,52 @@ extern "C" {
 #endif
 
 // Basic geometric vector type routines
-void realn_assign(const int dim, REAL *c, const REAL *a);
-void realn_add(const int dim, REAL * c, const REAL * a, const REAL * b);
-void realn_sub(const int dim, REAL * c, const REAL * a, const REAL * b);
-void realn_mul_scalar(const int dim, REAL * c, const REAL * a, const REAL scalar);
-void realn_div_scalar(const int dim, REAL * c, const REAL * a, const REAL scalar);
-void realn_neg(const int dim, REAL * c, const REAL * a);
-void realn_mul_realn(const size_t dim, REAL *c, const REAL *a, const REAL *b);
+	void realn_assign(const int dim, real *c, const real *a);
+	void realn_add(const int dim, real * c, const real * a, const real * b);
+	void realn_sub(const int dim, real * c, const real * a, const real * b);
+	void realn_mul_scalar(const int dim, real * c, const real * a, const real scalar);
+	void realn_div_scalar(const int dim, real * c, const real * a, const real scalar);
+	void realn_neg(const int dim, real * c, const real * a);
+	void realn_mul_realn(const size_t dim, real *c, const real *a, const real *b);
 
 // Linear Algebra
-REAL realn_dot(const int dim, const REAL * a, const REAL * b);
-REAL realn_mag(const int dim, const REAL * c);	// magnitude of vector
-void realn_normalize(const int dim, REAL * c, const REAL * a);
+	real realn_dot(const int dim, const real * a, const real * b);
+	real realn_mag(const int dim, const real * c);	// magnitude of vector
+	void realn_normalize(const int dim, real * c, const real * a);
 
 // Specific to 1x3
-void real3_set(real3 c, REAL x, REAL y, REAL z);
+	void real3_set(real3 c, real x, real y, real z);
 
 
 void real3_cross(real3 c, const real3 a, const real3 b);
-REAL real3_distance(const real3 a, const real3 b);
-REAL real3_radians_between_units(const real3 a, const real3 b);
-REAL real3_radians_between(const real3 a, const real3 b);
+real real3_distance(const real3 a, const real3 b);
+real real3_radians_between_units(const real3 a, const real3 b);
+real real3_radians_between(const real3 a, const real3 b);
 
 
 // generic matrix routines
-void matn_transpose(const size_t dim, REAL **a);
+void matn_transpose(const size_t dim, real **a);
 
 // matrix 2X2
-void mat2_mul_scalar(mat2 &c, const mat2 &a, const REAL scalar);
-void mat2_div_scalar(mat2 &c, const mat2 &a, const REAL scalar); 
+void mat2_mul_scalar(mat2 &c, const mat2 &a, const real scalar);
+void mat2_div_scalar(mat2 &c, const mat2 &a, const real scalar);
 void mat2_neg(mat2 &c, const mat2 &a);
-REAL mat2_determinant(const mat2 &a);
+real mat2_determinant(const mat2 &a);
 int mat2_inverse(mat2 &c, const mat2 &a);
-REAL mat2_trace(const mat2 &a);
+real mat2_trace(const mat2 &a);
 void mat2_transpose(const mat2 &c, const mat2 &a);
 void mat2_set_identity(mat2 &c);
 void mat2_mul_mat2(mat2 &c, const mat2 &a, const mat2 &b);
-void mat2_get_row_order(REAL *c);
-void mat2_get_col_order(REAL *c);
+void mat2_get_row_order(real *c);
+void mat2_get_col_order(real *c);
 
 // Matrix 3X3
 void mat3_add(mat3 &c, const mat3 &a, const mat3 &b);
 void mat3_sub(mat3 &c, const mat3 &a, const mat3 &b);
-void mat3_mul_scalar(mat3 &c, const mat3 &a, const REAL scalar);
-void mat3_div_scalar(mat3 &c, const mat3 &a, const REAL scalar);
-REAL mat3_determinant(const mat3 &a);
-REAL mat3_trace(const mat3 &a);
+void mat3_mul_scalar(mat3 &c, const mat3 &a, const real scalar);
+void mat3_div_scalar(mat3 &c, const mat3 &a, const real scalar);
+real mat3_determinant(const mat3 &a);
+real mat3_trace(const mat3 &a);
 void mat3_transpose(mat3 &c, const mat3 &a);
 void mat3_mul_mat3(mat3 &c, const mat3 &a, const mat3 &b);
 void row3_mul_mat3(real3 c, const real3 a, const mat3 &m);
@@ -85,20 +85,20 @@ void mat4_transpose(mat4 &c, const mat4 &a);
 
 // identity, also Kronecker delta
 void mat4_set_identity(mat4 &c);
-void mat4_mul_scalar(mat4 &c, const mat4 &a, const REAL scalar);
-void mat4_div_scalar(mat4 &c, const mat4 &a, const REAL scalar);
-REAL mat4_determinant(const mat4 &m);
+void mat4_mul_scalar(mat4 &c, const mat4 &a, const real scalar);
+void mat4_div_scalar(mat4 &c, const mat4 &a, const real scalar);
+real mat4_determinant(const mat4 &m);
 void mat4_adjoint(mat4 &c, const mat4 &a);
 int mat4_inverse(mat4 &c, const mat4 &a);
 void mat4_mul_mat4(mat4 &c, const mat4 &a, const mat4 &b);
 
 // assuming row vectors, multiply with matrix on the right
 // c = a * m;
-void row4_mul_mat4(real4 c, const REAL *a, const mat4 &m);
+void row4_mul_mat4(real4 c, const real *a, const mat4 &m);
 
 // assuming a column vector, multiply with matrix on left
 // c = m * a;
-void mat4_mul_col4(real4 c, const mat4 &m, const REAL *a);
+void mat4_mul_col4(real4 c, const mat4 &m, const real *a);
 
 
 

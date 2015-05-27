@@ -121,19 +121,19 @@ void real3_cross(real3 c, const real3 a, const real3 b)
 	c[2] = (a[0] * b[1]) - (a[1] * b[0]);
 }
 
-REAL real3_distance(const real3 a, const real3 b)
+real real3_distance(const real3 a, const real3 b)
 {
 	real3 c;
 	real3_sub(c, b, a);
 	return real3_mag(c);
 }
 
-REAL real3_radians_between_units(const real3 a, const real3 b)
+real real3_radians_between_units(const real3 a, const real3 b)
 {
 	return acos(real3_dot(a, b));
 }
 
-REAL real3_radians_between(const real3 a, const real3 b)
+real real3_radians_between(const real3 a, const real3 b)
 {
 	real3 aunit;
 	real3 bunit;
@@ -155,7 +155,7 @@ REAL real3_radians_between(const real3 a, const real3 b)
 void matn_transpose(const size_t dim, REAL **a)
 {
 	size_t i, j;
-	REAL tmp;
+	real tmp;
 
 	for (i = 1; i<dim; i++) {
 		for (j = 0; j<i; j++) {
@@ -168,7 +168,7 @@ void matn_transpose(const size_t dim, REAL **a)
 
 
 // 2 X 2 Matrix
-void mat2_mul_scalar(mat2 &c, const mat2 &a, const REAL scalar)
+void mat2_mul_scalar(mat2 &c, const mat2 &a, const real scalar)
 {
 	// row 1
 	c.m11 = a.m11 * scalar;
@@ -179,9 +179,9 @@ void mat2_mul_scalar(mat2 &c, const mat2 &a, const REAL scalar)
 	c.m22 = a.m22 * scalar;
 }
 
-void mat2_div_scalar(mat2 &c, const mat2 &a, const REAL scalar)
+void mat2_div_scalar(mat2 &c, const mat2 &a, const real scalar)
 {
-	REAL oneover = 1.0f / scalar;
+	real oneover = 1.0f / scalar;
 	// row 1
 	c.m11 = a.m11 * oneover;
 	c.m12 = a.m12 * oneover;
@@ -200,7 +200,7 @@ void mat2_neg(mat2 &c, const mat2 &a)
 	c.m22 = -a.m22;
 }
 
-REAL mat2_determinant(const mat2 &a)
+real mat2_determinant(const mat2 &a)
 {
 	return (a.m11 * a.m22) - (a.m12 * a.m21);
 }
@@ -209,7 +209,7 @@ REAL mat2_determinant(const mat2 &a)
 // c = inverse(a)
 int mat2_inverse(mat2 &c, const mat2 &a)
 {
-	REAL det = (a.m11 * a.m22) - (a.m12 * a.m21);
+	real det = (a.m11 * a.m22) - (a.m12 * a.m21);
 	if (det == 0) {
 		// error when determinant == 0
 		// cannot calculate inverse
@@ -229,7 +229,7 @@ int mat2_inverse(mat2 &c, const mat2 &a)
 
 // Calculate trace of 2x2 matrix
 // trace is the sum of the diagonal elements
-REAL mat2_trace(const mat2 &a)
+real mat2_trace(const mat2 &a)
 {
 	return a.m11 + a.m22;
 }
@@ -330,7 +330,7 @@ void mat3_sub(mat3 &c, const mat3 &a, const mat3 &b)
 	c.m33 = a.m33 - b.m33;
 }
 
-void mat3_mul_scalar(mat3 &c, const mat3 &a, const REAL scalar)
+void mat3_mul_scalar(mat3 &c, const mat3 &a, const real scalar)
 {
 	// row 1
 	c.m11 = a.m11 * scalar;
@@ -349,9 +349,9 @@ void mat3_mul_scalar(mat3 &c, const mat3 &a, const REAL scalar)
 
 }
 
-void mat3_div_scalar(mat3 &c, const mat3 &a, const REAL scalar)
+void mat3_div_scalar(mat3 &c, const mat3 &a, const real scalar)
 {
-	REAL fac = 1 / scalar;
+	real fac = 1 / scalar;
 	mat3_mul_scalar(c, a, fac);
 }
 
@@ -360,17 +360,17 @@ void mat3_div_scalar(mat3 &c, const mat3 &a, const REAL scalar)
 //  d  e  f
 //  g  h  i
 //
-REAL mat3_determinant(const mat3 &a)
+real mat3_determinant(const mat3 &a)
 {
 	// (aei +bfg + cdh) - (ceg + bdi + afh)
-	REAL part1 = a.m11*a.m22*a.m33 + a.m12*a.m23*a.m31 + a.m13*a.m21*a.m32;
-	REAL part2 = a.m13*a.m22*a.m31 + a.m12*a.m21*a.m33 + a.m11*a.m23*a.m32;
+	real part1 = a.m11*a.m22*a.m33 + a.m12*a.m23*a.m31 + a.m13*a.m21*a.m32;
+	real part2 = a.m13*a.m22*a.m31 + a.m12*a.m21*a.m33 + a.m11*a.m23*a.m32;
 
 	return part1 - part2;
 }
 
 // a + e + i
-REAL mat3_trace(const mat3 &a)
+real mat3_trace(const mat3 &a)
 {
 	return (a.m11 + a.m22 + a.m33);
 }
@@ -524,7 +524,7 @@ void mat4_transpose(mat4 &c, const mat4 &a)
 	c.m44 = a.m44;
 }
 
-REAL mat4_determinant(const mat4 &m) 
+real mat4_determinant(const mat4 &m)
 {
 	double value;
 	value =
@@ -670,7 +670,7 @@ void mat4_adjoint(mat4 &c, const mat4 &a)
 
 int mat4_inverse(mat4 &c, const mat4 &a)
 {
-	REAL determinant = mat4_determinant(a);
+	real determinant = mat4_determinant(a);
 	if (determinant == 0) {
 		return -1;
 	}
@@ -709,7 +709,7 @@ void mat4_mul_mat4(mat4 &c, const mat4 &a, const mat4 &b)
 }
 
 // c = vec4 * mat4
-void row4_mul_mat4(real4 c, const REAL *a, const mat4 &m)
+void row4_mul_mat4(real4 c, const real *a, const mat4 &m)
 {
 	c[0] = a[0] * m.m11 + a[1] * m.m21 + a[2] * m.m31 + a[3] * m.m41;
 	c[1] = a[0] * m.m12 + a[1] * m.m22 + a[2] * m.m32 + a[3] * m.m42;
@@ -717,7 +717,7 @@ void row4_mul_mat4(real4 c, const REAL *a, const mat4 &m)
 	c[3] = a[0] * m.m14 + a[1] * m.m24 + a[2] * m.m34 + a[3] * m.m44;
 }
 
-void mat4_mul_col4(real4 c, const mat4 &m, const REAL *a)
+void mat4_mul_col4(real4 c, const mat4 &m, const real *a)
 {
 	c[0] = m.m11*a[0] + m.m12 *a[1] + m.m13*a[2] + m.m14*a[3];
 	c[1] = m.m21*a[0] + m.m22*a[1] + m.m23*a[2] + m.m24*a[3];

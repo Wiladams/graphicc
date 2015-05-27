@@ -54,6 +54,6 @@ void draw()
 	}
 
 	// draw polygon
-	polygon(4, square);
+	//polygon(4, square);
 
 }

@@ -28,9 +28,10 @@
 #include <memory.h>
 #include <math.h>
 #include <stdint.h>
+#include "graphicc.h"
+#include "raster_rgba.h"
 
-
-typedef float real;
+#define CBlack RGBA(0,0,0,255)
 
 struct APolyVertex {
 	real x;
@@ -223,4 +224,54 @@ struct ACamera {
 
 	// Check if transformed poly (screen coords) is facing forward
 	static bool isFacing(APolyVertex &v1, APolyVertex &v2, APolyVertex &v3);
+};
+
+
+struct ACanvas {
+	pb_rgba *bm;
+	pb_rect clipRect;
+	uint32_t colorValue;
+
+	ACanvas(pb_rgba *pbm);
+	
+	virtual ~ACanvas(){};
+
+	void setClipRect(const pb_rect &rect){ clipRect.x = rect.x; clipRect.y = rect.y; clipRect.width = rect.width; clipRect.height = rect.height; }
+	void getClipRect(int &left, int &top, int &width, int &height) {
+		left = clipRect.x; top = clipRect.y;
+		width = clipRect.width; height = clipRect.height;
+	}
+
+	void drawHorizontalLine(const int y, const int left, const int right)
+	{
+		raster_rgba_hline(bm, left, y, right - left, colorValue);
+	}
+
+	void drawVerticalLine(const int x, const int top, const int bottom)
+	{
+		raster_rgba_vline(bm, x, top, bottom - top, colorValue);
+	}
+
+	void drawLine(const int x1, const int y1, const int x2, const int y2)
+	{
+		raster_rgba_line(bm, x1, y1, x2, y2, colorValue);
+	}
+
+	void drawRect(const pb_rect &rect)
+	{
+		raster_rgba_rect_fill(bm, rect.x, rect.y, rect.width, rect.height, colorValue);
+	}
+
+	void drawBox(const pb_rect &rect)
+	{
+		drawHorizontalLine(rect.y, rect.x, rect.x + rect.width);
+		drawHorizontalLine(rect.y+rect.height, rect.x, rect.x + rect.width);
+
+		// sides
+	}
+
+	void drawBitmap(pb_rgba *bms, const int x, const int y)
+	{
+		raster_rgba_blit(bm, x, y, bms);
+	}
 };
