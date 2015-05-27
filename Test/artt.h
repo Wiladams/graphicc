@@ -56,6 +56,8 @@ struct APolygon {
 	APolyVertex *pVerts;
 	uint8_t		vertIndex[MAX_POLY_VERTICES];
 	//ATmapCoord  *pTmapCoords;		// Texture map coordinates
+
+	int APolygon::findTopmostVertex() const;
 };
 
 // Representation of a 3D vector/point
@@ -236,6 +238,8 @@ struct ACanvas {
 	
 	virtual ~ACanvas(){};
 
+	void setColor(const uint32_t value) { colorValue = value; }
+
 	void setClipRect(const pb_rect &rect){ clipRect.x = rect.x; clipRect.y = rect.y; clipRect.width = rect.width; clipRect.height = rect.height; }
 	void getClipRect(int &left, int &top, int &width, int &height) {
 		left = clipRect.x; top = clipRect.y;
@@ -244,7 +248,17 @@ struct ACanvas {
 
 	void drawHorizontalLine(const int y, const int left, const int right)
 	{
-		raster_rgba_hline(bm, left, y, right - left, colorValue);
+		int xx1 = left;
+		int yy1 = y;
+		int xx2 = right;
+		int yy2 = y;
+
+		if (!clipLine(bm->frame, xx1, yy1, xx2, yy2))
+		{
+			return;
+		}
+
+		raster_rgba_hline(bm, xx1, yy1, xx2-xx1, colorValue);
 	}
 
 	void drawVerticalLine(const int x, const int top, const int bottom)
@@ -274,4 +288,6 @@ struct ACanvas {
 	{
 		raster_rgba_blit(bm, x, y, bms);
 	}
+
+	void drawFlatConvexPolygon(const APolygon &poly);
 };

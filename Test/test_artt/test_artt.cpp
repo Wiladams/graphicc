@@ -26,15 +26,18 @@ AVector camLoc(0, 0, 0);
 AVector camDir(-0.2, 0, 0);
 real fov = FOV_90;
 ACamera cam(camLoc, camDir, viewWidth, viewHeight, fov);
+ACanvas *canvas = nullptr;
 
 void setup()
 {
 	size(viewWidth, viewHeight);
+	canvas = new ACanvas(gpb);
+	background(pLightGray);
 }
 
 void draw()
 {
-	background(pLightGray);
+	//background(pLightGray);
 
 	// rotate camera around z axis
 	AVector camDir = cam.getDirection();
@@ -54,6 +57,6 @@ void draw()
 	}
 
 	// draw polygon
-	//polygon(4, square);
+	canvas->drawFlatConvexPolygon(square);
 
 }

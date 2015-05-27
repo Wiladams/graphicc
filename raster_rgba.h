@@ -26,6 +26,8 @@ limitations under the License.
 extern "C" {
 #endif
 
+bool clipLine(const pb_rect &bounds, int &x0, int &y0, int &x1, int &y1);
+
 void raster_rgba_span(pb_rgba *pb, const uint32_t x, const uint32_t y, const size_t len, const uint32_t *data);
 
 // SRCCOPY

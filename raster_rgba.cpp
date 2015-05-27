@@ -30,6 +30,110 @@ limitations under the License.
 	lerp255(GET_B(bg), GET_B(fg), GET_A(fg)), 255)
 
 
+//
+// Line Clipping in preparation for line drawing
+//
+typedef int OutCode;
+
+static const int LN_INSIDE = 0; // 0000
+static const int LN_LEFT = 1;   // 0001
+static const int LN_RIGHT = 2;  // 0010
+static const int LN_BOTTOM = 4; // 0100
+static const int LN_TOP = 8;    // 1000
+
+// Compute the bit code for a point (x, y) using the clip rectangle
+// bounded diagonally by (xmin, ymin), and (xmax, ymax)
+
+OutCode ComputeOutCode(const pb_rect &rct, const int x, const int y)
+{
+	OutCode code;
+	double xmin = rct.x;
+	double xmax = rct.x + rct.width - 1;
+	double ymin = rct.y;
+	double ymax = rct.y + rct.height - 1;
+
+	code = LN_INSIDE;          // initialised as being inside of clip window
+
+	if (x < xmin)           // to the left of clip window
+		code |= LN_LEFT;
+	else if (x > xmax)      // to the right of clip window
+		code |= LN_RIGHT;
+	if (y < ymin)           // below the clip window
+		code |= LN_BOTTOM;
+	else if (y > ymax)      // above the clip window
+		code |= LN_TOP;
+
+	return code;
+}
+
+// Cohen–Sutherland clipping algorithm clips a line from
+// P0 = (x0, y0) to P1 = (x1, y1) against a rectangle with 
+// diagonal from (xmin, ymin) to (xmax, ymax).
+bool clipLine(const pb_rect &bounds, int &x0, int &y0, int &x1, int &y1)
+{
+	// compute outcodes for P0, P1, and whatever point lies outside the clip rectangle
+	OutCode outcode0 = ComputeOutCode(bounds, x0, y0);
+	OutCode outcode1 = ComputeOutCode(bounds, x1, y1);
+	bool accept = false;
+	double xmin = bounds.x;
+	double xmax = bounds.x + bounds.width - 1;
+	double ymin = bounds.y;
+	double ymax = bounds.y + bounds.height - 1;
+
+
+	while (true) {
+		if (!(outcode0 | outcode1)) { // Bitwise OR is 0. Trivially accept and get out of loop
+			accept = true;
+			break;
+		}
+		else if (outcode0 & outcode1) { // Bitwise AND is not 0. Trivially reject and get out of loop
+			break;
+		}
+		else {
+			// failed both tests, so calculate the line segment to clip
+			// from an outside point to an intersection with clip edge
+			double x, y;
+
+			// At least one endpoint is outside the clip rectangle; pick it.
+			OutCode outcodeOut = outcode0 ? outcode0 : outcode1;
+
+			// Now find the intersection point;
+			// use formulas y = y0 + slope * (x - x0), x = x0 + (1 / slope) * (y - y0)
+			if (outcodeOut & LN_TOP) {           // point is above the clip rectangle
+				x = x0 + (x1 - x0) * (ymax - y0) / (y1 - y0);
+				y = ymax;
+			}
+			else if (outcodeOut & LN_BOTTOM) { // point is below the clip rectangle
+				x = x0 + (x1 - x0) * (ymin - y0) / (y1 - y0);
+				y = ymin;
+			}
+			else if (outcodeOut & LN_RIGHT) {  // point is to the right of clip rectangle
+				y = y0 + (y1 - y0) * (xmax - x0) / (x1 - x0);
+				x = xmax;
+			}
+			else if (outcodeOut & LN_LEFT) {   // point is to the left of clip rectangle
+				y = y0 + (y1 - y0) * (xmin - x0) / (x1 - x0);
+				x = xmin;
+			}
+
+			// Now we move outside point to intersection point to clip
+			// and get ready for next pass.
+			if (outcodeOut == outcode0) {
+				x0 = x;
+				y0 = y;
+				outcode0 = ComputeOutCode(bounds, x0, y0);
+			}
+			else {
+				x1 = x;
+				y1 = y;
+				outcode1 = ComputeOutCode(bounds, x1, y1);
+			}
+		}
+	}
+
+	return accept;
+}
+
 
 // Draw a span of pixels
 // This is basically a SRCCOPY
