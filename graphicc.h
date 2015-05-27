@@ -32,7 +32,7 @@ limitations under the License.
 
 typedef float	float32;
 typedef double	float64;
-typedef double	REAL;
+//typedef double	REAL;
 typedef float real;
 
 // There are various sources for high precision numbers.  The well known

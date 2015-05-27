@@ -7,7 +7,7 @@
 // convenience
 // Multiply rows against transformation matrix
 // assume columnar vectors on the right of the matrix
-void ogl_transform_rows(REAL *res, const mat4 &tmat, const REAL *inpts, const size_t nrows)
+void ogl_transform_rows(real *res, const mat4 &tmat, const real *inpts, const size_t nrows)
 {
 	for (size_t idx = 0; idx < nrows; idx++)
 	{
@@ -16,7 +16,7 @@ void ogl_transform_rows(REAL *res, const mat4 &tmat, const REAL *inpts, const si
 }
 
 // translation
-void ogl_translate(mat4 &c, const REAL dx, const REAL dy, const REAL dz)
+void ogl_translate(mat4 &c, const real dx, const real dy, const real dz)
 {
 	memset(&c, 0, sizeof(mat4));
 	c.m11 = 1;
@@ -42,7 +42,7 @@ void ogl_scale(mat4 &c, const real3 sxyz)
 }
 
 // rotate around x axis
-void ogl_rotatex(mat4 &c, const REAL radians)
+void ogl_rotatex(mat4 &c, const real radians)
 {
 	memset(&c, 0, sizeof(mat4));
 
@@ -57,7 +57,7 @@ void ogl_rotatex(mat4 &c, const REAL radians)
 }
 
 // rotate around y axis
-void ogl_rotatey(mat4 &c, const REAL radians)
+void ogl_rotatey(mat4 &c, const real radians)
 {
 	memset(&c, 0, sizeof(mat4));
 	
@@ -72,7 +72,7 @@ void ogl_rotatey(mat4 &c, const REAL radians)
 }
 
 // rotate around z axis
-void ogl_rotatez(mat4 &c, const REAL radians)
+void ogl_rotatez(mat4 &c, const real radians)
 {
 	memset(&c, 0, sizeof(mat4));
 
@@ -89,19 +89,19 @@ void ogl_rotatez(mat4 &c, const REAL radians)
 // Rotate around an arbitrary axis
 // rotate around an axis with its center
 // at the origin
-void ogl_rotate_around_axis(mat4 &c, const real3 n, const REAL radians)
+void ogl_rotate_around_axis(mat4 &c, const real3 n, const real radians)
 {
-	REAL nx = n[0];
-	REAL ny = n[1];
-	REAL nz = n[2];
-	REAL nx2 = n[0] * n[0];
-	REAL ny2 = n[1] * n[1];
-	REAL nz2 = n[2] * n[2];
+	real nx = n[0];
+	real ny = n[1];
+	real nz = n[2];
+	real nx2 = n[0] * n[0];
+	real ny2 = n[1] * n[1];
+	real nz2 = n[2] * n[2];
 
-	REAL cosR = cos(radians);
-	REAL sinR = sin(radians);
-	REAL onemincosR = 1 - cosR;
-	REAL oneminsinR = 1 - sinR;
+	real cosR = cos(radians);
+	real sinR = sin(radians);
+	real onemincosR = 1 - cosR;
+	real oneminsinR = 1 - sinR;
 
 	// row 1
 	c.m11 = nx2 * onemincosR + cosR;
@@ -143,17 +143,17 @@ void ogl_set_rotation(mat4 &c, const mat3 &rot)
 
 void ogl_lookat(mat4 &mat, const real3 eye, const real3 center, const real3 up)
 {
-	REAL * m = (REAL*)&mat;
+	real * m = (real*)&mat;
 
 	real3 tmpreal3;
 	real3 f;
 	real3 upN;
 
 	real3 s;
-	//REAL *s = &m[0];
+	//real *s = &m[0];
 
 	real3 u;
-	//REAL *u = &m[4];
+	//real *u = &m[4];
 
 	// Compute our new look at vector, which will be
 	//   the new negative Z axis of our transformed object.
@@ -173,7 +173,7 @@ void ogl_lookat(mat4 &mat, const real3 eye, const real3 center, const real3 up)
 }
 
 // Render pipeline transformation matrices
-void ogl_perspective(mat4 &c, const REAL zoomx, const REAL zoomy, const REAL near, const REAL far)
+void ogl_perspective(mat4 &c, const real zoomx, const real zoomy, const real near, const real far)
 {
 	memset(&c, 0, sizeof(mat4));
 
@@ -186,7 +186,7 @@ void ogl_perspective(mat4 &c, const REAL zoomx, const REAL zoomy, const REAL nea
 }
 
 
-void ogl_orthographic(mat4 &c, const REAL zoomx, const REAL zoomy, const REAL near, const REAL far)
+void ogl_orthographic(mat4 &c, const real zoomx, const real zoomy, const real near, const real far)
 {
 	memset(&c, 0, sizeof(mat4));
 
@@ -198,7 +198,7 @@ void ogl_orthographic(mat4 &c, const REAL zoomx, const REAL zoomy, const REAL ne
 	c.m44 = 1;
 }
 
-mat4 ogl_ortho(REAL left, REAL right, REAL bottom, REAL top, REAL n, REAL f)
+mat4 ogl_ortho(real left, real right, real bottom, real top, real n, real f)
 {
 	mat4 r;
 	r.m11 = 2.0f / (right - left);           r.m12 = 0,                               r.m13 = 0;                 r.m14 = 0;
@@ -213,22 +213,22 @@ mat4 ogl_ortho(REAL left, REAL right, REAL bottom, REAL top, REAL n, REAL f)
 // clipx := -1 (left), 1 (right)
 // clipy := -1 (bottom), 1 (top)
 //
-void ogl_map_to_window(REAL &screenx, REAL &screeny, 
-	const REAL clipx, const REAL clipy, const REAL clipw, 
-	const REAL winResx, const REAL winResy, 
-	const REAL winCenterx, const REAL winCentery)
+void ogl_map_to_window(real &screenx, real &screeny, 
+	const real clipx, const real clipy, const real clipw, 
+	const real winResx, const real winResy, 
+	const real winCenterx, const real winCentery)
 {
 	screenx = ((clipx*winResx) / (2 * clipw)) + winCenterx;
 	screeny = -((clipy*winResy) / (2 * clipw)) + winCentery;
 }
 
-void ogl_create_ndc_to_window(const REAL Ds,
-	const REAL winResx, const REAL winResy,
-	const REAL Sx, const REAL Sy)
+void ogl_create_ndc_to_window(const real Ds,
+	const real winResx, const real winResy,
+	const real Sx, const real Sy)
 {
-	REAL Wshalf = winResx / 2.0f;
-	REAL Hshalf = winResy / 2.0f;
-	REAL Dshalf = Ds / 2.0f;
+	real Wshalf = winResx / 2.0f;
+	real Hshalf = winResy / 2.0f;
+	real Dshalf = Ds / 2.0f;
 
 	mat4 m = {
 		Wshalf, 0, 0, 0,

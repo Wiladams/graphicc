@@ -26,17 +26,17 @@ limitations under the License.
 extern "C" {
 #endif
 
-	void ogl_transform_rows(REAL *res, const mat4 &tmat, const REAL *inpts, const size_t nrows);
+	void ogl_transform_rows(real *res, const mat4 &tmat, const real *inpts, const size_t nrows);
 
-void ogl_translate(mat4 &c, const REAL dx, const REAL dy, const REAL dz);
+void ogl_translate(mat4 &c, const real dx, const real dy, const real dz);
 
 void ogl_scale(mat4 &c, const real3 sxyz);
 
 
-void ogl_rotatex(mat4 &c, const REAL radians);
-void ogl_rotatey(mat4 &c, const REAL radians);
-void ogl_rotatez(mat4 &c, const REAL radians);
-void ogl_rotate_around_axis(mat4 &c, const real3 n, const REAL radians);
+void ogl_rotatex(mat4 &c, const real radians);
+void ogl_rotatey(mat4 &c, const real radians);
+void ogl_rotatez(mat4 &c, const real radians);
+void ogl_rotate_around_axis(mat4 &c, const real3 n, const real radians);
 void ogl_set_rotation(mat4 &c, const mat3 &rot);
 
 // Some render pipeline matrices
@@ -44,21 +44,21 @@ void ogl_set_rotation(mat4 &c, const mat3 &rot);
 void ogl_lookat(mat4 &c, const real3 eye, const real3 lookAt, const real3 up); 
 
 // Create a projection matrix
-void ogl_perspective(mat4 &c, const REAL zoomx, const REAL zoomy, const REAL near, const REAL far);
-void ogl_orthographic(mat4 &c, const REAL zoomx, const REAL zoomy, const REAL near, const REAL far);
-mat4 ogl_ortho(REAL left, REAL right, REAL bottom, REAL top, REAL n, REAL f);
+void ogl_perspective(mat4 &c, const real zoomx, const real zoomy, const real near, const real far);
+void ogl_orthographic(mat4 &c, const real zoomx, const real zoomy, const real near, const real far);
+mat4 ogl_ortho(real left, real right, real bottom, real top, real n, real f);
 
 // Create matrix to map from normalized (projection) space to actual physical screen
 // screenx, screeny contain the transformed values
 // clipx, clipy represent the input point
-void ogl_map_to_window(REAL &screenx, REAL &screeny,
-	const REAL clipx, const REAL clipy, const REAL clipw,
-	const REAL winResx, const REAL winResy,
-	const REAL winCenterx, const REAL winCentery);
+void ogl_map_to_window(real &screenx, real &screeny,
+	const real clipx, const real clipy, const real clipw,
+	const real winResx, const real winResy,
+	const real winCenterx, const real winCentery);
 
-void ogl_create_ndc_to_window(const REAL Ds,
-	const REAL winResx, const REAL winResy,
-	const REAL Sx, const REAL Sy);
+void ogl_create_ndc_to_window(const real Ds,
+	const real winResx, const real winResy,
+	const real Sx, const real Sy);
 
 #ifdef __cplusplus
 }

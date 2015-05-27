@@ -9,13 +9,13 @@ LRESULT CALLBACK keyPressed(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 //#define HIWORD(l)           ((WORD)((((DWORD_PTR)(l)) >> 16) & 0xffff))
 
 
-REAL winResx = 640;
-REAL winResy = 480;
-REAL winMaxX = winResx - 1;
-REAL winMaxY = winResy - 1;
+real winResx = 640;
+real winResy = 480;
+real winMaxX = winResx - 1;
+real winMaxY = winResy - 1;
 
-REAL winCenterx = (winResx / 2)-1;
-REAL winCentery = (winResy / 2)-1;
+real winCenterx = (winResx / 2)-1;
+real winCentery = (winResy / 2)-1;
 
 real3 eye = { -0.25, 1, 2 };
 
@@ -70,7 +70,7 @@ void setup()
 	//noLoop();
 }
 
-REAL pts1[] = {
+real pts1[] = {
 	0, 0, 1, 1,
 	2, 0, 1, 1,
 	2, 3, 1, 1,
@@ -81,7 +81,7 @@ REAL pts1[] = {
 	0, 3, 0, 1
 };
 
-size_t nrows = sizeof(pts1) / sizeof(REAL) / 4;
+size_t nrows = sizeof(pts1) / sizeof(real) / 4;
 
 /*
 Reference: http://www.songho.ca/opengl/gl_transform.html
@@ -90,7 +90,7 @@ Reference: http://www.songho.ca/opengl/gl_transform.html
 3. Then the viewport transformation takes those 3D NDC coordinates into 3D window coordinates.
 
 */
-void transform_points(REAL *res, const mat4 &tmat, const REAL *inpts, const size_t nrows)
+void transform_points(real *res, const mat4 &tmat, const real *inpts, const size_t nrows)
 {
 	for (size_t idx = 0; idx < nrows; idx++)
 	{
@@ -108,12 +108,12 @@ void drawShape()
 
 
 	// projection
-	REAL left = -5;
-	REAL right = 5;
-	REAL bottom = -5;
-	REAL top = 5;
-	REAL n = -100;
-	REAL f = 100;
+	real left = -5;
+	real right = 5;
+	real bottom = -5;
+	real top = 5;
+	real n = -100;
+	real f = 100;
 
 	mat4 proj_matrix = ogl_ortho(left, right, bottom, top, n, f);
 
@@ -121,17 +121,17 @@ void drawShape()
 	mat4_mul_mat4(posMatrix, proj_matrix, mv_matrix);
 
 	// divide by w
-	REAL res[32];
+	real res[32];
 	transform_points(res, posMatrix, pts1, nrows);
 
 
 	// viewport transform
 	fill(pBlack);
 	stroke(pBlack);
-	REAL screenx, screeny;
+	real screenx, screeny;
 	for (int idx = 0; idx < nrows; idx++)
 	{
-		REAL *pt = &res[idx * 4];
+		real *pt = &res[idx * 4];
 		ogl_map_to_window(screenx, screeny,
 			pt[0], pt[1], 1,
 			winMaxX, winMaxY,
@@ -145,10 +145,10 @@ void drawShape()
 
 void drawText()
 {
-	REAL screenx, screeny;
-	REAL clipx = 0;
-	REAL clipy = 0;
-	REAL clipw = 1;
+	real screenx, screeny;
+	real clipx = 0;
+	real clipy = 0;
+	real clipw = 1;
 
 	// Draw lines
 	//ogl_map_to_window(screenx, screeny, clipx, clipy, clipw,winMaxX, winMaxY,winCenterx, winCentery);
@@ -238,14 +238,14 @@ void drawText()
 
 void drawAxes()
 {
-	REAL axispts1[] = {
+	real axispts1[] = {
 		0, 0, 0, 1,
 		10, 0, 0, 1,
 		0, 10, 0, 1,
 		0, 0, 10, 1,
 	};
 
-	size_t nrows = sizeof(axispts1) / sizeof(REAL) / 4;
+	size_t nrows = sizeof(axispts1) / sizeof(real) / 4;
 
 	// model to view
 	mat4 mv_matrix;
@@ -255,12 +255,12 @@ void drawAxes()
 
 
 	// projection
-	REAL left = -5;
-	REAL right = 5;
-	REAL bottom = -5;
-	REAL top = 5;
-	REAL n = -100;
-	REAL f = 100;
+	real left = -5;
+	real right = 5;
+	real bottom = -5;
+	real top = 5;
+	real n = -100;
+	real f = 100;
 
 	mat4 proj_matrix = ogl_ortho(left, right, bottom, top, n, f);
 
@@ -268,17 +268,17 @@ void drawAxes()
 	mat4_mul_mat4(posMatrix, proj_matrix, mv_matrix);
 
 	// divide by w
-	REAL res[32];
+	real res[32];
 	transform_points(res, posMatrix, axispts1, nrows);
 
 
 	// viewport transform
-	REAL originx, originy;
-	REAL screenx, screeny;
-	REAL *originpt = &res[0];
-	REAL *xaxisend = &res[1 * 4];
-	REAL *yaxisend = &res[2 * 4];
-	REAL *zaxisend = &res[3 * 4];
+	real originx, originy;
+	real screenx, screeny;
+	real *originpt = &res[0];
+	real *xaxisend = &res[1 * 4];
+	real *yaxisend = &res[2 * 4];
+	real *zaxisend = &res[3 * 4];
 
 	ogl_map_to_window(originx, originy,
 			originpt[0], originpt[1], 1,

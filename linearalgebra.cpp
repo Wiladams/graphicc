@@ -23,14 +23,14 @@ limitations under the License.
 // general methods
 // copy 
 // c = a
-void realn_assign(const int dim, REAL *c, const REAL *a)
+void realn_assign(const int dim, real *c, const real *a)
 {
 	for (int idx = 0; idx < dim; idx++) {
 		c[idx] = a[idx];
 	}
 }
 
-void realn_add(const int dim, REAL * c, const REAL * a, const REAL *b)
+void realn_add(const int dim, real * c, const real * a, const real *b)
 {
 	for (int i = 0; i < dim; i++)
 	{
@@ -38,7 +38,7 @@ void realn_add(const int dim, REAL * c, const REAL * a, const REAL *b)
 	}
 }
 
-void realn_sub(const int dim, REAL *c, const REAL *a, const REAL *b)
+void realn_sub(const int dim, real *c, const real *a, const real *b)
 {
 	for (int i = 0; i < dim; i++)
 	{
@@ -46,7 +46,7 @@ void realn_sub(const int dim, REAL *c, const REAL *a, const REAL *b)
 	}
 }
 
-void realn_mul_scalar(const int dim, REAL *c, const REAL *a, const REAL scalar)
+void realn_mul_scalar(const int dim, real *c, const real *a, const real scalar)
 {
 	for (int i = 0; i < dim; i++)
 	{
@@ -54,7 +54,7 @@ void realn_mul_scalar(const int dim, REAL *c, const REAL *a, const REAL scalar)
 	}
 }
 
-void realn_mul_realn(const size_t dim, REAL *c, const REAL *a, const REAL *b)
+void realn_mul_realn(const size_t dim, real *c, const real *a, const real *b)
 {
 	for (size_t idx = 0; idx < dim; idx++) {
 		c[idx] = a[idx] * b[idx];
@@ -62,12 +62,12 @@ void realn_mul_realn(const size_t dim, REAL *c, const REAL *a, const REAL *b)
 }
 
 
-void realn_div_scalar(const int dim, REAL *c, const REAL *a, const REAL scalar)
+void realn_div_scalar(const int dim, real *c, const real *a, const real scalar)
 {
 	realn_mul_scalar(dim, c, a, 1 / scalar);
 }
 
-void realn_neg(const int dim, REAL *c, const REAL *a)
+void realn_neg(const int dim, real *c, const real *a)
 {
 	for (int i = 0; i < dim; i++)
 	{
@@ -76,9 +76,9 @@ void realn_neg(const int dim, REAL *c, const REAL *a)
 }
 
 // Linear algebra
-REAL realn_dot(const int dim, const REAL * a, const REAL * b)
+real realn_dot(const int dim, const real * a, const real * b)
 {
-	REAL c = 0;
+	real c = 0;
 	for (int i = 0; i < dim; i++)
 	{
 		c += a[i] * b[i];
@@ -87,15 +87,15 @@ REAL realn_dot(const int dim, const REAL * a, const REAL * b)
 	return c;
 }
 
-REAL realn_mag(const int dim, const REAL * a)
+real realn_mag(const int dim, const real * a)
 {
-	REAL lsquared = realn_dot(dim, a, a);
+	real lsquared = realn_dot(dim, a, a);
 	return sqrt(lsquared);
 }
 
-void realn_normalize(const int dim, REAL * c, const REAL * a)
+void realn_normalize(const int dim, real * c, const real * a)
 {
-	REAL mag = realn_mag(dim, a);
+	real mag = realn_mag(dim, a);
 	realn_div_scalar(dim, c, a, mag);
 }
 
@@ -104,7 +104,7 @@ void realn_normalize(const int dim, REAL * c, const REAL * a)
 
 
 // Specific to real3
-void real3_set(real3 c, REAL x, REAL y, REAL z)
+void real3_set(real3 c, real x, real y, real z)
 {
 	c[0] = x;
 	c[1] = y;
@@ -152,7 +152,7 @@ real real3_radians_between(const real3 a, const real3 b)
 // general matrix routines
 
 // in-place transpose
-void matn_transpose(const size_t dim, REAL **a)
+void matn_transpose(const size_t dim, real **a)
 {
 	size_t i, j;
 	real tmp;
@@ -469,7 +469,7 @@ void mat4_set_identity(mat4 &c)
 	c.m44 = 1;
 }
 
-void mat4_mul_scalar(mat4 &c, const mat4 &a, const REAL scalar)
+void mat4_mul_scalar(mat4 &c, const mat4 &a, const real scalar)
 {
 	// row 1
 	c.m11 = a.m11 * scalar;
@@ -496,7 +496,7 @@ void mat4_mul_scalar(mat4 &c, const mat4 &a, const REAL scalar)
 	c.m44 = a.m44 * scalar;
 }
 
-void mat4_div_scalar(mat4 &c, const mat4&a, const REAL scalar)
+void mat4_div_scalar(mat4 &c, const mat4&a, const real scalar)
 {
 	mat4_mul_scalar(c, a, 1.0f / scalar);
 }
