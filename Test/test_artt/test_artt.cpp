@@ -12,6 +12,7 @@ APolygon square = {
 	{ 0, 1, 2, 3, 0, 0, 0, 0 }
 };
 
+
 float squareWorld[] = {
 	50, -50, -400,
 	50, 50, -400,
@@ -33,18 +34,36 @@ void setup()
 	size(viewWidth, viewHeight);
 	canvas = new ACanvas(gpb);
 	background(pLightGray);
+
+	// draw polygon
+	APolyVertex tsc[3];
+	tsc[0].x = 10; tsc[0].y = 10;
+	tsc[1].x = 100; tsc[1].y = 100;
+	tsc[2].x = 10; tsc[2].y = 200;
+
+	APolygon tri = {
+		pBlue,
+		FLAT,	// shading 
+		3,
+		tsc,
+		{ 0, 2, 1, 0, 0, 0, 0, 0 }
+	};
+
+	canvas->drawFlatConvexPolygon(tri);
+
+	//noLoop();
 }
 
 void draw()
 {
-	//background(pLightGray);
+	background(pLightGray);
 
 	// rotate camera around z axis
 	AVector camDir = cam.getDirection();
-	camDir.z += 0.05;
+	camDir.z += 0.025;
 	cam.setDirection(camDir);
 	AVector camLoc = cam.getLocation();
-	camLoc.z -= 1;
+	camLoc.z -= 0.0250;
 	cam.setLocation(camLoc);
 
 	// transform and project polygon to screen coordinates
@@ -55,8 +74,5 @@ void draw()
 			quit();
 		}
 	}
-
-	// draw polygon
 	canvas->drawFlatConvexPolygon(square);
-
 }

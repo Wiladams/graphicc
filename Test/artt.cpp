@@ -138,7 +138,7 @@ struct APolyDda {
 		// Calculate fractional number of pixels to step in x (dx)
 		real xdelta = poly.pVerts[poly.vertIndex[vertNext]].x -
 			poly.pVerts[poly.vertIndex[vertIndex]].x;
-		int ydelta = yend = ybeg;
+		int ydelta = yend - ybeg;
 		if (ydelta > 0) {
 			dx = xdelta / ydelta;
 		}
