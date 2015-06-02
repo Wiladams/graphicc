@@ -270,8 +270,7 @@ int raster_rgba_vline(pb_rgba *pb, unsigned int x, unsigned int y, unsigned int 
 	return 0;
 }
 
-//#define sgn(x) x < 0 ? -1 : x==0?0 : 1
-#define sgn(val) ((0 < val) - (val < 0))
+
 
 // Bresenham simple line drawing
 void raster_rgba_line(pb_rgba *pb, unsigned int x1, unsigned int y1, unsigned int x2, unsigned int y2, int color)
@@ -325,7 +324,7 @@ void raster_rgba_line(pb_rgba *pb, unsigned int x1, unsigned int y1, unsigned in
 }
 
 
-void raster_rgba_blit(pb_rgba *pb, unsigned int x, unsigned int y, pb_rgba *src)
+void raster_rgba_blit(pb_rgba *pb, const int x, const int y, pb_rgba *src)
 {
 	uint32_t *dstPtr = (uint32_t *)pb->data;
 	uint32_t *srcPtr = (uint32_t *)src->data;

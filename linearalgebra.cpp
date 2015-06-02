@@ -535,7 +535,7 @@ real mat4_determinant(const mat4 &m)
 		m.m12 * m.m21 * m.m34 * m.m43 - m.m11 * m.m22 * m.m34 * m.m43 - m.m13 * m.m22 * m.m31 * m.m44 + m.m12 * m.m23 * m.m31 * m.m44 +
 		m.m13 * m.m21 * m.m32 * m.m44 - m.m11 * m.m23 * m.m32 * m.m44 - m.m12 * m.m21 * m.m33 * m.m44 + m.m11 * m.m22 * m.m33 * m.m44;
 	
-	return value;
+	return (real)value;
 }
 
 // Create the 4x4 adjoint matrix 

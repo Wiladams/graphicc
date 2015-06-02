@@ -50,7 +50,7 @@ void computeCoefficients(const int n, int * c)
 	}
 }
 
-void bezierPoint(const float u, Pt3 * pt, const int nControls, const Pt3 *controls, const int * c)
+void bezierPoint(Pt3 * pt, const float u, const int nControls, const Pt3 *controls, const int * c)
 {
 	int k;
 	int n = nControls - 1;
@@ -77,7 +77,7 @@ void bezier(const Pt3 *controls, const int nControls, const int m, Pt3 * curve)
 
 	computeCoefficients(nControls - 1, c);
 	for (i = 0; i <= m; i++) {
-		bezierPoint(i / (float)m, &curve[i], nControls, controls, c);
+		bezierPoint(&curve[i], i / (float)m, nControls, controls, c);
 	}
 	free(c);	
 }

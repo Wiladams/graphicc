@@ -79,6 +79,7 @@
     <ClCompile Include="pbm.cpp" />
     <ClCompile Include="pixelbuffer.cpp" />
     <ClCompile Include="raster_rgba.cpp" />
+    <ClCompile Include="raster_rgba_polygon.cpp" />
     <ClCompile Include="raster_rgba_triangle.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

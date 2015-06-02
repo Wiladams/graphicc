@@ -32,8 +32,8 @@ limitations under the License.
 
 typedef float	float32;
 typedef double	float64;
-//typedef double	REAL;
-typedef float real;
+typedef float32 real;
+typedef float coord;
 
 // There are various sources for high precision numbers.  The well known
 // CRC books are one.  The ones used here come variously from the Graphics Gems
@@ -63,13 +63,13 @@ typedef float real;
 
 #define G_EULER			0.577215664901532860606
 
-// A really small value
+// A decently small value
 #define EPSILON		0.0000000001
 
+inline bool isBigEndian() {int t = 1;return (*(char*)&t == 0);}
 
-
-inline real DEGREES(const real radians) {return ((180 / G_PI) * radians);}
-inline real RADIANS(const real degrees) {return ((G_PI / 180)*degrees);}
+inline real DEGREES(const real radians) { return (real)(G_RTOD * radians); }
+inline real RADIANS(const real degrees) { return (real)(G_DTOR * degrees); }
 
 // map a value (a) from between rlo <= a <= rhi to  shi <= b <= slo
 inline double MAP(double a, double rlo, double rhi, double slo, double shi) {return slo + ((double)(a - rlo) / (rhi - rlo)) * (shi - slo);}
@@ -80,6 +80,11 @@ inline double MAP(double a, double rlo, double rhi, double slo, double shi) {ret
 #define div255(num) ((num + (num >> 8)) >> 8)
 #define lerp255(bg, fg, a) ((uint8_t)div255((fg*a+bg*(255-a))))
 
+// returns the sign of the value
+//  < 0 --> -1
+//  > 0 -->  1
+// == 0 -->  0
+inline int sgn(real val) { return ((0 < val) - (val < 0)); }
 
 
 #ifdef _MSC_VER
@@ -113,17 +118,18 @@ typedef struct {
 		struct {
 			uint8_t r, g, b, a;
 		};
+		uint8_t v_[4];
 		uint32_t value;
 	};
 } pix_rgba;
 
 // pixel buffer rectangle
-typedef struct _pb_rect {
+typedef struct pb_rect_t {
 	int x, y;
 	int width, height;
 } pb_rect;
 
-inline int pb_rect_contains_point(const pb_rect &rct, const int x, const int y)
+inline int pb_rect_contains_point(const pb_rect &rct, const coord x, const coord y)
 {
 	if ((x < rct.x) || (y < rct.y))
 		return 0;
@@ -275,10 +281,7 @@ enum cover_scale_e
 	cover_full = cover_mask         //----cover_full 
 };
 
-inline bool isBigEndian() {
-	int t = 1;
-	return (*(char*)&t == 0);
-}
+
 
 
 typedef struct _font {
