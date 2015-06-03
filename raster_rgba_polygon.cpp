@@ -1,10 +1,10 @@
 #include "raster_rgba.h"
 
-int findTopmostVertex(const coord *verts, const int numVerts)
+int findTopmostVertex(coord *verts, const int numVerts)
 {
 	real ymin(32767);
 	int vmin;
-	const coord *vertPtr = verts;
+	coord *vertPtr = verts;
 
 	for (int i = 0; i < numVerts; i++){
 		if (vertPtr[1] < ymin)
@@ -59,7 +59,7 @@ struct APolyDda {
 };
 
 
-void raster_rgba_convex_polygon_fill(pb_rgba *pb, const coord *verts, const int nverts, const pb_rect &clipRect, int color)
+void raster_rgba_convex_polygon_fill(pb_rgba *pb, coord *verts, const int nverts, const pb_rect &clipRect, int color)
 {
 	// find topmost vertex of the polygon
 	int vmin = findTopmostVertex(verts, nverts);

@@ -17,6 +17,7 @@ static int gMode = 0;
 
 void drawShape();
 
+
 void drawShape()
 {
 	rectMode(CENTER);
@@ -32,6 +33,17 @@ void drawShape()
 	case 1:
 		quad(width / 2, 0, width - 1, height / 2, width / 2, height - 1, 0, height / 2);
 		break;
+
+	case 2: {
+				static coord polyverts[] = {
+					(width / 2) - 100, 10,
+					10, height / 2,
+					(width / 2) + 100, (height / 2),
+					(width / 2) + 100, 10,
+				};
+				static int nverts = 4;
+				raster_rgba_convex_polygon_fill(gpb, polyverts, nverts, pixelFrame, pYellow);
+	} break;
 
 	default:
 		rect(width / 2, height / 2, width / 2, height / 2);

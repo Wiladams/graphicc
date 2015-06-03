@@ -50,7 +50,7 @@ void raster_rgba_triangle_fill(pb_rgba *pb,
 	int color);
 
 
-void raster_rgba_convex_polygon_fill(pb_rgba *pb, const coord *verts, const int nverts, const pb_rect &clipRect, int color);
+void raster_rgba_convex_polygon_fill(pb_rgba *pb, coord *verts, const int nverts, const pb_rect &clipRect, int color);
 
 void raster_rgba_ellipse_fill(pb_rgba *pb, const uint32_t cx, const uint32_t cy, const size_t xradius, size_t yradius, const uint32_t color);
 void raster_rgba_ellipse_stroke(pb_rgba *pb, const uint32_t cx, const uint32_t cy, const size_t xradius, size_t yradius, const uint32_t color);
