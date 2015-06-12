@@ -267,9 +267,6 @@ void test_struct()
 
 void test_vec3()
 {
-	//vec3 a1;
-	//a1._v[0] = 10;
-
 	vec3 a = { 1, 2, 3 };
 	vec3 b = { 10, 20, 30 };
 	
@@ -293,6 +290,10 @@ void test_vec3()
 	vec3 e = { 1, 1, 0 };
 	printf("\nDISTANCE: %f", vec3_distance(d, e));
 
+
+	vec3 bminus = vec3_neg(b);
+	printf("\nNEG: ");
+	realn_write_array(3, (const real *)&bminus);
 }
 
 int main(int argc, char **argv)
