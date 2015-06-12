@@ -53,7 +53,7 @@ extern "C" {
 // C4SRF
 
 // DETVAL
-void DETVAL(const mat3 &DI, REAL &VAL);
+void DETVAL(const mat3 &DI, real &VAL);
 
 // EFGLMN
 
@@ -139,7 +139,7 @@ void MATRNS(const mat4 &MI, mat4 &MO);
 // SPLNPC
 
 // SPROD - Dot product
-void SPROD(const real3 &V1, const real3 &V2, REAL &S);
+void SPROD(const real3 &V1, const real3 &V2, real &S);
 
 // SRFINV
 // SRFREV
@@ -158,10 +158,10 @@ void SPROD(const real3 &V1, const real3 &V2, REAL &S);
 // TWSTV
 // UNV		
 // VANG		Compute the angle between two vectors
-void VANG(const real3 &V1, const real3 &V2, REAL &A);
+void VANG(const real3 &V1, const real3 &V2, real &A);
 
 // VMAG		Compute the magnitude of a vector
-void VMAG(const real3 V, REAL MAG);
+void VMAG(const real3 V, real MAG);
 
 // VPROD	Compute the vector product of two vectors (cross product)
 void VPROD(const real3 &V1, const real3 &V2, real3 &V3);

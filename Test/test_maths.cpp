@@ -5,9 +5,9 @@ http://www.calcul.com/show/calculator/matrix-multiplication_;4;4;4;4?matrix1=[["
 */
 
 #include "test_common.h"
+#include "vec3.h"
 
-
-void realn_write_array(const size_t nelems, const REAL *c)
+void realn_write_array(const size_t nelems, const real *c)
 {
 	printf("[");
 	for (size_t idx = 0; idx < nelems; idx++)
@@ -33,7 +33,7 @@ void write_mat4(const mat4 &c)
 	printf("\n");
 }
 
-void realn_print(const size_t nelems, const REAL *c, const char *caption)
+void realn_print(const size_t nelems, const real *c, const char *caption)
 {
 	printf("%s ==> ", caption);
 	realn_write_array(nelems, c);
@@ -106,9 +106,9 @@ void test_matn_transpose()
 
 	//matn_transpose(4, m);
 
-	realn_write_array(4, (REAL *)&m[0]);
+	realn_write_array(4, (real *)&m[0]);
 	printf("\n");
-	realn_write_array(4, (REAL *)&m[1]);
+	realn_write_array(4, (real *)&m[1]);
 
 }
 
@@ -227,7 +227,7 @@ void test_inverse()
 
 void test_rotation()
 {
-	REAL X[] = {
+	real X[] = {
 		0, 0, 1, 1,
 		3, 0, 1, 1,
 		3, 2, 1, 1,
@@ -251,7 +251,7 @@ void test_rotation()
 
 	// transform each row through the matrix
 	real4 res;
-	REAL *rowPtr = nullptr;
+	real *rowPtr = nullptr;
 
 	for (int row = 0; row < nRows; row++) {
 		rowPtr = &X[row * 4];
@@ -265,6 +265,35 @@ void test_struct()
 	printf("sizeof(pix_rgba): %d\n", sizeof(pix_rgba));
 }
 
+void test_vec3()
+{
+	//vec3 a1;
+	//a1._v[0] = 10;
+
+	vec3 a = { 1, 2, 3 };
+	vec3 b = { 10, 20, 30 };
+	
+	vec3 c = vec3_add(a, b);
+	printf("\nADD: ");
+	realn_write_array(3, (const real *)&c);
+
+	c = vec3_sub(c, b);
+	printf("\nSUB: ");
+	realn_write_array(3, (const real *)&c);
+
+	c = vec3_mul(a, b);
+	printf("\nMUL: ");
+	realn_write_array(3, (const real *)&c);
+
+	c = vec3_scale(a, 10);
+	printf("\nSCALE: ");
+	realn_write_array(3, (const real *)&c);
+
+	vec3 d = {1, 0, 0};
+	vec3 e = { 1, 1, 0 };
+	printf("\nDISTANCE: %f", vec3_distance(d, e));
+
+}
 
 int main(int argc, char **argv)
 {
@@ -276,7 +305,8 @@ int main(int argc, char **argv)
 	//test_adjoint();
 	//test_inverse();
 	//test_rotation();
-	test_struct();
+	//test_struct();
+	test_vec3();
 
 	return 0;
 }
