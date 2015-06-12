@@ -212,7 +212,7 @@ void init()
 	font_t_init(&gfont, verdana12);
 	gTextSize = 10;
 	gTextAlignX = TX_LEFT;
-	gTextAlignY = TX_BOTTOM;
+	gTextAlignY = TX_TOP;
 
 	setKeyboardHandler(keyHandler);
 	setMouseHandler(mouseHandler);

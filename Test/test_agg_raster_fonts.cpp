@@ -93,6 +93,7 @@ void draw()
 
 	setFont(fontlist[fontidx].data);
 
+	textAlign(TX_LEFT, TX_TOP);
 	fill(pBlack);
 	text(fontlist[fontidx].name, 0, 0);
 	text(CAPS, 0, gfont.height * 1);
