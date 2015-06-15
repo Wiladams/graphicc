@@ -35,6 +35,7 @@ int pb_rgba_init(pb_rgba *fb, const unsigned int width, const unsigned int heigh
 	fb->frame.height = height;
 
 	fb->pixelpitch = width;
+	fb->bitStride = width * 32;
 
 	return 0;
 }
@@ -65,6 +66,7 @@ int pb_rgba_get_frame(pb_rgba *pb, const unsigned int x, const unsigned int y, c
 	pf->frame.width = width;
 	pf->frame.height = height;
 	pf->pixelpitch = pb->pixelpitch;
+	pf->bitStride = pb->bitStride;
 
 	return 0;
 }
@@ -90,11 +92,24 @@ void pb_rgba_cover_pixel(pb_rgba *pb, const unsigned int x, const unsigned int y
 		// All other cases where doing a cover of something
 		// other than full opacity
 		uint8_t alpha = GET_A(value);
+		int dstPixel;
+		pb_rgba_get_pixel(pb, x, y, &dstPixel);
+
+
+		int dstColor = RGBA(
+			lerp255(GET_R(dstPixel), GET_R(value), alpha),
+			lerp255(GET_R(dstPixel), GET_R(value), alpha), 
+			lerp255(GET_R(dstPixel), GET_R(value), alpha), 
+			lerp255(GET_R(dstPixel), GET_R(value), alpha), 
+		);
+		pb_rgba_set_pixel(pb, x, y, dstColor);
+		/*
 		pix_rgba * B = (pix_rgba *)&pb->data[(y*(pb)->pixelpitch) + x];
 		B->r = lerp255(B->r, GET_R(value), alpha);
 		B->g = lerp255(B->g, GET_R(value), alpha);
 		B->b = lerp255(B->b, GET_R(value), alpha);
 		B->a = lerp255(B->a, GET_R(value), alpha);
+		*/
 	}
 }
 

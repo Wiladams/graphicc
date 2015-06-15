@@ -234,19 +234,19 @@ A pixel buffer is an array of pixels.
 The pixelformat determines the layout of the
 individual elements.
 
-data - pointer to the beginning of the data
-pformat - some indication of the pixel layout
-width - number of pixels wide
-height - number of pixels high
-pixelpitch - number of pixels between rows
+data		- pointer to the beginning of the data
+bitStride	- number of bits between rows
+pixelpitch	- number of pixels between rows
 */
 
 typedef struct _pb_rgba {
 	uint8_t *		data;
-	unsigned int		pixelpitch;
-	int					owndata;
-	pb_rect				frame;
+	unsigned int	pixelpitch;
+	int				bitStride;
+	int				owndata;
+	pb_rect			frame;
 } pb_rgba;
+
 
 
 #ifdef __cplusplus
