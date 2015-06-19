@@ -28,6 +28,7 @@
 #include <memory.h>
 #include <math.h>
 #include <stdint.h>
+
 #include "graphicc.h"
 #include "raster_rgba.h"
 
