@@ -54,6 +54,8 @@
 #ifndef __STB_INCLUDE_STB_TRUETYPE_H__
 #define __STB_INCLUDE_STB_TRUETYPE_H__
 
+#include "graphicc.h"
+
 #ifdef STBTT_STATIC
 #define STBTT_DEF static
 #else
