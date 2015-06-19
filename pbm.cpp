@@ -23,8 +23,10 @@ limitations under the License.
 #include <sys/stat.h>
 #include "raster_rgba.h"
 
+#ifdef __Win32
 #pragma warning(push)
 #pragma warning(disable: 4996)	// _CRT_SECURE_NO_WARNINGS (fopen) 
+#endif
 
 static const int MAXLINE = 100;
 
@@ -69,7 +71,7 @@ int PPM_read_binary(const char *filename, pb_rgba *fb)
 {
 	struct stat buf;
 	int ret = stat(filename, &buf);
-	printf("res: %d\n", ret, buf.st_size);
+	//printf("res: %d, size: %lld\n", ret, buf.st_size);
 
 	FILE * fp = fopen(filename, "rb");
 
@@ -118,11 +120,13 @@ int PPM_read_binary(const char *filename, pb_rgba *fb)
 	return 0;
 }
 
+/*
 int read_PPM(const char *filename, pb_rgba *fb)
 {
 
 	return -1;
 }
+*/
 
 int write_PPM_ascii(const char *filename, pb_rgba *fb)
 {
@@ -185,4 +189,6 @@ int write_PPM_binary(const char *filename, pb_rgba *fb)
 	return 0;
 }
 
+#ifdef __Win32
 #pragma warning(pop)
+#endif

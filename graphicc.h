@@ -16,9 +16,9 @@ limitations under the License.
 
 #pragma once
 
-
+#ifdef _Win32
 #pragma comment(lib,"graphicc.lib")
-
+#endif
 
 #ifndef graphicc_h
 #define graphicc_h

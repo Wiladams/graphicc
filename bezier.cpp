@@ -86,7 +86,7 @@ void bezier(const Pt3 *controls, const int nControls, const int m, Pt3 * curve)
 
 void bezier4(const Pt3 *controls, const int m, Pt3 * curve)
 {
-	int nControls = 4;
+	//int nControls = 4;
 	int i = 0;
 
 	for (i = 0; i <= m; i++) {

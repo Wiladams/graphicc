@@ -63,8 +63,8 @@ void raster_rgba_blit(pb_rgba *pb, const int x, const int y, pb_rgba *src);
 #endif
 
 
-#define raster_rgba_rect_fill(pb, x1, y1, width, height, value) for (size_t idx = 0; idx < height; idx++){raster_rgba_hline(pb, x1, y1 + idx, width, value);	}															
-#define raster_rgba_rect_fill_blend(pb, x1, y1, width, height, value) for (size_t idx = 0; idx < height; idx++){raster_rgba_hline_blend(pb, x1, y1 + idx, width, value);	}															
+#define raster_rgba_rect_fill(pb, x1, y1, width, height, value) for (int idx = 0; idx < height; idx++){raster_rgba_hline(pb, x1, y1 + idx, width, value);	}															
+#define raster_rgba_rect_fill_blend(pb, x1, y1, width, height, value) for (int idx = 0; idx < height; idx++){raster_rgba_hline_blend(pb, x1, y1 + idx, width, value);	}															
 
 
 #endif

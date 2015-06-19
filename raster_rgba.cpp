@@ -221,11 +221,9 @@ void raster_rgba_vline_fade(pb_rgba *pb, int y1, int color1, int y2, int color2,
 int raster_rgba_hline(pb_rgba *pb, unsigned int x, unsigned int y, unsigned int length, int value)
 {
 	size_t terminus = x + length;
-	x = x < 0 ? 0 : x;
 	terminus = terminus - x;
 
 	unsigned int * data = &((unsigned int *)pb->data)[y*pb->pixelpitch+x];
-	size_t count = 1;
 	for (size_t idx = 0; idx < terminus; idx++)
 	{
 		*data = value;
@@ -240,11 +238,9 @@ int raster_rgba_hline(pb_rgba *pb, unsigned int x, unsigned int y, unsigned int 
 int raster_rgba_hline_blend(pb_rgba *pb, unsigned int x, unsigned int y, unsigned int length, int value)
 {
 	size_t terminus = x + length;
-	x = x < 0 ? 0 : x;
 	terminus = terminus - x;
 
 	unsigned int * data = &((unsigned int *)pb->data)[y*pb->pixelpitch + x];
-	size_t count = 1;
 	for (size_t idx = 0; idx < terminus; idx++)
 	{
 		int bg = *data;

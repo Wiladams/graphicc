@@ -98,9 +98,9 @@ void pb_rgba_cover_pixel(pb_rgba *pb, const unsigned int x, const unsigned int y
 
 		int dstColor = RGBA(
 			lerp255(GET_R(dstPixel), GET_R(value), alpha),
-			lerp255(GET_R(dstPixel), GET_R(value), alpha), 
-			lerp255(GET_R(dstPixel), GET_R(value), alpha), 
-			lerp255(GET_R(dstPixel), GET_R(value), alpha), 
+			lerp255(GET_G(dstPixel), GET_G(value), alpha), 
+			lerp255(GET_B(dstPixel), GET_B(value), alpha), 
+			lerp255(GET_A(dstPixel), GET_A(value), alpha)
 		);
 		pb_rgba_set_pixel(pb, x, y, dstColor);
 		/*
