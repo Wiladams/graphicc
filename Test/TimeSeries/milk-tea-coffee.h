@@ -2,9 +2,9 @@
 
 typedef struct yeardatum {
 	int year;
-	float milk;
-	float tea;
-	float coffee;
+	double milk;
+	double tea;
+	double coffee;
 } yeardatum;
 
 yeardatum data[] = {

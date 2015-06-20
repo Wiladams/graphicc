@@ -14,10 +14,10 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-#pragma once
+//#pragma once
 
 #ifndef RASTER_RGBA_H
-#define RASTER_RGBA_H
+#define RASTER_RGBA_H 1
 
 #include "graphicc.h"
 
@@ -57,14 +57,38 @@ void raster_rgba_ellipse_stroke(pb_rgba *pb, const uint32_t cx, const uint32_t c
 
 void raster_rgba_blit(pb_rgba *pb, const int x, const int y, pb_rgba *src);
 
+/*
+	raster_rgba_blend_alphamap
+	The alpha map has 8 bits per pixel.  Each pixel represents the alpha
+	value for the fixed color value.  If the alpha is 0, the pixel is not rendered.
+
+	The bitmap has a byte row stride equal to the width indicated.
+	x - x position within destination
+	y - y position within destination
+	bitmap - source alpha values
+	w - width of bitmap, in bytes
+	h - height of alphamap, in bytes
+	color - base color value
+*/
+void raster_rgba_blend_alphamap(pb_rgba *pb, const int x, const int y, const unsigned char *bitmap, const int w, const int h, const int color);
+
+inline void raster_rgba_rect_fill(pb_rgba *pb, const int x, const int y, const int width, const int height, const int value)
+{
+	for (int idx = 0; idx < height; idx++){
+		raster_rgba_hline(pb, x, y + idx, width, value);
+	}
+}
+
+inline void raster_rgba_rect_fill_blend(pb_rgba *pb, const int x, const int y, const int width, const int height, const int value)
+{
+	for (int idx = 0; idx < height; idx++){
+		raster_rgba_hline_blend(pb, x, y + idx, width, value);
+	}
+}
 
 #ifdef __cplusplus
 }
 #endif
-
-
-#define raster_rgba_rect_fill(pb, x1, y1, width, height, value) for (int idx = 0; idx < height; idx++){raster_rgba_hline(pb, x1, y1 + idx, width, value);	}															
-#define raster_rgba_rect_fill_blend(pb, x1, y1, width, height, value) for (int idx = 0; idx < height; idx++){raster_rgba_hline_blend(pb, x1, y1 + idx, width, value);	}															
 
 
 #endif

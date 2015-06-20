@@ -21,9 +21,9 @@ limitations under the License.
 #include <stdlib.h>
 #include <sys/types.h>
 #include <sys/stat.h>
-#include "raster_rgba.h"
 
-#ifdef __Win32
+
+#ifdef _WIN32
 #pragma warning(push)
 #pragma warning(disable: 4996)	// _CRT_SECURE_NO_WARNINGS (fopen) 
 #endif
@@ -100,7 +100,6 @@ int PPM_read_binary(const char *filename, pb_rgba *fb)
 	int imgHeight = atoi(strheight);
 
 	pb_rgba_init(fb, imgWidth, imgHeight);
-	raster_rgba_rect_fill(fb, 0, 0, imgWidth, imgHeight, RGBA(255, 255, 0, 255));
 															
 
 
@@ -189,6 +188,6 @@ int write_PPM_binary(const char *filename, pb_rgba *fb)
 	return 0;
 }
 
-#ifdef __Win32
+#ifdef _WIN32
 #pragma warning(pop)
 #endif

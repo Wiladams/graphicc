@@ -67,7 +67,7 @@ void GUIStyle::DrawSunkenRect(const int x, const int y, const int w, const int h
 	fill(this->baseColor);
 	rect(x, y, w, h);
 
-	self:DrawFrame(x, y, w, h, Sunken);
+	DrawFrame(x, y, w, h, Sunken);
 }
 
 void GUIStyle::DrawRaisedRect(const int x, const int y, const int w, const int h)
@@ -75,7 +75,7 @@ void GUIStyle::DrawRaisedRect(const int x, const int y, const int w, const int h
 	noStroke();
 	fill(this->baseColor);
 	rect(x, y, w, h);
-	self:DrawFrame(x, y, w, h, Raised);
+	DrawFrame(x, y, w, h, Raised);
 }
 
 

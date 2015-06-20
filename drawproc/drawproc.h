@@ -10,8 +10,9 @@
 
 #include "agg_embedded_raster_fonts.h"
 
+#ifdef _WIN32
 #pragma comment(lib,"drawproc.lib")
-
+#endif
 
 typedef void(CALLBACK *EventObserverHandler)();
 

@@ -32,8 +32,8 @@ int volumeIntervalMinor = 5;
 
 
 // plot area
-float plotX1, plotY1;
-float plotX2, plotY2;
+int plotX1, plotY1;
+int plotX2, plotY2;
 int labelX, labelY;
 
 int currentColumn = COLUMN_MILK;
@@ -50,7 +50,7 @@ bool isValid(const int row, const int col)
 float getColumnMax(int col)
 {
 	float m = FLT_MIN;
-	float value;
+	double value;
 
 	for (int row = 0; row < rowCount; row++) {
 		// only consider valid data items
@@ -164,8 +164,8 @@ void drawDataPoints(const int col)
 	for (int row = 0; row < rowCount; row++){
 		if (isValid(row, col)) {
 			float value = getFloat(row, col);
-			float x = MAP(data[row].year, yearMin, yearMax, plotX1, plotX2);
-			float y = MAP(value, dataMin, dataMax, plotY2, plotY1);
+			double x = MAP(data[row].year, yearMin, yearMax, plotX1, plotX2);
+			double y = MAP(value, dataMin, dataMax, plotY2, plotY1);
 			point(x, y);
 		}
 	}

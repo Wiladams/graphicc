@@ -340,6 +340,37 @@ void raster_rgba_blit(pb_rgba *pb, const int x, const int y, pb_rgba *src)
 	}
 }
 
+void raster_rgba_blend_alphamap(pb_rgba *pb, const int x, const int y, const unsigned char *bitmap, const int w, const int h, const int color)
+{
+	int xpos = x;
+	int ypos = y;
+
+	uint32_t *dstPtr = (uint32_t *)pb->data;
+	uint8_t *srcPtr = (uint8_t *)bitmap;
+
+	dstPtr += y*pb->pixelpitch + x;
+	uint32_t *dstRowPtr = dstPtr;
+
+	int srcrow = 0;
+	for (srcrow = 0; srcrow < h; srcrow++)
+	{
+		xpos = x;
+
+		for (int srccol = 0; srccol < w; srccol++)
+		{
+			if (*srcPtr > 0)
+			{
+				int dstColor = RGBA(GET_R(color), GET_G(color), GET_B(color), *srcPtr);
+				pb_rgba_cover_pixel(pb, xpos, ypos, dstColor);
+			}
+			xpos++;
+			srcPtr += 1;
+		}
+
+		ypos++;
+	}
+}
+
 /*
 	Bresenham ellipse drawing algorithm
 	Only for the frame, not for filling

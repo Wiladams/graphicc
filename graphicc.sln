@@ -79,6 +79,10 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "test_truetype", "Test\test_truetype\test_truetype.vcxproj", "{207F95D5-7EF7-4511-AA22-715F4FCF7266}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "test_truetype_view", "Test\test_truetype_view\test_truetype_view.vcxproj", "{065A847B-A6C4-415C-8C78-E76AB80FF45C}"
+	ProjectSection(ProjectDependencies) = postProject
+		{5856A423-63AB-4119-A3B7-0ED0CF7B61FE} = {5856A423-63AB-4119-A3B7-0ED0CF7B61FE}
+		{22E0AE80-590C-4C3F-AB8E-15437D25E2D2} = {22E0AE80-590C-4C3F-AB8E-15437D25E2D2}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

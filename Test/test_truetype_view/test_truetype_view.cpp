@@ -15,8 +15,6 @@ struct ttfset {
 };
 
 
-
-
 void ttfset_print(struct ttfset &fset)
 {
 	printf("TTF Set: %s\n", fset.filename);
@@ -74,6 +72,7 @@ void font_print_info(struct stbtt_fontinfo &info)
 	printf("[%d, %d], [%d,%d]\n", x0, y0, x1, y1);
 }
 
+/*
 int pb_gray8_init(pb_rgba *fb, const unsigned int width, const unsigned int height)
 {
 	if (!fb) return -1;
@@ -94,52 +93,18 @@ int pb_gray8_init(pb_rgba *fb, const unsigned int width, const unsigned int heig
 
 	return 0;
 }
+*/
 
-void raster_rgba_blit_bitmap(pb_rgba *pb, const int x, const int y, const unsigned char *bitmap, const int w, const int h, const int color)
-{
-	int xpos = x;
-	int ypos = y;
-
-	uint32_t *dstPtr = (uint32_t *)pb->data;
-	uint8_t *srcPtr = (uint8_t *)bitmap;
-
-	dstPtr += y*pb->pixelpitch + x;
-	uint32_t *dstRowPtr = dstPtr;
-
-	int srcrow = 0;
-	for (srcrow = 0; srcrow < h; srcrow++)
-	{
-		xpos = x;
-
-		// for each row of the source
-		// copy to the destination
-		for (int srccol = 0; srccol < w; srccol++)
-		{
-			if (*srcPtr > 0)
-			{
-				int dstColor = RGBA(GET_R(color), GET_G(color), GET_B(color), *srcPtr);
-				pb_rgba_cover_pixel(pb, xpos, ypos, dstColor);
-				//pb_rgba_set_pixel(pb, xpos, ypos, dstColor);
-			}
-			xpos++;
-			srcPtr += 1;
-		}
-
-		ypos++;
-	}
-}
 
 struct ttfset fontset;
 struct stbtt_fontinfo finfo;
 
 void setup()
 {
-	size(640, 480);
-	//background(pLightGray);
-	background(pWhite);
+	size(1024, 768);
 
 	//char *filename = "c:/windows/fonts/arial.ttf";
-	char *filename = "c:/windows/fonts/vijaya.ttf";
+	char *filename = "c:/windows/fonts/segoeui.ttf";
 
 	if (!ttfset_open(fontset, filename)) {
 		return ;
@@ -153,48 +118,55 @@ unsigned char screen[20][79];
 
 void drawText()
 {
-	int i, j, ascent, baseline;
+	int i, j;
+	int ascent, descent, lineGap, baseline;
 	float scale, xpos = 2; // leave a little padding in case the character extends left
 	float ypos = 2;
 
-	char *text = "Heljo World!";
+	char *text = "Hella Werld!";
 	unsigned char *bitmap;
 
-	scale = stbtt_ScaleForPixelHeight(&finfo, 96);
-	stbtt_GetFontVMetrics(&finfo, &ascent, 0, 0);
-	baseline = (int)(ascent*scale);
+	stbtt_GetFontVMetrics(&finfo, &ascent, &descent, &lineGap);
 
-	int idx = 0;
-	while (text[idx]) {
-		int advance, lsb, x0, y0, x1, y1;
-		float x_shift = xpos - (float)floor(xpos);
-		stbtt_GetCodepointHMetrics(&finfo, text[idx], &advance, &lsb);
-		stbtt_GetCodepointBitmapBoxSubpixel(&finfo, text[idx], scale, scale, x_shift, 0, &x0, &y0, &x1, &y1);
-		//stbtt_MakeCodepointBitmapSubpixel(&finfo, &screen[baseline + y0][(int)xpos + x0], x1 - x0, y1 - y0, 79, scale, scale, x_shift, 0, text[idx]);
-		// note that this stomps the old data, so where character boxes overlap (e.g. 'lj') it's wrong
-		// because this API is really for baking character bitmaps into textures. if you want to render
-		// a sequence of characters, you really need to render each bitmap to a temp buffer, then
-		// "alpha blend" that into the working buffer
+	for (int pixfactor = 3; pixfactor < 9; pixfactor++) {
 
-		int w, h;
-		bitmap = stbtt_GetCodepointBitmap(&finfo, 0, scale , text[idx], &w, &h, 0, 0);
+		int pixsize = pow((float)2, pixfactor);
+		scale = stbtt_ScaleForPixelHeight(&finfo, pixsize);
+		baseline = (int)(ascent*scale);
 
-		raster_rgba_blit_bitmap(gpb, xpos, ypos, bitmap, w, h, pBlue);
+		int idx = 0;
+		while (text[idx]) {
+			int advance, lsb, x0, y0, x1, y1;
+			float x_shift = xpos - (float)floor(xpos);
+			stbtt_GetCodepointHMetrics(&finfo, text[idx], &advance, &lsb);
+			stbtt_GetCodepointBitmapBoxSubpixel(&finfo, text[idx], scale, scale, x_shift, 0, &x0, &y0, &x1, &y1);
+			//stbtt_MakeCodepointBitmapSubpixel(&finfo, &screen[baseline + y0][(int)xpos + x0], x1 - x0, y1 - y0, 79, scale, scale, x_shift, 0, text[idx]);
+			// note that this stomps the old data, so where character boxes overlap (e.g. 'lj') it's wrong
+			// because this API is really for baking character bitmaps into textures. if you want to render
+			// a sequence of characters, you really need to render each bitmap to a temp buffer, then
+			// "alpha blend" that into the working buffer
 
-		xpos += (advance * scale);
-		if (text[idx + 1])
-			xpos += scale*stbtt_GetCodepointKernAdvance(&finfo, text[idx], text[idx + 1]);
-		idx++;
+			int w, h;
+			bitmap = stbtt_GetCodepointBitmap(&finfo, 0, scale, text[idx], &w, &h, 0, 0);
 
-		stbtt_FreeBitmap(bitmap, NULL);
+			raster_rgba_blend_alphamap(gpb, xpos, ypos + baseline + y0, bitmap, w, h, pYellow);
+
+			//printf("%d %d %d", baseline, y0, y1);
+			xpos += (advance * scale);
+			if (text[idx + 1])
+				xpos += scale*stbtt_GetCodepointKernAdvance(&finfo, text[idx], text[idx + 1]);
+			idx++;
+
+			stbtt_FreeBitmap(bitmap, NULL);
+		}
+		xpos = 2;
+		ypos += pixsize-(scale*descent);
 	}
-
 }
 
 void drawFontBox()
 {
 	char strbuff[256];
-
 
 	float scale = stbtt_ScaleForPixelHeight(&finfo, 96);
 	int ascent, descent, lineGap;
@@ -257,5 +229,6 @@ void drawFontBox()
 void draw()
 {
 	background(pLightGray);
-	drawFontBox();
+	//drawFontBox();
+	drawText();
 }
