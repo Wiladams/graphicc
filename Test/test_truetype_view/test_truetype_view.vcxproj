@@ -66,10 +66,12 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\fontastic.cpp" />
     <ClCompile Include="..\truetype.cpp" />
     <ClCompile Include="test_truetype_view.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\fontastic.h" />
     <ClInclude Include="..\truetype.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

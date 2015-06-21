@@ -21,9 +21,15 @@
     <ClCompile Include="..\truetype.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\fontastic.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\truetype.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\fontastic.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

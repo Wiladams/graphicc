@@ -9,17 +9,15 @@
 #include <stdint.h>
 #include <string.h>
 
-struct ttfset {
-	char *filename;
-	uint8_t *data;
-};
 
 
-void ttfset_print(struct ttfset &fset)
+
+void ttfset_print(struct ttfcollection &fset)
 {
 	printf("TTF Set: %s\n", fset.filename);
 }
 
+/*
 bool ttfset_open(struct ttfset &fset, const char *filename)
 {
 	FILE *f;
@@ -32,18 +30,20 @@ bool ttfset_open(struct ttfset &fset, const char *filename)
 	// calculate size of file to allocate buffer
 	// use fseek, ftell
 	fseek(f, 0, SEEK_END);
-	int bufferSize = ftell(f) + 1;
+	int bufferSize = ftell(f);
 	fseek(f, 0, SEEK_SET);
 
 	fset.data = (uint8_t *)malloc(bufferSize);
 	fset.filename = _strdup(filename);
+	fset.dataSize = bufferSize;
 	fread(fset.data, 1, bufferSize, f);
 	fclose(f);
 
 	return true;
 }
+*/
 
-struct stbtt_fontinfo ttfset_font_from_index(const struct ttfset &fset, const int idx)
+struct stbtt_fontinfo ttfcollection_font_from_index(const struct ttfcollection &fset, const int idx)
 {
 	int offset = stbtt_GetFontOffsetForIndex(fset.data, idx);
 	
@@ -96,7 +96,7 @@ int pb_gray8_init(pb_rgba *fb, const unsigned int width, const unsigned int heig
 */
 
 
-struct ttfset fontset;
+struct ttfcollection fontset;
 struct stbtt_fontinfo finfo;
 
 void setup()
@@ -106,11 +106,11 @@ void setup()
 	//char *filename = "c:/windows/fonts/arial.ttf";
 	char *filename = "c:/windows/fonts/segoeui.ttf";
 
-	if (!ttfset_open(fontset, filename)) {
+	if (!ttfcollection_open(filename, fontset)) {
 		return ;
 	}
 
-	finfo = ttfset_font_from_index(fontset, 0);
+	finfo = ttfcollection_font_from_index(fontset, 0);
 }
 
 unsigned char screen[20][79];
