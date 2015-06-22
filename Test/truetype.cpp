@@ -871,10 +871,7 @@ static int stbtt__edge_compare(const void *p, const void *q)
 	return 0;
 }
 
-typedef struct
-{
-	float x, y;
-} stbtt__point;
+
 
 static void stbtt__rasterize(stbtt__bitmap *result, stbtt__point *pts, int *wcount, int windings, float scale_x, float scale_y, float shift_x, float shift_y, int off_x, int off_y, int invert, void *userdata)
 {
@@ -956,7 +953,7 @@ static int stbtt__tesselate_curve(stbtt__point *points, int *num_points, float x
 }
 
 // returns number of contours
-static stbtt__point *stbtt_FlattenCurves(stbtt_vertex *vertices, int num_verts, float objspace_flatness, int **contour_lengths, int *num_contours, void *userdata)
+STBTT_DEF stbtt__point *stbtt_FlattenCurves(stbtt_vertex *vertices, int num_verts, float objspace_flatness, int **contour_lengths, int *num_contours, void *userdata)
 {
 	stbtt__point *points = 0;
 	int num_points = 0;

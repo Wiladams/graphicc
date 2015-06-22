@@ -111,6 +111,10 @@ void setup()
 	}
 
 	finfo = ttfcollection_font_from_index(fontset, 0);
+
+	noLoop();
+
+	draw();
 }
 
 unsigned char screen[20][79];
@@ -226,9 +230,61 @@ void drawFontBox()
 	line(0, ascentY, width, ascentY);
 }
 
+void drawVertices()
+{
+	background(pLightGray);
+
+	int codepoint = 'A';
+	stbtt_vertex * vertices;
+
+	float flatness = 2.0;
+	int pixsize = 120;
+	float scale = stbtt_ScaleForPixelHeight(&finfo, pixsize);
+
+	int nVerts = stbtt_GetCodepointShape(&finfo, codepoint, &vertices);
+
+	printf("res: %d\n", nVerts);
+	stroke(pBlack);
+	strokeWeight(4.0);
+
+	int winding_count, *winding_lengths;
+	stbtt__point *windings = stbtt_FlattenCurves(vertices, nVerts, flatness / scale, &winding_lengths, &winding_count, finfo.userdata);
+
+	printf("winding_count: %d\n", winding_count);
+
+	for (int i = 0; i < winding_count; i++)
+	{
+		int x = 4 + (windings[i].x * scale);
+		int y = pixsize - (windings[i].y * scale);
+		point(x, y);
+	}
+	/*
+	//STBTT_DEF void stbtt_Rasterize(stbtt__bitmap *result, float flatness_in_pixels, stbtt_vertex *vertices, int num_verts, float scale_x, float scale_y, float shift_x, float shift_y, int x_off, int y_off, int invert, void *userdata)
+	//{
+		int winding_count, *winding_lengths;
+		stbtt__point *windings = stbtt_FlattenCurves(vertices, num_verts, flatness_in_pixels / scale, &winding_lengths, &winding_count, userdata);
+		if (windings) {
+			stbtt__rasterize(result, windings, winding_lengths, winding_count, scale_x, scale_y, shift_x, shift_y, x_off, y_off, invert, userdata);
+			STBTT_free(winding_lengths, userdata);
+			STBTT_free(windings, userdata);
+		}
+	//}
+	*/
+	/*
+	for (int i = 0; i < nVerts;i++) {
+		stbtt_vertex *vert = &vertices[i];
+		int x = 4+(vert->x * scale);
+		int y = pixsize - (vert->y * scale);
+		printf("vert: %d %d %d", vert->cx, vert->cy, vert->type);
+		point(x, y);
+	}
+	*/
+}
+
 void draw()
 {
 	background(pLightGray);
 	//drawFontBox();
-	drawText();
+	//drawText();
+	drawVertices();
 }

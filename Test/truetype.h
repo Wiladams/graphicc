@@ -263,6 +263,11 @@ extern "C" {
 	};
 #endif
 
+typedef struct
+{
+		float x, y;
+} stbtt__point;
+
 #ifndef stbtt_vertex // you can predefine this to use different values
 	// (we share this with other code at RAD)
 #define stbtt_vertex_type short // can't use stbtt_int16 because that's not visible in the header file
@@ -276,6 +281,7 @@ extern "C" {
 	STBTT_DEF int stbtt_IsGlyphEmpty(const stbtt_fontinfo *info, int glyph_index);
 	// returns non-zero if nothing is drawn for this glyph
 
+	STBTT_DEF stbtt__point *stbtt_FlattenCurves(stbtt_vertex *vertices, int num_verts, float objspace_flatness, int **contour_lengths, int *num_contours, void *userdata);
 	STBTT_DEF int stbtt_GetCodepointShape(const stbtt_fontinfo *info, int unicode_codepoint, stbtt_vertex **vertices);
 	STBTT_DEF int stbtt_GetGlyphShape(const stbtt_fontinfo *info, int glyph_index, stbtt_vertex **vertices);
 	// returns # of vertices and fills *vertices with the pointer to them
