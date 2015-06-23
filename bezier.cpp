@@ -30,7 +30,7 @@ int intfactorial(const int n)
 	return c;
 }
 
-void computeCoefficients(const int n, int * c)
+void bez_computeCoefficients(const int n, int * c)
 {
 	int k, i;
 
@@ -50,7 +50,7 @@ void computeCoefficients(const int n, int * c)
 	}
 }
 
-void bezierPoint(Pt3 * pt, const float u, const int nControls, const Pt3 *controls, const int * c)
+void bez3_point(Pt3 * pt, const float u, const int nControls, const Pt3 *controls, const int * c)
 {
 	int k;
 	int n = nControls - 1;
@@ -69,23 +69,25 @@ void bezierPoint(Pt3 * pt, const float u, const int nControls, const Pt3 *contro
 	}
 }
 
-void bezier(const Pt3 *controls, const int nControls, const int m, Pt3 * curve)
+void bez3_curve(const Pt3 *controls, const int nControls, const int m, Pt3 * curve)
 {
 	// create space for the coefficients
 	int * c = (int *)malloc(nControls * sizeof(int));
 	int i;
 
-	computeCoefficients(nControls - 1, c);
+	bez_computeCoefficients(nControls - 1, c);
 	for (i = 0; i <= m; i++) {
-		bezierPoint(&curve[i], i / (float)m, nControls, controls, c);
+		bez3_point(&curve[i], i / (float)m, nControls, controls, c);
 	}
 	free(c);	
 }
 
 
 
-void bezier4(const Pt3 *controls, const int m, Pt3 * curve)
+void bez_curve4(const Pt3 *controls, const int m, Pt3 * curve)
 {
+	bez3_curve(controls, 4, m, curve);
+	/*
 	//int nControls = 4;
 	int i = 0;
 
@@ -119,4 +121,5 @@ void bezier4(const Pt3 *controls, const int m, Pt3 * curve)
 		curve[i].y += controls[3].y * BEZ33;
 		curve[i].z += controls[3].z * BEZ33;
 	}
+	*/
 }

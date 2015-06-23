@@ -31,7 +31,7 @@ void test_bezier()
 	// One loop
 	int nctrls = 5;
 	Pt3 ctrls1[5] = { { centerx - xsize, centery, 0 }, { centerx, centery - ysize, 0 }, { centerx + xsize, centery, 0 }, { centerx, centery + ysize, 0 }, { centerx - xsize, centery, 0 } };
-	bezier(ctrls1, nctrls, m, curve);
+	bez3_curve(ctrls1, nctrls, m, curve);
 	polyline(&pb, curve, m, pBlack);
 
 

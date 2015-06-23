@@ -31,7 +31,7 @@ int intfactorial(const int n);
 // computeCoefficients
 // n represents the number of control points
 // c is the array containing the calculated coefficients
-void computeCoefficients(const int n, int * c);
+void bez_computeCoefficients(const int n, int * c);
 
 // calculate a specific point on a bezier curve
 // u			- a value between 0.0 and 1.0, 0.0 is beginning of curve
@@ -40,11 +40,11 @@ void computeCoefficients(const int n, int * c);
 // nControls	- The number of control points
 // controls		- The array of control points
 // c			- calculated coefficients
-void bezierPoint(const float u, Pt3 *pt, const int nControls, const Pt3 *controls, const int * c);
+void bez3_point(const float u, Pt3 *pt, const int nControls, const Pt3 *controls, const int * c);
 
 //
 // general bezier curve calculation of arbitrary onts
-void bezier(const Pt3 *controls, const int nControls, const int m, Pt3 * curve);
+void bez3_curve(const Pt3 *controls, const int nControls, const int m, Pt3 * curve);
 
 //
 // cubic bezier

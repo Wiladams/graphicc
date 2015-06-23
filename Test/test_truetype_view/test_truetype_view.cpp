@@ -234,6 +234,11 @@ void drawVertices()
 {
 	background(pLightGray);
 
+	stroke(pBlack);
+	fill(pBlack);
+	bezier(2, 2, 200, 2, 200, 200, 100);
+
+/*
 	int codepoint = 'A';
 	stbtt_vertex * vertices;
 
@@ -258,6 +263,7 @@ void drawVertices()
 		int y = pixsize - (windings[i].y * scale);
 		point(x, y);
 	}
+*/
 	/*
 	//STBTT_DEF void stbtt_Rasterize(stbtt__bitmap *result, float flatness_in_pixels, stbtt_vertex *vertices, int num_verts, float scale_x, float scale_y, float shift_x, float shift_y, int x_off, int y_off, int invert, void *userdata)
 	//{

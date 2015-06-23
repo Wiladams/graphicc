@@ -1,5 +1,7 @@
 
 #include "drawproc.h"
+#include "bezier.h"
+
 //#include <windowsx.h>	// GET_X_LPARAM
 
 #include <vector>
@@ -320,9 +322,21 @@ void fill(const uint32_t value)
 }
 
 // 2D primitives
-void bezier(const int x1, const int y1, const int x2, const int y2, const int x3, const int y3)
+void polyline(pb_rgba *pb, Pt3 *curve, const int nPts, int color)
 {
+	for (int idx = 0; idx < nPts; idx++) {
+		raster_rgba_line(pb, curve[idx].x, curve[idx].y, curve[idx + 1].x, curve[idx + 1].y, color);
+	}
+}
 
+void bezier(const int x1, const int y1, const int x2, const int y2, const int x3, const int y3, const int segments)
+{
+	int nControls = 3;
+	Pt3 controls[3] = { {x1,y1,0}, {x2,y2,0}, {x3,y3,0} };
+	Pt3 *curve = (Pt3 *)malloc(segments*sizeof(Pt3));
+
+	bez3_curve(controls, nControls, segments, curve);
+	polyline(gpb, curve, segments, strokeColor);
 }
 
 void ellipse(const int a, const int b, const int c, const int d)

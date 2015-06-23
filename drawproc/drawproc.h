@@ -178,7 +178,7 @@ void strokeWeight(const float weight);
 
 
 // 2D primitives
-void bezier(const int x1, const int y1, const int x2, const int y2, const int x3, const int y3);
+void bezier(const int x1, const int y1, const int x2, const int y2, const int x3, const int y3, const int segments=60);
 void ellipse(const int a, const int b, const int c, const int d);
 void line(const int x1, const int y1, const int x2, const int y2);
 void lineloop(const size_t nPtr, const int *pts);
