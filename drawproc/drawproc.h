@@ -207,6 +207,7 @@ void textSize(const int size);
 // Shape
 void beginShape(const int shapeKind = GR_POLYGON);
 void vertex(const int x, const int y);
+void bezierVertex(const int x1, const int y1, const int x2, const int y2, const int x3, const int y3);
 void endShape(const int kindOfClose = STROKE);
 
 // Math

@@ -12,7 +12,7 @@ to be updated.
 */
 #include "drawproc.h"
 
-static const int gMaxMode = 3;
+static const int gMaxMode = 4;
 static int gMode = 0;
 
 void drawShape();
@@ -44,6 +44,16 @@ void drawShape()
 				static int nverts = 4;
 				raster_rgba_convex_polygon_fill(gpb, polyverts, nverts, pixelFrame, pYellow);
 	} break;
+
+	case 3:
+		//noFill();
+		fill(pWhite);
+		beginShape(GR_POINTS);
+		vertex(30, 20);
+		bezierVertex(80, 0, 80, 75, 30, 75);
+		bezierVertex(50, 80, 60, 25, 30, 20);
+		endShape();
+		break;
 
 	default:
 		rect(width / 2, height / 2, width / 2, height / 2);

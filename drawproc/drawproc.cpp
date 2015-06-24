@@ -742,7 +742,7 @@ void polygon(int nverts, int *verts)
 
 
 // Shape
-static int gShapeKind = 0;
+static int gShapeKind = GR_POLYGON;
 Vector2dVector gShape;
 
 
@@ -755,6 +755,20 @@ void beginShape(const int shapeKind)
 void vertex(const int x, const int y)
 {
 	gShape.push_back(Vector2d(x,y));
+}
+
+void bezierVertex(const int x1, const int y1, const int x2, const int y2, const int x3, const int y3)
+{
+	int nControls = 4;
+	int segments = 120;
+	Pt3 controls[4] = { {gShape[0].GetX(), gShape[0].GetY(), 0},{ x1, y1, 0 }, { x2, y2, 0 }, { x3, y3, 0 } };
+	Pt3 *curve = (Pt3 *)malloc(segments*sizeof(Pt3));
+
+	bez3_curve(controls, nControls, segments, curve);
+	for (int idx = 0; idx < segments; idx++) {
+		vertex(curve[idx].x, curve[idx].y);
+	}
+
 }
 
 void endShape(const int kindOfFinish)
