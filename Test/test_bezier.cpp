@@ -37,11 +37,11 @@ void test_bezier()
 
 	// one double peak through the middle
 	Pt3 ctrls3[5] = { { centerx - xsize, centery, 0 }, { centerx - (xsize*0.3f), centery + ysize, 0 }, { centerx, centery - ysize, 0 }, { centerx + (xsize*0.3f), centery + ysize, 0 }, { centerx + xsize, centery, 0 } };
-	bezier(ctrls3, nctrls, m, curve);
+	bez3_curve(ctrls3, nctrls, m, curve);
 	polyline(&pb, curve, m, pRed);
 
 	// Now we have a simple image, so write it to a file
-	int err = write_PPM("test_bezier.ppm", &pb);
+	int err = write_PPM_binary("test_bezier.ppm", &pb);
 }
 
 void test_bezier4()
@@ -64,26 +64,40 @@ void test_bezier4()
 	int nControls = 4;
 	int m = 100;
 	Pt3 curve[200];
-	bezier4(controls, m, curve);
+	bez3_cubic(controls, m, curve);
 	polyline(&pb, curve, m, pGreen);
 
 	// Several curves going up
 	for (int offset = 0; offset < ysize; offset += 5) {
 		Pt3 ctrls2[4] = { { centerx - xsize, centery, 0 }, { centerx, centery - offset, 0 }, { centerx, centery - offset, 0 }, { centerx + xsize, centery, 0 } };
 		//bezier(ctrls2, nControls, m, curve);
-		bezier4(ctrls2, m, curve);
+		bez3_cubic(ctrls2, m, curve);
 		polyline(&pb, curve, m, pBlue);
 	}
 
 
 	// Now we have a simple image, so write it to a file
-	int err = write_PPM("test_bezier4.ppm", &pb);
+	int err = write_PPM_binary("test_bezier4.ppm", &pb);
+}
+
+void test_coefficients()
+{
+	int c[4];
+	int nControls = 3;
+	bez_computeCoefficients(nControls-1, c);
+	printf("%d %d %d\n", c[0], c[1], c[2]);
+
+	nControls = 4;
+	bez_computeCoefficients(nControls - 1, c);
+	printf("%d %d %d %d\n", c[0], c[1], c[2], c[3]);
+
 }
 
 int main(int argc, char **argv)
 {
-	test_bezier();
-	test_bezier4();
+	test_coefficients();
+	//test_bezier();
+	//test_bezier4();
 
 	return 0;
 }

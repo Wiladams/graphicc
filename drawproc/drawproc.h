@@ -71,23 +71,23 @@ typedef float coord;
 class Vector2d
 {
 public:
-	Vector2d(float x, float y)
+	Vector2d(coord x, coord y)
 	{
 		Set(x, y);
 	};
 
-	float GetX(void) const { return mX; };
+	coord GetX(void) const { return mX; };
 
-	float GetY(void) const { return mY; };
+	coord GetY(void) const { return mY; };
 
-	void  Set(float x, float y)
+	void  Set(coord x, coord y)
 	{
 		mX = x;
 		mY = y;
 	};
 private:
-	float mX;
-	float mY;
+	coord mX;
+	coord mY;
 };
 
 struct Vector3d
@@ -140,15 +140,13 @@ extern int mouseY;
 // mousePressed
 // mouseReleased()
 // mouseWheel()
-// mouseX
-// mouseY
 // pmouseX
 // pmouseY
 
 // Keyboard
 extern int key;
 extern int keyCode;
-extern int isKeyPressed;
+extern bool isKeyPressed;
 // keyPressed()
 // keyReleased()
 // keyTyped()

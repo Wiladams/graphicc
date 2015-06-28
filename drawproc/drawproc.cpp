@@ -34,7 +34,7 @@ int gTextAlignY;
 // Keyboard
 int keyCode = 0;
 int key = 0;
-int isKeyPressed = 0;
+bool isKeyPressed = 0;
 
 // Mouse
 #define GET_X_LPARAM(lp)                        ((int)(short)LOWORD(lp))
@@ -127,7 +127,7 @@ LRESULT CALLBACK keyHandler(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 
 		case WM_KEYDOWN:
 			keyCode = wParam;
-			isKeyPressed = 1;
+			isKeyPressed = true;
 
 			if (gkbdOnPressedHandler) {
 				return gkbdOnPressedHandler(hWnd, message, wParam, lParam);
@@ -137,7 +137,7 @@ LRESULT CALLBACK keyHandler(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 		case WM_KEYUP:
 			// raw keycodes
 			keyCode = wParam;
-			isKeyPressed = 0;
+			isKeyPressed = false;
 
 			if (gkbdOnReleasedHandler) {
 				return gkbdOnReleasedHandler(hWnd, message, wParam, lParam);

@@ -82,9 +82,12 @@ void bez3_curve(const Pt3 *controls, const int nControls, const int m, Pt3 * cur
 	free(c);	
 }
 
+void bez3_quadratic(const Pt3 *controls, const int m, Pt3 * curve)
+{
+	bez3_curve(controls, 3, m, curve);
+}
 
-
-void bez_curve4(const Pt3 *controls, const int m, Pt3 * curve)
+void bez3_cubic(const Pt3 *controls, const int m, Pt3 * curve)
 {
 	bez3_curve(controls, 4, m, curve);
 	/*

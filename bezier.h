@@ -46,13 +46,21 @@ void bez3_point(const float u, Pt3 *pt, const int nControls, const Pt3 *controls
 // general bezier curve calculation of arbitrary onts
 void bez3_curve(const Pt3 *controls, const int nControls, const int m, Pt3 * curve);
 
+// 
+// quadratic bezier
+// controls		- 3 control points
+// m			- number of segments in curve
+// curve		- array containing calculated points along curve
+//
+void bez3_quadratic(const Pt3 *controls, const int m, Pt3 *curve);
+
 //
 // cubic bezier
 // controls		- 4 control points
 // m			- number of segments in curve
 // curve		- array containing calculated points along curve
 //
-void bezier4(const Pt3 *controls, const int m, Pt3 * curve);
+void bez3_cubic(const Pt3 *controls, const int m, Pt3 * curve);
 
 #ifdef __cplusplus
 }
