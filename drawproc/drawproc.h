@@ -12,6 +12,10 @@
 
 #ifdef _WIN32
 #pragma comment(lib,"drawproc.lib")
+	#ifdef _MSC_VER
+		// This is here so that we can simply use a 'main()' 
+		#pragma comment(linker, "/subsystem:windows /ENTRY:mainCRTStartup")
+	#endif
 #endif
 
 typedef void(CALLBACK *EventObserverHandler)();
@@ -68,26 +72,14 @@ typedef enum KindOfClose {
 
 typedef float coord;
 
-class Vector2d
+struct Vector2d
 {
-public:
 	Vector2d(coord x, coord y)
-	{
-		Set(x, y);
-	};
+	:_x(x), _y(y)
+	{};
 
-	coord GetX(void) const { return mX; };
-
-	coord GetY(void) const { return mY; };
-
-	void  Set(coord x, coord y)
-	{
-		mX = x;
-		mY = y;
-	};
-private:
-	coord mX;
-	coord mY;
+	coord _x;
+	coord _y;
 };
 
 struct Vector3d

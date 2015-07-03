@@ -341,11 +341,14 @@ void eventLoop(HWND hWnd)
 }
 
 
-
-int APIENTRY _tWinMain(_In_ HINSTANCE hInstance,
+/*
+int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 	_In_opt_ HINSTANCE hPrevInstance,
 	_In_ LPTSTR    lpCmdLine,
 	_In_ int       nCmdShow)
+
+	*/
+int main(int argc, char **argv)
 {
 	InitializeInstance();
 

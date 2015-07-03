@@ -14,6 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+
 #include "bezier.h"
 
 
@@ -21,7 +22,8 @@ limitations under the License.
 #include <stdlib.h>
 
 
-int intfactorial(const int n)
+// calculate a factorial for an integer
+static int intfactorial(const int n)
 {
 	int c = 1;
 	for (int k = 1; k <= n; k++)
@@ -30,7 +32,10 @@ int intfactorial(const int n)
 	return c;
 }
 
-void bez_computeCoefficients(const int n, int * c)
+// computeCoefficients
+// n represents the number of control points
+// c is the array containing the calculated coefficients
+static void bez_computeCoefficients(const int n, int * c)
 {
 	int k, i;
 
@@ -48,6 +53,22 @@ void bez_computeCoefficients(const int n, int * c)
 			c[k] /= i;
 		}
 	}
+}
+
+coord bez_point(const float u, const coord *controls, const int nControls, const int * c)
+{
+	int k;
+	int n = nControls - 1;
+	float blend;
+
+	coord res = 0.0;
+
+	// Add in influence of each control point
+	for (k = 0; k < nControls; k++){
+		blend = (float)c[k] * powf(u, (float)k) *powf(1 - u, n - k);
+		res = res + controls[k] * blend;
+	}
+	return res;
 }
 
 void bez3_point(Pt3 * pt, const float u, const int nControls, const Pt3 *controls, const int * c)

@@ -26,12 +26,15 @@ extern "C" {
 #endif
 
 // calculate a factorial for an integer
-int intfactorial(const int n);
+//int intfactorial(const int n);
 
 // computeCoefficients
 // n represents the number of control points
 // c is the array containing the calculated coefficients
-void bez_computeCoefficients(const int n, int * c);
+//void bez_computeCoefficients(const int n, int * c);
+
+// calculate a specific value along a one dimensional bezier curve
+coord bez_point(const float u, const coord *controls, const int nControls, const int * c);
 
 // calculate a specific point on a bezier curve
 // u			- a value between 0.0 and 1.0, 0.0 is beginning of curve

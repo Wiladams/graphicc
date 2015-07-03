@@ -21,6 +21,28 @@ limitations under the License.
 
 #include "graphicc.h"
 
+typedef struct _mat2 {
+	real m11, m12;
+	real m21, m22;
+} mat2;
+
+typedef struct _mat3 {
+	real m11, m12, m13;
+	real m21, m22, m23;
+	real m31, m32, m33;
+} mat3;
+
+
+typedef struct _mat4 {
+	real m11, m12, m13, m14;
+	real m21, m22, m23, m24;
+	real m31, m32, m33, m34;
+	real m41, m42, m43, m44;
+} mat4;
+
+typedef real mat4x4[4][4];
+
+
 #ifdef __cplusplus
 extern "C" {
 #endif

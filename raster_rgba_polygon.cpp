@@ -1,3 +1,5 @@
+
+
 #include "raster_rgba.h"
 
 int findTopmostVertex(coord *verts, const int numVerts)

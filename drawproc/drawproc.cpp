@@ -376,9 +376,9 @@ void lineloop(const Vector2dVector &pts)
 
 	for (int idx = 0; idx < nPts - 1; idx++)
 	{
-		line(pts[idx].GetX(), pts[idx].GetY(), pts[idx + 1].GetX(), pts[idx + 1].GetY());
+		line(pts[idx]._x, pts[idx]._y, pts[idx + 1]._x, pts[idx + 1]._y);
 	}
-	line(pts[nPts - 1].GetX(), pts[nPts - 1].GetY(), pts[0].GetX(), pts[0].GetY());
+	line(pts[nPts - 1]._x, pts[nPts - 1]._y, pts[0]._x, pts[0]._y);
 }
 
 void lineloop(const size_t nPts, const int *pts)
@@ -582,7 +582,7 @@ float triangle_area(const Vector2dVector &contour)
 
 	for (int p = n - 1, q = 0; q<n; p = q++)
 	{
-		A += contour[p].GetX()*contour[q].GetY() - contour[q].GetX()*contour[p].GetY();
+		A += contour[p]._x*contour[q]._y - contour[q]._x*contour[p]._y;
 	}
 	return A*0.5f;
 }
@@ -620,22 +620,22 @@ bool triangulate_snip(const Vector2dVector &contour, int u, int v, int w, int n,
 	int p;
 	float Ax, Ay, Bx, By, Cx, Cy, Px, Py;
 
-	Ax = contour[V[u]].GetX();
-	Ay = contour[V[u]].GetY();
+	Ax = contour[V[u]]._x;
+	Ay = contour[V[u]]._y;
 
-	Bx = contour[V[v]].GetX();
-	By = contour[V[v]].GetY();
+	Bx = contour[V[v]]._x;
+	By = contour[V[v]]._y;
 
-	Cx = contour[V[w]].GetX();
-	Cy = contour[V[w]].GetY();
+	Cx = contour[V[w]]._x;
+	Cy = contour[V[w]]._y;
 
 	if (EPSILON > (((Bx - Ax)*(Cy - Ay)) - ((By - Ay)*(Cx - Ax)))) return false;
 
 	for (p = 0; p<n; p++)
 	{
 		if ((p == u) || (p == v) || (p == w)) continue;
-		Px = contour[V[p]].GetX();
-		Py = contour[V[p]].GetY();
+		Px = contour[V[p]]._x;
+		Py = contour[V[p]]._y;
 		if (triangle_pt_inside(Ax, Ay, Bx, By, Cx, Cy, Px, Py)) return false;
 	}
 
@@ -686,9 +686,9 @@ bool triangulate_process(const Vector2dVector &contour)
 			a = V[u]; b = V[v]; c = V[w];
 
 			// draw single triangle
-			triangle(contour[a].GetX(), contour[a].GetY(), 
-				contour[b].GetX(), contour[b].GetY(), 
-				contour[c].GetX(), contour[c].GetY());
+			triangle(contour[a]._x, contour[a]._y, 
+				contour[b]._x, contour[b]._y,
+				contour[c]._x, contour[c]._y);
 
 			m++;
 
@@ -761,7 +761,7 @@ void bezierVertex(const int x1, const int y1, const int x2, const int y2, const 
 {
 	int nControls = 4;
 	int segments = 120;
-	Pt3 controls[4] = { {gShape[0].GetX(), gShape[0].GetY(), 0},{ x1, y1, 0 }, { x2, y2, 0 }, { x3, y3, 0 } };
+	Pt3 controls[4] = { {gShape[0]._x, gShape[0]._y, 0},{ x1, y1, 0 }, { x2, y2, 0 }, { x3, y3, 0 } };
 	Pt3 *curve = (Pt3 *)malloc(segments*sizeof(Pt3));
 
 	bez3_curve(controls, nControls, segments, curve);
@@ -779,7 +779,7 @@ void endShape(const int kindOfFinish)
 	switch (gShapeKind) {
 		case GR_POINTS:
 		for (int idx = 0; idx < n; idx++){
-			point(gShape[idx].GetX(), gShape[idx].GetY());
+			point(gShape[idx]._x, gShape[idx]._y);
 		}
 		break;
 
@@ -788,7 +788,7 @@ void endShape(const int kindOfFinish)
 				int nLines = n / 2;
 				for (int idx = 0; idx < nLines; idx++)
 				{
-					line(gShape[idx * 2].GetX(), gShape[idx * 2].GetY(), gShape[(idx * 2) + 1].GetX(), gShape[(idx * 2) + 1].GetY());
+					line(gShape[idx * 2]._x, gShape[idx * 2]._y, gShape[(idx * 2) + 1]._x, gShape[(idx * 2) + 1]._y);
 				}
 			}
 			else if (kindOfFinish == CLOSE) {
@@ -799,7 +799,7 @@ void endShape(const int kindOfFinish)
 	
 		case GR_LINE_STRIP:
 			for (int idx = 0; idx < n - 1; idx++) {
-				line(gShape[idx].GetX(), gShape[idx].GetY(), gShape[idx + 1].GetX(), gShape[idx + 1].GetY());
+				line(gShape[idx]._x, gShape[idx]._y, gShape[idx + 1]._x, gShape[idx + 1]._y);
 			}
 		break;
 
@@ -816,10 +816,10 @@ void endShape(const int kindOfFinish)
 			int nTris = n / 4;
 			for (int idx = 0; idx < nTris; idx++) {
 				int offset = idx * 4;
-				quad(gShape[offset].GetX(), gShape[offset].GetY(),
-					gShape[(offset)+1].GetX(), gShape[(offset)+1].GetY(),
-					gShape[(offset)+2].GetX(), gShape[(offset)+2].GetY(),
-					gShape[(offset)+3].GetX(), gShape[(offset)+3].GetY());
+				quad(gShape[offset]._x, gShape[offset]._y,
+					gShape[(offset)+1]._x, gShape[(offset)+1]._y,
+					gShape[(offset)+2]._x, gShape[(offset)+2]._y,
+					gShape[(offset)+3]._x, gShape[(offset)+3]._y);
 			}
 		} 
 		break;
@@ -831,9 +831,9 @@ void endShape(const int kindOfFinish)
 			int nTris = n / 3;
 			for (int idx = 0; idx < nTris; idx++)
 			{
-				triangle(gShape[idx * 3].GetX(), gShape[idx * 3].GetY(), 
-					gShape[(idx * 3) + 1].GetX(), gShape[(idx * 3) + 1].GetY(), 
-					gShape[(idx * 3) + 2].GetX(), gShape[(idx * 3) + 2].GetY());
+				triangle(gShape[idx * 3]._x, gShape[idx * 3]._y,
+					gShape[(idx * 3) + 1]._x, gShape[(idx * 3) + 1]._y,
+					gShape[(idx * 3) + 2]._x, gShape[(idx * 3) + 2]._y);
 			}
 		} 
 		break;

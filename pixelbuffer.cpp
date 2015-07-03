@@ -14,6 +14,8 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+
+
 #include "graphicc.h"
 
 #include <stdlib.h>
@@ -92,8 +94,7 @@ void pb_rgba_cover_pixel(pb_rgba *pb, const unsigned int x, const unsigned int y
 		// All other cases where doing a cover of something
 		// other than full opacity
 		uint8_t alpha = GET_A(value);
-		int dstPixel;
-		pb_rgba_get_pixel(pb, x, y, &dstPixel);
+		int32_t dstPixel = pb_rgba_get_pixel(pb, x, y);
 
 
 		int dstColor = RGBA(

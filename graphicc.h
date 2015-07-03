@@ -16,9 +16,20 @@ limitations under the License.
 
 #pragma once
 
-#ifdef _WIN32
-#pragma comment(lib,"graphicc.lib")
+#if defined(BUILD_AS_DLL)
+  #if defined(GRC_CORE) || defined(GRC_LIB)
+    #define GRC_API		__declspec(dllexport)
+  #else
+    #define GRC_API		__declspec(dllimport)
+  #endif
+#else
+  #define GRC_API		extern
+	#ifdef _WIN32
+	#pragma comment(lib,"graphicc.lib")
+	#endif
 #endif
+
+
 
 #ifndef graphicc_h
 #define graphicc_h
@@ -64,7 +75,7 @@ typedef float coord;
 #define G_EULER			0.577215664901532860606
 
 // A decently small value
-#define EPSILON		0.0000000001
+static const double  EPSILON = 0.0000000001;
 
 inline bool isBigEndian() {int t = 1;return (*(char*)&t == 0);}
 
@@ -92,10 +103,11 @@ inline int sgn(real val) { return ((0 < val) - (val < 0)); }
 #pragma warning(disable: 4201)  // nonstandard extension used : nameless struct/union
 #endif
 
-
+/*
 enum pixellayouts {
 	rgba
 };
+*/
 
 #ifdef BGR_DOMINANT
 #define RGBA(r,g,b,a) ((uint32_t)(a<<24|r<<16|g<<8|b))
@@ -125,34 +137,34 @@ typedef struct {
 
 // pixel buffer rectangle
 typedef struct pb_rect_t {
-	int x, y;
-	int width, height;
+	coord x, y;
+	coord width, height;
 } pb_rect;
 
-inline int pb_rect_contains_point(const pb_rect &rct, const coord x, const coord y)
+inline bool pb_rect_contains_point(const pb_rect &rct, const coord x, const coord y)
 {
 	if ((x < rct.x) || (y < rct.y))
-		return 0;
+		return false;
 
 	if ((x >= rct.x + rct.width) || (y >= rct.y + rct.height))
-		return 0;
+		return false;
 
-	return 1;
+	return true;
 }
 
-inline int pb_rect_contains_rect(const pb_rect &container, const pb_rect &other)
+inline bool pb_rect_contains_rect(const pb_rect &container, const pb_rect &other)
 {
 	if (!pb_rect_contains_point(container, other.x, other.y))
 	{
-		return 0;
+		return false;
 	}
 
 	if (!pb_rect_contains_point(container, other.x + other.width - 1, other.y + other.height - 1))
 	{
-		return 0;
+		return false;
 	}
 
-	return 1;
+	return true;
 }
 
 // return the intersection of rectangles a and b
@@ -160,13 +172,13 @@ inline int pb_rect_contains_rect(const pb_rect &container, const pb_rect &other)
 // will be == zero
 inline void pb_rect_intersection(pb_rect &c, const pb_rect &a, const pb_rect &b)
 {
-	int x = a.x > b.x ? a.x : b.x;
-	int y = a.y > b.y ? a.y : b.y;
-	int right = ((a.x + a.width - 1) < (b.x + b.width - 1)) ? (a.x + a.width - 1) : (b.x + b.width - 1);
-	int bottom = ((a.y + a.height - 1) < (b.y + b.height - 1)) ? (a.y + a.height - 1) : (b.y + b.height - 1);
+	coord x = a.x > b.x ? a.x : b.x;
+	coord y = a.y > b.y ? a.y : b.y;
+	coord right = ((a.x + a.width - 1) < (b.x + b.width - 1)) ? (a.x + a.width - 1) : (b.x + b.width - 1);
+	coord bottom = ((a.y + a.height - 1) < (b.y + b.height - 1)) ? (a.y + a.height - 1) : (b.y + b.height - 1);
 
-	int width = ((right - x) > 0) ? (right - x) : 0;
-	int height = ((bottom - y) > 0) ? (bottom - y) : 0;
+	coord width = ((right - x) > 0) ? (right - x) : 0;
+	coord height = ((bottom - y) > 0) ? (bottom - y) : 0;
 
 	c.x = x;
 	c.y = y;
@@ -195,32 +207,13 @@ typedef real real3[3];
 typedef real real4[4];
 
 typedef struct {
-	real x;
-	real y;
-	real z;
+	coord x;
+	coord y;
+	coord z;
 } Pt3;
 
 
-typedef struct _mat2 {
-	real m11, m12;
-	real m21, m22;
-} mat2;
 
-typedef struct _mat3 {
-	real m11, m12, m13;
-	real m21, m22, m23;
-	real m31, m32, m33;
-} mat3;
-
-
-typedef struct _mat4 {
-	real m11, m12, m13, m14;
-	real m21, m22, m23, m24;
-	real m31, m32, m33, m34;
-	real m41, m42, m43, m44;
-} mat4;
-
-typedef real mat4x4[4][4];
 
 #ifdef _MSC_VER
 #pragma warning(pop)
@@ -253,20 +246,26 @@ typedef struct _pb_rgba {
 extern "C" {
 #endif
 
-	int pb_rgba_init(pb_rgba *pb, const unsigned int width, const unsigned int height);
-	int pb_rgba_free(pb_rgba *pb);
+GRC_API int pb_rgba_init(pb_rgba *pb, const unsigned int width, const unsigned int height);
+GRC_API int pb_rgba_free(pb_rgba *pb);
 
-	int pb_rgba_get_frame(pb_rgba *pb, const unsigned int x, const unsigned int y, const unsigned int width, const unsigned int height, pb_rgba *pf);
+GRC_API int pb_rgba_get_frame(pb_rgba *pb, const unsigned int x, const unsigned int y, const unsigned int width, const unsigned int height, pb_rgba *pf);
 
-	void pb_rgba_cover_pixel(pb_rgba *pb, const unsigned int x, const unsigned int y, const uint32_t value);
+GRC_API void pb_rgba_cover_pixel(pb_rgba *pb, const unsigned int x, const unsigned int y, const uint32_t value);
 
 #ifdef __cplusplus
 }
 #endif
 
-#define pb_rgba_get_pixel(pb, x, y, value) *value = ((uint32_t *)(pb)->data)[(y*(pb)->pixelpitch)+x]
-#define pb_rgba_set_pixel(pb, x, y, value) ((uint32_t *)(pb)->data)[(y*(pb)->pixelpitch)+x] = value
+inline uint32_t pb_rgba_get_pixel(pb_rgba *pb, const int x, const int y)
+{
+	return ((uint32_t *)(pb)->data)[(y*(pb)->pixelpitch) + x];
+}
 
+inline void pb_rgba_set_pixel(pb_rgba *pb, const int x, const int y, const int32_t value) 
+{
+	((uint32_t *)(pb)->data)[(y*(pb)->pixelpitch) + x] = value;
+}
 
 
 

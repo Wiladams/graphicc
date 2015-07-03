@@ -14,6 +14,8 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+
+
 #include "raster_rgba.h"
 
 #include <math.h>
@@ -255,7 +257,7 @@ int raster_rgba_hline_blend(pb_rgba *pb, unsigned int x, unsigned int y, unsigne
 
 int raster_rgba_vline(pb_rgba *pb, unsigned int x, unsigned int y, unsigned int length, int value)
 {
-	unsigned int * data = &((unsigned int *)pb->data)[y*pb->frame.width + x];
+	unsigned int * data = &((unsigned int *)pb->data)[y*(int)pb->frame.width + x];
 	size_t count = 1;
 	while (count <= length) {
 		*data = value;
