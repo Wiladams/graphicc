@@ -9,16 +9,21 @@
 #include <tchar.h>
 #include <windows.h>
 
-//#pragma comment(lib,"drawproc.lib")
+#ifdef _WIN32
+#pragma comment(lib,"drawproc.lib")
+#ifdef _MSC_VER
+// This is here so that we can simply use a 'main()' 
+#pragma comment(linker, "/subsystem:windows /ENTRY:mainCRTStartup")
+#endif
+#endif
 
+
+#define DPROC_API		__declspec(dllexport)
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-// MUST BE IMPLEMENTED BY TEST CASE
-void draw();
-void setup();
 
 
 // Called by client code
@@ -33,7 +38,18 @@ void setDrawInLoop(bool);
 void forceDraw();
 
 // Callback functions
-typedef void(*CallToHandler)();
+typedef void(*LoopHandler)();
+typedef void(*SetupHandler)();
+typedef void(*CallToHandler)(); 
+
+DPROC_API void draw();
+DPROC_API void setup();
+
+SetupHandler setSetupRoutine(SetupHandler handler);
+CallToHandler setLoopRoutine(LoopHandler handler);
+
+
+
 
 typedef LRESULT(CALLBACK* WinProcHandler)(HWND, UINT, WPARAM, LPARAM);
 typedef LRESULT(CALLBACK* KeyboardHandler)(HWND, UINT, WPARAM, LPARAM);
@@ -41,8 +57,6 @@ typedef LRESULT(CALLBACK*MouseHandler)(HWND hWnd, UINT message, WPARAM wParam, L
 
 void setKeyboardHandler(KeyboardHandler handler);
 void setMouseHandler(MouseHandler handler);
-CallToHandler setSetupRoutine(CallToHandler handler);
-CallToHandler setLoopRoutine(CallToHandler handler);
 #ifdef __cplusplus
 }
 #endif

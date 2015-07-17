@@ -58,9 +58,9 @@ static KeyboardHandler gkbdOnTypedHandler = nullptr;
 
 
 static EventObserverHandler gOnMousePressedHandler = nullptr;
-static MouseHandler gmouseOnUpHandler = nullptr;
-static MouseHandler gmouseOnWheelHandler = nullptr;
-static MouseHandler gmouseOnDraggedHandler = nullptr;
+static EventObserverHandler gmouseReleasedHandler = nullptr;
+static EventObserverHandler gmouseOnWheelHandler = nullptr;
+static EventObserverHandler gmouseOnDraggedHandler = nullptr;
 static EventObserverHandler gmouseOnMovedHandler = nullptr;
 
 
@@ -80,30 +80,6 @@ void setOnKeyTypedHandler(KeyboardHandler handler)
 }
 
 
-void setOnMousePressedHandler(EventObserverHandler handler)
-{
-	gOnMousePressedHandler = handler;
-}
-
-void setOnMouseUpHandler(MouseHandler handler)
-{
-	gmouseOnUpHandler = handler;
-}
-
-void setOnMouseWheelHandler(MouseHandler handler)
-{
-	gmouseOnWheelHandler = handler;
-}
-
-void setOnMouseDraggedHandler(MouseHandler handler)
-{
-	gmouseOnDraggedHandler = handler;
-}
-
-void setOnMouseMovedHandler(EventObserverHandler handler)
-{
-	gmouseOnMovedHandler = handler;
-}
 
 LRESULT CALLBACK keyHandler(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
@@ -153,6 +129,32 @@ LRESULT CALLBACK keyHandler(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 }
 
 
+// Mouse Routines
+void setOnMousePressedHandler(EventObserverHandler handler)
+{
+	gOnMousePressedHandler = handler;
+}
+
+void setOnMouseReleasedHandler(EventObserverHandler handler)
+{
+	gmouseReleasedHandler = handler;
+}
+
+void setOnMouseWheelHandler(EventObserverHandler handler)
+{
+	gmouseOnWheelHandler = handler;
+}
+
+void setOnMouseDraggedHandler(EventObserverHandler handler)
+{
+	gmouseOnDraggedHandler = handler;
+}
+
+void setOnMouseMovedHandler(EventObserverHandler handler)
+{
+	gmouseOnMovedHandler = handler;
+}
+
 
 LRESULT CALLBACK mouseHandler(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
@@ -160,7 +162,7 @@ LRESULT CALLBACK mouseHandler(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPa
 	{
 		case WM_MOUSEWHEEL:
 			if (gmouseOnWheelHandler != nullptr) {
-				gmouseOnWheelHandler(hWnd, message, wParam, lParam);
+				gmouseOnWheelHandler(); // hWnd, message, wParam, lParam);
 			}
 		break;
 
@@ -171,7 +173,7 @@ LRESULT CALLBACK mouseHandler(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPa
 
 			if (isMousePressed) {
 				if (gmouseOnDraggedHandler != nullptr) {
-					gmouseOnDraggedHandler(hWnd, message, wParam, lParam);
+					gmouseOnDraggedHandler();
 				}
 			} else if (gmouseOnMovedHandler != nullptr) {
 				gmouseOnMovedHandler();
@@ -194,8 +196,8 @@ LRESULT CALLBACK mouseHandler(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPa
 		case WM_RBUTTONUP:
 			isMousePressed = false;
 
-			if (gmouseOnUpHandler != nullptr) {
-				gmouseOnUpHandler(hWnd, message, wParam, lParam);
+			if (gmouseReleasedHandler != nullptr) {
+				gmouseReleasedHandler();
 			}
 		break;
 
@@ -217,6 +219,14 @@ void init()
 	gTextAlignY = TX_TOP;
 
 	setKeyboardHandler(keyHandler);
+	
+	HMODULE modH = GetModuleHandle(NULL);
+
+	setOnMousePressedHandler((EventObserverHandler)GetProcAddress(modH, "mousePressed"));
+	setOnMouseReleasedHandler((EventObserverHandler)GetProcAddress(modH, "mouseReleased"));
+	setOnMouseMovedHandler((EventObserverHandler)GetProcAddress(modH, "mouseMoved"));
+	setOnMouseDraggedHandler((EventObserverHandler)GetProcAddress(modH, "mouseDragged"));
+
 	setMouseHandler(mouseHandler);
 }
 
@@ -305,6 +315,11 @@ void stroke(const uint32_t value)
 {
 	strokeColor = value;
 }
+
+void noSmooth() {}
+void smooth() {}
+void strokeCap() {}
+void strokeJoin() {}
 
 void strokeWeight(const float weight)
 {

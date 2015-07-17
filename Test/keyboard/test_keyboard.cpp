@@ -18,10 +18,10 @@ pb_rect keyRect = { 0, 0, 34, 34 };
 /*
 VK_SPACE, 168, 242, 204, 34
 */
-void draw();
+//void draw();
 
 
-void CALLBACK mousePressed()
+void  mousePressed()
 {
 	gMode++;
 	if (gMode >= gMaxMode) {
@@ -30,11 +30,10 @@ void CALLBACK mousePressed()
 
 }
 
-void CALLBACK mouseMoved()
+void  mouseMoved()
 {
 	keyRect.x = mouseX - keyRect.width / 2;
 	keyRect.y = mouseY - keyRect.height / 2;
-
 }
 
 LRESULT CALLBACK keyReleased(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
@@ -110,9 +109,9 @@ void setup()
 	background(pLightGray);
 	//noLoop();
 
-	setOnMousePressedHandler(mousePressed);
-	setOnMouseMovedHandler(mouseMoved);
-	setOnKeyReleasedHandler(keyReleased);
+	//setOnMousePressedHandler(mousePressed);
+	//setOnMouseMovedHandler(mouseMoved);
+	//setOnKeyReleasedHandler(keyReleased);
 }
 
 

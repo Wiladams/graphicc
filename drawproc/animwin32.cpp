@@ -28,8 +28,7 @@ bool continueRunning = true;
 bool gDrawDuringLoop = true;
 
 
-static CallToHandler gSetupRoutine = nullptr;
-static CallToHandler gLoopRoutine = nullptr;
+
 
 
 
@@ -40,16 +39,23 @@ static KeyboardHandler gkbdHandler = nullptr;
 // Mouse event handlers
 static MouseHandler gmouseHandler = nullptr;
 
-CallToHandler setSetupRoutine(CallToHandler handler)
+// Setup and Loop handlers
+static SetupHandler gSetupRoutine = nullptr;
+static LoopHandler gLoopRoutine = nullptr;
+
+void defaultSetup()
+{}
+
+SetupHandler setSetupRoutine(SetupHandler handler)
 {
-	CallToHandler oldRoutine = gSetupRoutine;
+	SetupHandler oldRoutine = gSetupRoutine;
 	gSetupRoutine = handler;
 	return oldRoutine;
 }
 
-CallToHandler setLoopRoutine(CallToHandler handler)
+LoopHandler setLoopRoutine(LoopHandler handler)
 {
-	CallToHandler oldRoutine = gLoopRoutine;
+	LoopHandler oldRoutine = gLoopRoutine;
 	gLoopRoutine = handler;
 	return oldRoutine;
 }
@@ -91,6 +97,8 @@ double seconds()
 // Internal to animwin32
 void InitializeInstance()
 {
+
+
 	// Setup time
 	uint64_t freq;
 
@@ -99,6 +107,23 @@ void InitializeInstance()
 
 	clockfrequency = 1.0f / freq;
 
+	// Get pointers to client setup and loop routines
+	HMODULE modH = GetModuleHandle(NULL);
+	printf("modH: 0x%x\n", modH);
+
+	SetupHandler procAddr = (SetupHandler)GetProcAddress(modH, "setup");
+	printf("proc Address: 0x%x\n", procAddr);
+
+	if (procAddr != NULL) {
+		setSetupRoutine(procAddr);
+	}
+
+	LoopHandler loopAddr = (LoopHandler)GetProcAddress(modH, "draw");
+	printf("loop Addr: 0x%x\n", loopAddr);
+
+	if (loopAddr != NULL) {
+		setLoopRoutine(loopAddr);
+	}
 }
 
 //
@@ -312,7 +337,6 @@ void eventLoop(HWND hWnd)
 	if (gLoopRoutine != nullptr) {
 		gLoopRoutine();
 	}
-	draw();
 
 	InvalidateRect(hWnd, 0, TRUE);
 
@@ -331,7 +355,6 @@ void eventLoop(HWND hWnd)
 			if (gLoopRoutine != nullptr) {
 				gLoopRoutine();
 			}
-			draw();
 
 			// Assume the 'draw()' did something which requires the 
 			// screen to be redrawn, so, invalidate the entire client area
@@ -341,13 +364,6 @@ void eventLoop(HWND hWnd)
 }
 
 
-/*
-int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
-	_In_opt_ HINSTANCE hPrevInstance,
-	_In_ LPTSTR    lpCmdLine,
-	_In_ int       nCmdShow)
-
-	*/
 int main(int argc, char **argv)
 {
 	InitializeInstance();
@@ -357,7 +373,6 @@ int main(int argc, char **argv)
 	if (gSetupRoutine != nullptr) {
 		gSetupRoutine();
 	}
-	setup();
 
 	// Start running the event loop
 	eventLoop(ghWnd);

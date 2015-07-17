@@ -10,27 +10,37 @@
 
 #include "agg_embedded_raster_fonts.h"
 
-#ifdef _WIN32
-#pragma comment(lib,"drawproc.lib")
-	#ifdef _MSC_VER
-		// This is here so that we can simply use a 'main()' 
-		#pragma comment(linker, "/subsystem:windows /ENTRY:mainCRTStartup")
-	#endif
+
+#ifdef __cplusplus
+extern "C" {
 #endif
 
-typedef void(CALLBACK *EventObserverHandler)();
+typedef void (*EventObserverHandler)();
 
 
 // IO Event Handlers
+DPROC_API void keyPressed();
+DPROC_API void keyReleased();
+DPROC_API void keyTyped();
+
 void setOnKeyPressedHandler(KeyboardHandler handler);
 void setOnKeyReleasedHandler(KeyboardHandler handler);
 void setOnKeyTypedHandler(KeyboardHandler handler);
 
-void setOnMousePressedHandler(EventObserverHandler handler);
-void setOnMouseWheelHandler(MouseHandler handler);
-void setOnMouseMovedHandler(EventObserverHandler handler);
-void setOnMouseDraggedHandler(MouseHandler handler);
+DPROC_API void mousePressed();
+DPROC_API void mouseMoved();
+DPROC_API void mouseDragged();
+DPROC_API void mouseReleased();
 
+void setOnMousePressedHandler(EventObserverHandler handler);
+void setOnMouseReleasedHandler(EventObserverHandler handler);
+void setOnMouseWheelHandler(EventObserverHandler handler);
+void setOnMouseMovedHandler(EventObserverHandler handler);
+void setOnMouseDraggedHandler(EventObserverHandler handler);
+
+#ifdef __cplusplus
+}
+#endif
 
 void redraw();
 
