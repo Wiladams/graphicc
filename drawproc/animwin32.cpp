@@ -60,12 +60,10 @@ void setKeyboardHandler(KeyboardHandler handler)
 	gkbdHandler = handler;
 }
 
-
 void setMouseHandler(MouseHandler handler)
 {
 	gmouseHandler = handler;
 }
-
 
 
 // Internal to animwin32
@@ -206,6 +204,8 @@ void * SetWindowSize(const int width, const int height)
 void OnPaint(HDC hdc, PAINTSTRUCT &ps)
 {
 	// bitblt bmhandle to client area
+	// we should actually look at the paint struct
+	// and only blit the part that needs to be drawn
 	if ((NULL != ghMemDC) && (nullptr != gPixelData)) {
 		::BitBlt(hdc, 0, 0, gbmWidth, gbmHeight, ghMemDC, 0, 0, SRCCOPY);
 	}
@@ -304,7 +304,7 @@ void eventLoop(HWND hWnd)
 		gLoopRoutine();
 	}
 
-	InvalidateRect(hWnd, 0, TRUE);
+	forceDraw();
 
 	while (continueRunning)
 	{
@@ -324,7 +324,7 @@ void eventLoop(HWND hWnd)
 
 			// Assume the 'draw()' did something which requires the 
 			// screen to be redrawn, so, invalidate the entire client area
-			InvalidateRect(hWnd, 0, TRUE);
+			forceDraw();
 		}
 	}
 }

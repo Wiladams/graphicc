@@ -15,8 +15,6 @@ to be updated.
 static const int gMaxMode = 4;
 static int gMode = 0;
 
-void drawShape();
-
 
 void drawShape()
 {
@@ -63,7 +61,7 @@ void drawShape()
 	redraw();
 }
 
-void CALLBACK mousePressed()
+void mousePressed()
 {
 	gMode++;
 	if (gMode >= gMaxMode) {
@@ -79,10 +77,5 @@ void setup()
 	size(1024, 768);
 	background(pLightGray);
 	noLoop();
-
-	setOnMousePressedHandler(mousePressed);
 }
 
-void draw()
-{
-}
