@@ -1,7 +1,7 @@
 /*
-test_text
+test_keyboard
 
-Do some simple text drawing
+Do some simple mouse and keyboard tracking
 
 */
 #include "drawproc.h"
@@ -15,19 +15,12 @@ static int gMode = 0;
 pb_rgba fb;
 pb_rect keyRect = { 0, 0, 34, 34 };
 
-/*
-VK_SPACE, 168, 242, 204, 34
-*/
-//void draw();
-
-
 void  mousePressed()
 {
 	gMode++;
 	if (gMode >= gMaxMode) {
 		gMode = 0;
 	}
-
 }
 
 void  mouseMoved()
@@ -36,9 +29,9 @@ void  mouseMoved()
 	keyRect.y = mouseY - keyRect.height / 2;
 }
 
-LRESULT CALLBACK keyReleased(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
+void  keyReleased()
 {
-	switch (wParam)
+	switch (keyCode)
 	{
 	case VK_SPACE:
 		write_PPM_binary("test_keyboard.ppm", gpb);
@@ -64,14 +57,13 @@ LRESULT CALLBACK keyReleased(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPar
 	keyRect.x = mouseX - keyRect.width / 2;
 	keyRect.y = mouseY - keyRect.height / 2;
 
-	return 0;
 }
 
 // Draw information about the mouse
 // location, buttons pressed, etc
 void drawMouseInfo()
 {
-	// draw a white banner across the top
+	// draw a white banner across the bottom
 	noStroke();
 	fill(pWhite);
 	rect(0, fb.frame.height + 2, width, 24);
@@ -107,11 +99,6 @@ void setup()
 
 	size(fb.frame.width+4, fb.frame.height+4+30);
 	background(pLightGray);
-	//noLoop();
-
-	//setOnMousePressedHandler(mousePressed);
-	//setOnMouseMovedHandler(mouseMoved);
-	//setOnKeyReleasedHandler(keyReleased);
 }
 
 

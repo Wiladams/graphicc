@@ -52,9 +52,9 @@ typedef std::vector< Vector2d > Vector2dVector;
 
 
 
-static KeyboardHandler gkbdOnPressedHandler = nullptr;
-static KeyboardHandler gkbdOnReleasedHandler = nullptr;
-static KeyboardHandler gkbdOnTypedHandler = nullptr;
+static EventObserverHandler gkbdOnPressedHandler = nullptr;
+static EventObserverHandler gkbdOnReleasedHandler = nullptr;
+static EventObserverHandler gkbdOnTypedHandler = nullptr;
 
 
 static EventObserverHandler gOnMousePressedHandler = nullptr;
@@ -64,17 +64,17 @@ static EventObserverHandler gmouseOnDraggedHandler = nullptr;
 static EventObserverHandler gmouseOnMovedHandler = nullptr;
 
 
-void setOnKeyPressedHandler(KeyboardHandler handler)
+void setOnKeyPressedHandler(EventObserverHandler handler)
 {
 	gkbdOnPressedHandler = handler;
 }
 
-void setOnKeyReleasedHandler(KeyboardHandler handler)
+void setOnKeyReleasedHandler(EventObserverHandler handler)
 {
 	gkbdOnReleasedHandler = handler;
 }
 
-void setOnKeyTypedHandler(KeyboardHandler handler)
+void setOnKeyTypedHandler(EventObserverHandler handler)
 {
 	gkbdOnTypedHandler = handler;
 }
@@ -91,7 +91,8 @@ LRESULT CALLBACK keyHandler(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 			key = wParam;
 
 			if (gkbdOnTypedHandler) {
-				gkbdOnTypedHandler(hWnd, message, wParam, lParam);
+				gkbdOnTypedHandler();
+				//hWnd, message, wParam, lParam);
 			}
 
 			switch (key){
@@ -106,7 +107,8 @@ LRESULT CALLBACK keyHandler(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 			isKeyPressed = true;
 
 			if (gkbdOnPressedHandler) {
-				return gkbdOnPressedHandler(hWnd, message, wParam, lParam);
+				gkbdOnPressedHandler();
+					//hWnd, message, wParam, lParam);
 			}
 		break;
 
@@ -116,7 +118,7 @@ LRESULT CALLBACK keyHandler(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 			isKeyPressed = false;
 
 			if (gkbdOnReleasedHandler) {
-				return gkbdOnReleasedHandler(hWnd, message, wParam, lParam);
+				gkbdOnReleasedHandler();
 			}
 		break;
 
@@ -218,10 +220,19 @@ void init()
 	gTextAlignX = TX_LEFT;
 	gTextAlignY = TX_TOP;
 
-	setKeyboardHandler(keyHandler);
+
 	
 	HMODULE modH = GetModuleHandle(NULL);
 
+	// Keyboard handling routines
+	setOnKeyPressedHandler((EventObserverHandler)GetProcAddress(modH, "keyPressed"));
+	setOnKeyReleasedHandler((EventObserverHandler)GetProcAddress(modH, "keyReleased"));
+	setOnKeyTypedHandler((EventObserverHandler)GetProcAddress(modH, "keyTyped"));
+
+	setKeyboardHandler(keyHandler);
+
+
+	// Mouse Handling Routines
 	setOnMousePressedHandler((EventObserverHandler)GetProcAddress(modH, "mousePressed"));
 	setOnMouseReleasedHandler((EventObserverHandler)GetProcAddress(modH, "mouseReleased"));
 	setOnMouseMovedHandler((EventObserverHandler)GetProcAddress(modH, "mouseMoved"));

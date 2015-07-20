@@ -27,6 +27,9 @@
     <ClCompile Include="guistyle.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="dproc_clock.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="agg_embedded_raster_fonts.h">
@@ -39,6 +42,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="guistyle.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="dproc_clock.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

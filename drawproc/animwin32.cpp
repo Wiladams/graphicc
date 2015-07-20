@@ -1,6 +1,7 @@
 
 
 #include "animwin32.h"
+#include "dproc_clock.h"
 
 #include <math.h>
 #include <stdio.h>
@@ -29,10 +30,6 @@ bool gDrawDuringLoop = true;
 
 
 
-
-
-
-
 // Keyboard event handlers
 static KeyboardHandler gkbdHandler = nullptr;
 
@@ -43,8 +40,6 @@ static MouseHandler gmouseHandler = nullptr;
 static SetupHandler gSetupRoutine = nullptr;
 static LoopHandler gLoopRoutine = nullptr;
 
-void defaultSetup()
-{}
 
 SetupHandler setSetupRoutine(SetupHandler handler)
 {
@@ -71,41 +66,12 @@ void setMouseHandler(MouseHandler handler)
 	gmouseHandler = handler;
 }
 
-// for time keeping
-uint64_t startcount = 0;
-double clockfrequency = 1;
-
-// time keeping
-void resettime()
-{
-	::QueryPerformanceCounter((LARGE_INTEGER*)&startcount);
-}
-
-double seconds()
-{
-	uint64_t currentCount;
-	::QueryPerformanceCounter((LARGE_INTEGER*)&currentCount);
-
-	uint64_t ellapsed = currentCount - startcount;
-	double secs = ellapsed * clockfrequency;
-
-	return secs;
-}
-
 
 
 // Internal to animwin32
 void InitializeInstance()
 {
-
-
-	// Setup time
-	uint64_t freq;
-
-	::QueryPerformanceFrequency((LARGE_INTEGER*)&freq);
-	::QueryPerformanceCounter((LARGE_INTEGER*)&startcount);
-
-	clockfrequency = 1.0f / freq;
+	initTime();
 
 	// Get pointers to client setup and loop routines
 	HMODULE modH = GetModuleHandle(NULL);

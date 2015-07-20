@@ -23,20 +23,11 @@ DPROC_API void keyPressed();
 DPROC_API void keyReleased();
 DPROC_API void keyTyped();
 
-void setOnKeyPressedHandler(KeyboardHandler handler);
-void setOnKeyReleasedHandler(KeyboardHandler handler);
-void setOnKeyTypedHandler(KeyboardHandler handler);
 
 DPROC_API void mousePressed();
 DPROC_API void mouseMoved();
 DPROC_API void mouseDragged();
 DPROC_API void mouseReleased();
-
-void setOnMousePressedHandler(EventObserverHandler handler);
-void setOnMouseReleasedHandler(EventObserverHandler handler);
-void setOnMouseWheelHandler(EventObserverHandler handler);
-void setOnMouseMovedHandler(EventObserverHandler handler);
-void setOnMouseDraggedHandler(EventObserverHandler handler);
 
 #ifdef __cplusplus
 }

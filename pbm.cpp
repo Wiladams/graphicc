@@ -136,7 +136,7 @@ int write_PPM_ascii(const char *filename, pb_rgba *fb)
 	if (!fp) return -1;
 
 	// write out the image header
-	fprintf(fp, "P3\n%d %d\n255\n", fb->frame.width, fb->frame.height);
+	fprintf(fp, "P3\n%d %d\n255\n", int(fb->frame.width), int(fb->frame.height));
 
 	// write the individual pixel values in binary form
 	uint32_t * pixelPtr = (uint32_t *)fb->data;
@@ -167,7 +167,7 @@ int write_PPM_binary(const char *filename, pb_rgba *fb)
 	if (!fp) return -1;
 
 	// write out the image header
-	fprintf(fp, "P6\n%d %d\n255\n", fb->frame.width, fb->frame.height);
+	fprintf(fp, "P6\n%d %d\n255\n", int(fb->frame.width), int(fb->frame.height));
 	
 	// write the individual pixel values in binary form
 	uint32_t * pixelPtr = (uint32_t *)fb->data;
