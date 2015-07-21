@@ -12,7 +12,7 @@
 // Forward declarations of functions included in this code module:
 LRESULT CALLBACK	WndProc(HWND, UINT, WPARAM, LPARAM);
 
-// Global Variables:
+// Global Windows Variables:
 HINSTANCE hInst;								// current instance
 
 char szTitle[] = "Window";					// The title bar text
@@ -40,7 +40,11 @@ static MouseHandler gmouseHandler = nullptr;
 static SetupHandler gSetupRoutine = nullptr;
 static LoopHandler gLoopRoutine = nullptr;
 
+// Application clock
+struct dproc_clock *gClock = nullptr;
 
+
+// Routines called by client
 SetupHandler setSetupRoutine(SetupHandler handler)
 {
 	SetupHandler oldRoutine = gSetupRoutine;
@@ -65,11 +69,36 @@ void setMouseHandler(MouseHandler handler)
 	gmouseHandler = handler;
 }
 
+void quit()
+{
+	PostQuitMessage(0);
+	continueRunning = false;
+}
+
+void forceDraw()
+{
+	// Assume the 'draw()' did something which requires the 
+	// screen to be redrawn, so, invalidate the entire client area
+	InvalidateRect(ghWnd, 0, TRUE);
+}
+
+
+// time keeping
+void resettime()
+{
+	dproc_clock_init(gClock);
+}
+
+double seconds()
+{
+	return dproc_clock_seconds(gClock);
+}
+
 
 // Internal to animwin32
 void InitializeInstance()
 {
-	initTime();
+	gClock = dproc_clock_new();
 
 	// Get pointers to client setup and loop routines
 	HMODULE modH = GetModuleHandle(NULL);
@@ -211,12 +240,6 @@ void OnPaint(HDC hdc, PAINTSTRUCT &ps)
 	}
 }
 
-void quit()
-{
-	PostQuitMessage(0);
-	continueRunning = false;
-}
-
 
 
 
@@ -288,12 +311,7 @@ void setDrawInLoop(bool doDraw)
 	gDrawDuringLoop = doDraw;
 }
 
-void forceDraw()
-{
-	// Assume the 'draw()' did something which requires the 
-	// screen to be redrawn, so, invalidate the entire client area
-	InvalidateRect(ghWnd, 0, TRUE);
-}
+
 
 void eventLoop(HWND hWnd)
 {

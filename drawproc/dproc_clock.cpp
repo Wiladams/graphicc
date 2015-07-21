@@ -7,8 +7,6 @@
 uint64_t startcount = 0;
 double clockfrequency = 1;
 
-
-
 struct dproc_clock * dproc_clock_new()
 {
 	struct dproc_clock * clock = (struct dproc_clock *)malloc(sizeof(struct dproc_clock));
@@ -41,30 +39,4 @@ double dproc_clock_seconds(struct dproc_clock *clock)
 	double secs = ellapsed * clock->frequency;
 
 	return secs;
-}
-
-// time keeping
-void resettime()
-{
-	::QueryPerformanceCounter((LARGE_INTEGER*)&startcount);
-}
-
-double seconds()
-{
-	uint64_t currentCount;
-	::QueryPerformanceCounter((LARGE_INTEGER*)&currentCount);
-
-	uint64_t ellapsed = currentCount - startcount;
-	double secs = ellapsed * clockfrequency;
-
-	return secs;
-}
-
-void initTime()
-{
-	// Setup time
-	uint64_t freq;
-	::QueryPerformanceFrequency((LARGE_INTEGER*)&freq);
-	::QueryPerformanceCounter((LARGE_INTEGER*)&startcount);
-	clockfrequency = 1.0f / freq;
 }

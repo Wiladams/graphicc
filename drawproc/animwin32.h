@@ -26,7 +26,7 @@ extern "C" {
 
 
 
-// Called by client code
+// These can be called by client code
 void * GetPixelBuffer(const int width, const int height);
 void * SetWindowSize(const int width, const int height);
 
@@ -42,9 +42,12 @@ typedef void(*LoopHandler)();
 typedef void(*SetupHandler)();
 typedef void(*CallToHandler)(); 
 
+// These should be implemented by the client
 DPROC_API void draw();
 DPROC_API void setup();
 
+// These can be called by the client, but not
+// strictly necessary
 SetupHandler setSetupRoutine(SetupHandler handler);
 CallToHandler setLoopRoutine(LoopHandler handler);
 
@@ -55,6 +58,7 @@ typedef LRESULT(CALLBACK* WinProcHandler)(HWND, UINT, WPARAM, LPARAM);
 typedef LRESULT(CALLBACK* KeyboardHandler)(HWND, UINT, WPARAM, LPARAM);
 typedef LRESULT(CALLBACK*MouseHandler)(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
 
+// These should be called by the client 
 void setKeyboardHandler(KeyboardHandler handler);
 void setMouseHandler(MouseHandler handler);
 #ifdef __cplusplus
