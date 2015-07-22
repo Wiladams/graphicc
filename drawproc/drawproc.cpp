@@ -57,6 +57,7 @@ static EventObserverHandler gkbdOnReleasedHandler = nullptr;
 static EventObserverHandler gkbdOnTypedHandler = nullptr;
 
 
+static EventObserverHandler gOnMouseClickedHandler = nullptr;
 static EventObserverHandler gOnMousePressedHandler = nullptr;
 static EventObserverHandler gmouseReleasedHandler = nullptr;
 static EventObserverHandler gmouseOnWheelHandler = nullptr;
@@ -132,6 +133,11 @@ LRESULT CALLBACK keyHandler(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 
 
 // Mouse Routines
+void setOnMouseClickedHandler(EventObserverHandler handler)
+{
+	gOnMouseClickedHandler = handler;
+}
+
 void setOnMousePressedHandler(EventObserverHandler handler)
 {
 	gOnMousePressedHandler = handler;
@@ -201,6 +207,10 @@ LRESULT CALLBACK mouseHandler(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPa
 			if (gmouseReleasedHandler != nullptr) {
 				gmouseReleasedHandler();
 			}
+
+			if (gOnMouseClickedHandler != nullptr) {
+				gOnMouseClickedHandler();
+			}
 		break;
 
 		default:
@@ -233,6 +243,7 @@ void init()
 
 
 	// Mouse Handling Routines
+	setOnMousePressedHandler((EventObserverHandler)GetProcAddress(modH, "mouseClicked"));
 	setOnMousePressedHandler((EventObserverHandler)GetProcAddress(modH, "mousePressed"));
 	setOnMouseReleasedHandler((EventObserverHandler)GetProcAddress(modH, "mouseReleased"));
 	setOnMouseMovedHandler((EventObserverHandler)GetProcAddress(modH, "mouseMoved"));
@@ -317,7 +328,7 @@ void noStroke()
 	strokeColor = 0;
 }
 
-void stroke(const uint8_t value)
+void strokeGray(const uint8_t value)
 {
 	strokeColor = RGBA(value, value, value, 255);
 }

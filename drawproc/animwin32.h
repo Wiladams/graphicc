@@ -44,6 +44,7 @@ typedef void(*CallToHandler)();
 
 // These should be implemented by the client
 DPROC_API void draw();
+DPROC_API void loop(); 
 DPROC_API void setup();
 
 // These can be called by the client, but not

@@ -77,8 +77,9 @@ void drawMouseInfo()
 	// select verdana font
 	setFont(verdana17);
 	char infobuff[256];
-	sprintf_s(infobuff, "Mouse X: %3d Y: %3d    Key: (%3f, %3f)(%3.0f, %3.0f)", mouseX, mouseY, keyRect.x, 
-		keyRect.y, keyRect.width, keyRect.height);
+	sprintf_s(infobuff, "Mouse X: %3d Y: %3d    Key: (%3f, %3f)(%3.0f, %3.0f)  Seconds: %3.2f", mouseX, mouseY, 
+		keyRect.x, keyRect.y, keyRect.width, keyRect.height,
+		seconds());
 	fill(pBlack);
 	textAlign(TX_LEFT, TX_TOP);
 	text(infobuff, 0, fb.frame.height + 2);

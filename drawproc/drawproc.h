@@ -23,10 +23,10 @@ DPROC_API void keyPressed();
 DPROC_API void keyReleased();
 DPROC_API void keyTyped();
 
-
-DPROC_API void mousePressed();
-DPROC_API void mouseMoved();
+DPROC_API void mouseClicked();
 DPROC_API void mouseDragged();
+DPROC_API void mouseMoved(); 
+DPROC_API void mousePressed();
 DPROC_API void mouseReleased();
 
 #ifdef __cplusplus
@@ -101,10 +101,6 @@ extern pb_rgba *gpb;
 extern pb_rect pixelFrame;
 
 
-
-extern uint64_t startcount;	// for time keeping
-extern uint64_t frequency;
-
 extern uint32_t bgColor;
 extern pb_rgba *bgImage;
 
@@ -127,12 +123,14 @@ extern int mouseX;
 extern int mouseY;
 // mouseButton
 // mouseClicked()
+
 // mouseDragged()
 // mouseMoved()
 // mousePressed()
-// mousePressed
 // mouseReleased()
 // mouseWheel()
+
+extern bool isMousePressed;
 // pmouseX
 // pmouseY
 
@@ -151,16 +149,15 @@ void backgroundImage(pb_rgba *bg);
 
 //void colorMode();
 void fill(const uint32_t value);
-//void fill(const uint8_t gray);
 void fillGray(const uint8_t gray);
 void noFill();
 void noStroke();
 void stroke(const uint32_t value);
-void stroke(const uint8_t gray);
+void strokeGray(const uint8_t gray);
 
 // attributes
 void ellipseMode(const int mode);
-//void noSmooth();
+void noSmooth();
 void rectMode(const RECTMODE mode);
 //void smooth();
 //void strokeCap();
