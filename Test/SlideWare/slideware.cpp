@@ -19,8 +19,8 @@ static int gMode = 0;
 void drawShape()
 {
 	rectMode(CENTER);
-	fill(RGBA(random(255), random(255), random(255), 255));
-	background(pLightGray);
+	fillRGBA(RGBA(random(255), random(255), random(255), 255));
+	backgroundRGBA(pLightGray);
 
 	switch (gMode)
 	{
@@ -45,7 +45,7 @@ void drawShape()
 
 	case 3:
 		//noFill();
-		fill(pWhite);
+		fillRGBA(pWhite);
 		beginShape(GR_POINTS);
 		vertex(30, 20);
 		bezierVertex(80, 0, 80, 75, 30, 75);
@@ -75,7 +75,7 @@ void mousePressed()
 void setup()
 {
 	size(1024, 768);
-	background(pLightGray);
+	backgroundRGBA(pLightGray);
 	noLoop();
 }
 

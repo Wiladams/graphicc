@@ -17,7 +17,7 @@ int arrayindex = 0;
 
 void draw()
 {
-	background(RGBA(102,102,102,255));
+	background(102);
 
 	for (int i = 1; i < width; i++) {
 		xvals[i - 1] = xvals[i];
@@ -34,19 +34,18 @@ void draw()
 		bvals[width - 1] = 255;
 	}
 
-	fillGray(255);
+	fill(255);
 	noStroke();
 	rect(0, height / 3, width, height / 3 + 1);
 
 	for (int i = 1; i<width; i++) {
-		strokeGray(255);
+		stroke(255);
 		point(i, xvals[i]);
 
-		strokeGray(0);
+		stroke(0);
 		point(i, yvals[i]);
-		//point(i, height / 3 + yvals[i] / 3);
 
-		strokeGray(255);
+		stroke(255);
 		line(i, 2 * height / 3 + bvals[i] / 3, i, (2 * height / 3 + bvals[i - 1] / 3));
 	}
 }

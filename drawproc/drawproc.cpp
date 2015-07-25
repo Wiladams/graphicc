@@ -304,7 +304,12 @@ int random(const int rndMax)
 }
 
 // color setting
-void background(const uint32_t value)
+void background(const uint8_t gray)
+{
+	backgroundRGBA(RGBA(gray, gray, gray, 255));
+}
+
+void backgroundRGBA(const uint32_t value)
 {
 	bgColor = value;
 	if ((gpb != NULL) && (width > 0) && (height > 0))
@@ -328,12 +333,12 @@ void noStroke()
 	strokeColor = 0;
 }
 
-void strokeGray(const uint8_t value)
+void stroke(const uint8_t value, const uint8_t alpha)
 {
-	strokeColor = RGBA(value, value, value, 255);
+	strokeColor = RGBA(value, value, value, alpha);
 }
 
-void stroke(const uint32_t value)
+void strokeRGBA(const uint32_t value)
 {
 	strokeColor = value;
 }
@@ -348,12 +353,12 @@ void strokeWeight(const float weight)
 	gstrokeWeight = weight;
 }
 
-void fillGray(const uint8_t value)
+void fill(const uint8_t gray, const uint8_t alpha)
 {
-	fillColor = RGBA(value, value, value, 255);
+	fillColor = RGBA(gray, gray, gray, alpha);
 }
 
-void fill(const uint32_t value)
+void fillRGBA(const uint32_t value)
 {
 	fillColor = value;
 }

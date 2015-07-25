@@ -121,18 +121,19 @@ void size(const size_t width, const size_t height);
 // Mouse
 extern int mouseX;
 extern int mouseY;
+extern bool isMousePressed;
+// pmouseX
+// pmouseY
 // mouseButton
-// mouseClicked()
 
+// mouseClicked()
 // mouseDragged()
 // mouseMoved()
 // mousePressed()
 // mouseReleased()
 // mouseWheel()
 
-extern bool isMousePressed;
-// pmouseX
-// pmouseY
+
 
 // Keyboard
 extern int key;
@@ -143,17 +144,19 @@ extern bool isKeyPressed;
 // keyTyped()
 
 // Setting colors
-void background(const uint32_t value);
+void background(const uint8_t value);
+void backgroundRGBA(const uint32_t value);
 void backgroundImage(pb_rgba *bg);
 //void clear();
 
 //void colorMode();
-void fill(const uint32_t value);
-void fillGray(const uint8_t gray);
 void noFill();
+void fill(const uint8_t gray, const uint8_t alpha = 255);
+void fillRGBA(const uint32_t value);
+
 void noStroke();
-void stroke(const uint32_t value);
-void strokeGray(const uint8_t gray);
+void strokeRGBA(const uint32_t value);
+void stroke(const uint8_t gray, const uint8_t alpha=255);
 
 // attributes
 void ellipseMode(const int mode);

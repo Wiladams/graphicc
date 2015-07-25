@@ -47,9 +47,9 @@ static const int numfonts = sizeof(fontlist) / sizeof(fontlist[0]);
 static int fontidx = 0;
 
 
-LRESULT CALLBACK keyReleased(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
+void keyReleased()
 {
-	switch (wParam)
+	switch (keyCode)
 	{
 		case VK_UP:
 			fontidx--;
@@ -70,15 +70,12 @@ LRESULT CALLBACK keyReleased(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPar
 		break;
 	}
 
-	return 0;
 }
 
 void setup()
 {
 	size(640, 480);
-	background(pWhite);
-
-	setOnKeyReleasedHandler(keyReleased);
+	background(155);
 }
 
 static char CAPS[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
@@ -89,25 +86,25 @@ static char SOME[] = "The quick brown fox jumped over the lazy dog.";
 
 void draw()
 {
-	background(pWhite);
+	background(255);
 
 	setFont(fontlist[fontidx].data);
 
 	textAlign(TX_LEFT, TX_TOP);
-	fill(pBlack);
+	fillRGBA(pBlack);
 	text(fontlist[fontidx].name, 0, 0);
 	text(CAPS, 0, gfont.height * 1);
 
-	fill(pRed);
+	fillRGBA(pRed);
 	text(LOWS, 0, gfont.height * 2);
 
-	fill(pGreen);
+	fillRGBA(pGreen);
 	text(NUMS, 0, gfont.height * 3);
 
-	fill(pBlue);
+	fillRGBA(pBlue);
 	text(SYMS, 0, gfont.height * 4);
 
-	fill(pBlack);
+	fillRGBA(pBlack);
 	text(SOME, 0, gfont.height * 5);
 }
 

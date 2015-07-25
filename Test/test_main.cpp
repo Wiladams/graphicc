@@ -13,10 +13,14 @@
 	will grow from size zero, the height of window, within that second.
 */
 
-#include <math.h>
+
 
 #include "drawproc.h"
 #include "test_common.h"
+
+#include <math.h>
+#include <stdlib.h>
+
 
 static uint32_t colors[] = {
 	pBlack,
@@ -73,29 +77,29 @@ void drawLines()
 {
 	line(30, 20, 85, 75);
 	line(30, 20, 85, 20);
-	stroke((uint8_t)126);
+	stroke(126);
 	line(85, 20, 85, 75);
-	stroke((uint8_t)255);
+	stroke(255);
 	line(85, 75, 30, 75);
 }
 
 void drawRects()
 {
-	stroke(pBlack);
+	stroke(0);
 	rectMode(CORNER);
-	fill((uint8_t)255);
+	fill(255);
 	rect(25, 25, 60, 60);
 
 	rectMode(CORNERS);
-	fill((uint8_t)100);
+	fill(100);
 	rect(25, 25, 50, 50);
 
 	rectMode(RADIUS);
-	fill((uint8_t)255);
+	fill(255);
 	rect(250, 50, 30, 30);
 
 	rectMode(CENTER);
-	fill((uint8_t)100);
+	fill(100);
 	rect(250, 50, 30, 30);
 }
 
@@ -106,7 +110,7 @@ void drawRandomRectangles()
 
 	rectMode(CORNER);
 	//noStroke();
-	stroke(pBlack);
+	stroke(0);
 
 	for (int cnt = 1001; cnt; cnt--)
 	{
@@ -119,7 +123,7 @@ void drawRandomRectangles()
 		int y1 = rand() % (height - 1);
 
 		//noFill();
-		fill(c);
+		fillRGBA(c);
 		rect(x1, y1, lwidth, lheight);
 	}
 }
@@ -216,7 +220,7 @@ void drawBars()
 {
 	rectMode(CORNER);
 	//nostroke();
-	stroke(pBlack);
+	stroke(0);
 
 	int *b = (int *)malloc(sizeof(int)* 2 * (numbars+2));
 
@@ -231,7 +235,7 @@ void drawBars()
 
 		double secfrag = fmod(seconds(), bars[offset].interval);
 		int barheight = MAP(secfrag, 0, bars[offset].interval, 4, height - 1);
-		fill(bars[offset].color);
+		fillRGBA(bars[offset].color);
 		int x1 = offset*(bargap + barwidth) + bargap;
 		int y1 = height - barheight;
 		rect(x1, y1, barwidth, barheight);
@@ -246,7 +250,7 @@ void drawBars()
 	b[(polyidx * 2) + 1] = height - 1;
 
 	//fill(RGBA(127, 127, 127, 80));
-	fill(RGBA(0, 127, 255, 120));
+	fillRGBA(RGBA(0, 127, 255, 120));
 	polygon(numbars + 2, b);
 
 	free(b);
@@ -264,7 +268,7 @@ void drawPolygon()
 	};
 	int nverts = (sizeof(a) / sizeof(a[0]))/2;
 
-	fill(pYellow);
+	fillRGBA(pYellow);
 	polygon(nverts, a);
 
 	int b[] = {
@@ -279,7 +283,7 @@ void drawPolygon()
 	};
 	int bverts = (sizeof(b) / sizeof(b[0]))/2;
 
-	fill(pGreen);
+	fillRGBA(pGreen);
 	polygon(bverts, b);
 
 }
@@ -354,7 +358,7 @@ void drawMouse()
 
 	rectMode(CENTER);
 	stroke(pBlack);
-	fill(RGBA(0, 127, 255, 200));
+	fillRGBA(RGBA(0, 127, 255, 200));
 	rect(mouseX, mouseY, mWidth, mHeight);
 }
 
@@ -364,7 +368,7 @@ void drawMouseInfo()
 {
 	// draw a white banner across the top
 	noStroke();
-	fill(pWhite);
+	fill(255);
 	rect(0, 0, width, 24);
 
 	// select verdana font
@@ -375,7 +379,7 @@ void drawMouseInfo()
 
 	char infobuff[256];
 	sprintf_s(infobuff, "Mouse X: %3d Y: %3d\tFPS: %f\n", mouseX, mouseY, fps);
-	fill(pBlack);
+	fill(0);
 	text(infobuff, 10, 0);
 }
 
@@ -383,8 +387,8 @@ static float a;
 
 void drawLinearMotion()
 {
-	background((uint8_t)51);
-	stroke(pWhite);
+	background(51);
+	stroke(255);
 
 	int thickness = 6;
 	while (thickness--) {
@@ -405,9 +409,9 @@ int desiredWidth = 640;
 int desiredHeight = 480;
 pb_rgba localpb;
 
-LRESULT CALLBACK keyReleased(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
+void keyReleased()
 {
-	switch (wParam)
+	switch (keyCode)
 	{
 	case VK_RIGHT:
 		currentRoutine++;
@@ -427,18 +431,15 @@ LRESULT CALLBACK keyReleased(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPar
 		dumpimage = true;
 		break;
 	}
-
-	return 0;
 }
 
 
 
-extern "C"
 void setup()
 {
 
 	size(desiredWidth, desiredHeight);
-	background(pLightGray);
+	backgroundRGBA(pLightGray);
 
 	a = height / 2;
 
@@ -457,7 +458,6 @@ void setup()
 		bars[idx].interval = intervals[rand() % numintervals];
 	}
 
-	setOnKeyReleasedHandler(keyReleased);
 	resettime();
 }
 
@@ -482,7 +482,7 @@ DrawingHandler gDrawRoutines[] = {
 
 };
 
-extern "C"
+
 void draw()
 {
 	frameCount++;
@@ -494,7 +494,7 @@ void draw()
 
 
 
-	//drawMouse();
+	drawMouse();
 	drawMouseInfo();
 
 	if (dumpimage)

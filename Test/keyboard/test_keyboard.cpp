@@ -65,12 +65,12 @@ void drawMouseInfo()
 {
 	// draw a white banner across the bottom
 	noStroke();
-	fill(pWhite);
+	fillRGBA(pWhite);
 	rect(0, fb.frame.height + 2, width, 24);
 
 
 	// draw the key rectangle
-	fill(RGBA(255, 238, 200, 180));
+	fillRGBA(RGBA(255, 238, 200, 180));
 	stroke(pDarkGray);
 	rect(keyRect.x, keyRect.y, keyRect.width, keyRect.height);
 
@@ -80,7 +80,7 @@ void drawMouseInfo()
 	sprintf_s(infobuff, "Mouse X: %3d Y: %3d    Key: (%3f, %3f)(%3.0f, %3.0f)  Seconds: %3.2f", mouseX, mouseY, 
 		keyRect.x, keyRect.y, keyRect.width, keyRect.height,
 		seconds());
-	fill(pBlack);
+	fillRGBA(pBlack);
 	textAlign(TX_LEFT, TX_TOP);
 	text(infobuff, 0, fb.frame.height + 2);
 
@@ -88,7 +88,7 @@ void drawMouseInfo()
 
 void draw()
 {
-	background(pLightGray);
+	backgroundRGBA(pLightGray);
 	backgroundImage(&fb);
 
 	drawMouseInfo();
@@ -99,7 +99,7 @@ void setup()
 	int ret = PPM_read_binary("c:/repos/graphicc/Test/windows-keyboard-60-keys.ppm", &fb);
 
 	size(fb.frame.width+4, fb.frame.height+4+30);
-	background(pLightGray);
+	backgroundRGBA(pLightGray);
 }
 
 
