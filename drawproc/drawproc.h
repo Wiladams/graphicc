@@ -38,6 +38,10 @@ void redraw();
 /*
 Drawing API
 */
+typedef enum COLORMODE {
+	RGB,
+	HSB
+};
 typedef enum RECTMODE{
 	CORNER,
 	CORNERS,
@@ -112,6 +116,9 @@ void init();
 void noLoop();
 void loop();
 
+// time
+uint64_t millis();
+
 // Drawing API
 void size(const size_t width, const size_t height);
 
@@ -144,6 +151,8 @@ extern bool isKeyPressed;
 // keyTyped()
 
 // Setting colors
+void colorMode(const COLORMODE mode, const float max1=-1, const float max2=-1, const float max3=-1, const float maxA=-1);
+
 void background(const uint8_t value);
 void backgroundRGBA(const uint32_t value);
 void backgroundImage(pb_rgba *bg);

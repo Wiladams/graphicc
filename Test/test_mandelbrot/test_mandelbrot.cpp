@@ -8,7 +8,7 @@ References:
 */
 
 #include "drawproc.h"
-//#include "linearalgebra.h"
+
 #include <math.h>
 
 // Mandelbrot parameters
@@ -28,8 +28,8 @@ static int mHeight = 64;
 void drawMouse()
 {	
 	rectMode(CENTER);
-	stroke(pBlack);
-	fill(RGBA(0, 127, 255, 127));
+	strokeRGBA(pBlack);
+	fillRGBA(RGBA(0, 127, 255, 127));
 	rect(mouseX, mouseY, mWidth, mHeight);
 }
 
@@ -77,7 +77,7 @@ void drawMandelbrot()
 	}
 }
 
-void CALLBACK mouseDown()
+void mousePressed()
 {
 	// calculate the rectangle boundaries
 
@@ -97,10 +97,10 @@ void CALLBACK mouseDown()
 
 }
 
-LRESULT CALLBACK mouseWheel(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
+void mouseWheel()
 {
-	int fwKeys = GET_KEYSTATE_WPARAM(wParam);
-	int zDelta = GET_WHEEL_DELTA_WPARAM(wParam);
+	//int fwKeys = GET_KEYSTATE_WPARAM(wParam);
+	//int zDelta = GET_WHEEL_DELTA_WPARAM(wParam);
 
 	// zDelta > 0 ==> away from user 
 	if (zDelta > 0) {

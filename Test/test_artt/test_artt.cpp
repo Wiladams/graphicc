@@ -33,7 +33,7 @@ void setup()
 {
 	size(viewWidth, viewHeight);
 	canvas = new ACanvas(gpb);
-	background(pLightGray);
+	backgroundRGBA(pLightGray);
 
 	// draw polygon
 	APolyVertex tsc[3];
@@ -56,7 +56,7 @@ void setup()
 
 void draw()
 {
-	background(pLightGray);
+	backgroundRGBA(pLightGray);
 
 	// rotate camera around z axis
 	AVector camDir = cam.getDirection();

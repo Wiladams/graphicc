@@ -19,6 +19,12 @@ int gellipseMode = CORNER;
 
 
 // color setting
+COLORMODE gColorMode = RGB;
+float gColorMax1 = 255;
+float gColorMax2 = 255;
+float gColorMax3 = 255;
+float gColorMaxA = 255;
+
 uint32_t bgColor = pDarkGray;
 pb_rgba *bgImage = nullptr;
 uint32_t strokeColor = RGBA(0, 0, 0, 255);
@@ -51,6 +57,32 @@ int mouseButton = 0;
 typedef std::vector< Vector2d > Vector2dVector;
 
 
+// utils
+static inline float MIN2(float a, float b)
+{
+	return a < b ? a : b;
+}
+
+static inline float MIN3(float a, float b, float c)
+{
+	return MIN2(a, b) < c ? MIN2(a, b) : c;
+}
+
+static inline float MAX2(float a, float b)
+{
+	return a > b ? a : b;
+}
+
+static inline float MAX3(float a, float b, float c)
+{
+	return MAX2(a, b) > c ? MAX2(a, b) : c;
+}
+
+// Time
+uint64_t millis()
+{
+	return (uint64_t)seconds() * 1000;
+}
 
 static EventObserverHandler gkbdOnPressedHandler = nullptr;
 static EventObserverHandler gkbdOnReleasedHandler = nullptr;
@@ -169,6 +201,9 @@ LRESULT CALLBACK mouseHandler(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPa
 	switch (message)
 	{
 		case WM_MOUSEWHEEL:
+			//int fwKeys = GET_KEYSTATE_WPARAM(wParam);
+			//int zDelta = GET_WHEEL_DELTA_WPARAM(wParam);
+
 			if (gmouseOnWheelHandler != nullptr) {
 				gmouseOnWheelHandler(); // hWnd, message, wParam, lParam);
 			}
@@ -304,6 +339,32 @@ int random(const int rndMax)
 }
 
 // color setting
+void colorMode(const COLORMODE mode, const float max1, const float max2, const float max3, const float maxA)
+{
+	gColorMode = mode;
+	if (max1 == -1) {
+		return; 
+	}
+
+	if (max2 == -1 && max3 == -1 && maxA == -1) {
+		gColorMax1 = max1;
+		gColorMax2 = max1;
+		gColorMax3 = max1;
+		gColorMaxA = max1;
+	}
+	else if (maxA == -1) {
+		gColorMax1 = max1;
+		gColorMax2 = max2;
+		gColorMax3 = max3;
+	}
+	else {
+		gColorMax1 = max1;
+		gColorMax2 = max2;
+		gColorMax3 = max3;
+		gColorMaxA = maxA;
+	}
+}
+
 void background(const uint8_t gray)
 {
 	backgroundRGBA(RGBA(gray, gray, gray, 255));
@@ -321,6 +382,95 @@ void backgroundRGBA(const uint32_t value)
 void backgroundImage(pb_rgba *bg)
 {
 	raster_rgba_blit(gpb, 0, 0, bg);
+}
+
+// r,g,b values are from 0 to 1
+// h = [0,360], s = [0,1], v = [0,1]
+//		if s == 0, then h = -1 (undefined)
+
+void RGBtoHSV(float r, float g, float b, float *h, float *s, float *v)
+{
+	float min, max, delta;
+
+	min = MIN3(r, g, b);
+	max = MAX3(r, g, b);
+	*v = max;				// v
+
+	delta = max - min;
+
+	if (max != 0)
+		*s = delta / max;		// s
+	else {
+		// r = g = b = 0		// s = 0, v is undefined
+		*s = 0;
+		*h = -1;
+		return;
+	}
+
+	if (r == max)
+		*h = (g - b) / delta;		// between yellow & magenta
+	else if (g == max)
+		*h = 2 + (b - r) / delta;	// between cyan & yellow
+	else
+		*h = 4 + (r - g) / delta;	// between magenta & cyan
+
+	*h *= 60;				// degrees
+	if (*h < 0)
+		*h += 360;
+
+}
+
+void HSVtoRGB(float *r, float *g, float *b, float h, float s, float v)
+{
+	int i;
+	float f, p, q, t;
+
+	if (s == 0) {
+		// achromatic (gray)
+		*r = *g = *b = v;
+		return;
+	}
+
+	h /= 60;			// sector 0 to 5
+	i = floor(h);
+	f = h - i;			// factorial part of h
+	p = v * (1 - s);
+	q = v * (1 - s * f);
+	t = v * (1 - s * (1 - f));
+
+	switch (i) {
+	case 0:
+		*r = v;
+		*g = t;
+		*b = p;
+		break;
+	case 1:
+		*r = q;
+		*g = v;
+		*b = p;
+		break;
+	case 2:
+		*r = p;
+		*g = v;
+		*b = t;
+		break;
+	case 3:
+		*r = p;
+		*g = q;
+		*b = v;
+		break;
+	case 4:
+		*r = t;
+		*g = p;
+		*b = v;
+		break;
+	default:		// case 5:
+		*r = v;
+		*g = p;
+		*b = q;
+		break;
+	}
+
 }
 
 void noFill()
