@@ -38,9 +38,11 @@ void redraw();
 /*
 Drawing API
 */
+typedef uint32_t COLOR;
+
 typedef enum COLORMODE {
-	RGB,
-	HSB
+	COLOR_MODE_RGB,
+	COLOR_MODE_HSB
 };
 typedef enum RECTMODE{
 	CORNER,
@@ -152,20 +154,20 @@ extern bool isKeyPressed;
 
 // Setting colors
 void colorMode(const COLORMODE mode, const float max1=-1, const float max2=-1, const float max3=-1, const float maxA=-1);
-
-void background(const uint8_t value);
-void backgroundRGBA(const uint32_t value);
+COLOR color(const float v1, const float v2=-1, const float v3=-1, const float alpha=-1);
+void background(const float v1, const float v2 = -1, const float v3 = -1, const float alpha = -1);
+void backgroundRGBA(const COLOR value);
 void backgroundImage(pb_rgba *bg);
 //void clear();
 
 //void colorMode();
 void noFill();
-void fill(const uint8_t gray, const uint8_t alpha = 255);
-void fillRGBA(const uint32_t value);
+void fill(const float v1, const float v2 = -1, const float v3 = -1, const float alpha = -1);
+void fillRGBA(const COLOR value);
 
 void noStroke();
-void strokeRGBA(const uint32_t value);
-void stroke(const uint8_t gray, const uint8_t alpha=255);
+void strokeRGBA(const COLOR value);
+void stroke(const float v1, const float v2 = -1, const float v3 = -1, const float alpha=-1);
 
 // attributes
 void ellipseMode(const int mode);

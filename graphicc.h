@@ -85,6 +85,7 @@ inline real RADIANS(const real degrees) { return (real)(G_DTOR * degrees); }
 // map a value (a) from between rlo <= a <= rhi to  shi <= b <= slo
 inline double MAP(double a, double rlo, double rhi, double slo, double shi) {return slo + ((double)(a - rlo) / (rhi - rlo)) * (shi - slo);}
 
+
 // turn a division by 255 into something 
 // much cheaper to calculate
 // for values between 0 and 65534
@@ -110,12 +111,15 @@ enum pixellayouts {
 */
 
 #ifdef BGR_DOMINANT
-#define RGBA(r,g,b,a) ((uint32_t)(a<<24|r<<16|g<<8|b))
-#define GET_B(value) ((uint32_t)value &0xff)
-#define GET_G(value) (((uint32_t)value &0xff00) >> 8)
-inline uint8_t GET_R(const uint32_t value) {return (((uint32_t)value & 0xff0000) >> 16);}
+inline uint32_t RGBA(const int r, const int g, const int b, const int a) 
+{
+	return ((uint32_t)(a << 24 | r << 16 | g << 8 | b));
+}
 
-#define GET_A(value) (((uint32_t)value &0xff000000) >> 24)
+inline uint8_t GET_B(const uint32_t value) {return ((uint32_t)value & 0xff);}
+inline uint8_t GET_G(const uint32_t value) {return (((uint32_t)value & 0xff00) >> 8);}
+inline uint8_t GET_R(const uint32_t value) {return (((uint32_t)value & 0xff0000) >> 16);}
+inline uint8_t GET_A(const uint32_t value) {return (((uint32_t)value & 0xff000000) >> 24);}
 #else
 #define RGBA(r,g,b,a) ((uint32_t)(a<<24|b<<16|g<<8|r))
 #define GET_R(value) ((uint32_t)value &0xff)

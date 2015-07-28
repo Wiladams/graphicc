@@ -65,7 +65,7 @@ coord bez_point(const float u, const coord *controls, const int nControls, const
 
 	// Add in influence of each control point
 	for (k = 0; k < nControls; k++){
-		blend = (float)c[k] * powf(u, (float)k) *powf(1 - u, n - k);
+		blend = (float)c[k] * powf(u, k) *powf(1.0f - u, n - k);
 		res = res + controls[k] * blend;
 	}
 	return res;
@@ -83,7 +83,7 @@ void bez3_point(Pt3 * pt, const float u, const int nControls, const Pt3 *control
 	
 	// Add in influence of each control point
 	for (k = 0; k < nControls; k++){
-		blend = (float)c[k] * powf(u, (float)k) *powf(1 - u, n - k);
+		blend = (float)c[k] * powf(u, (float)k) *powf(1.0f - u, n - k);
 		pt->x += controls[k].x * blend;
 		pt->y += controls[k].y * blend;
 		pt->z += controls[k].z * blend;

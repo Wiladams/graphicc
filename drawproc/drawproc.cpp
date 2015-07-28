@@ -19,17 +19,17 @@ int gellipseMode = CORNER;
 
 
 // color setting
-COLORMODE gColorMode = RGB;
+COLORMODE gColorMode = COLOR_MODE_RGB;
 float gColorMax1 = 255;
 float gColorMax2 = 255;
 float gColorMax3 = 255;
 float gColorMaxA = 255;
 
-uint32_t bgColor = pDarkGray;
+COLOR bgColor = pDarkGray;
 pb_rgba *bgImage = nullptr;
-uint32_t strokeColor = RGBA(0, 0, 0, 255);
+COLOR strokeColor = RGBA(0, 0, 0, 255);
 float gstrokeWeight = 1;
-uint32_t fillColor = RGBA(255, 255, 255, 255);
+COLOR fillColor = RGBA(255, 255, 255, 255);
 
 // Text Settings
 font_t gfont;
@@ -58,25 +58,11 @@ typedef std::vector< Vector2d > Vector2dVector;
 
 
 // utils
-static inline float MIN2(float a, float b)
-{
-	return a < b ? a : b;
-}
+static inline float MIN2(float a, float b){return a < b ? a : b;}
+static inline float MAX2(float a, float b){return a > b ? a : b;}
 
-static inline float MIN3(float a, float b, float c)
-{
-	return MIN2(a, b) < c ? MIN2(a, b) : c;
-}
-
-static inline float MAX2(float a, float b)
-{
-	return a > b ? a : b;
-}
-
-static inline float MAX3(float a, float b, float c)
-{
-	return MAX2(a, b) > c ? MAX2(a, b) : c;
-}
+static inline float MIN3(float a, float b, float c){return MIN2(MIN2(a, b), c);}
+static inline float MAX3(float a, float b, float c){return MAX2(MAX2(a, b), c);}
 
 // Time
 uint64_t millis()
@@ -339,54 +325,10 @@ int random(const int rndMax)
 }
 
 // color setting
-void colorMode(const COLORMODE mode, const float max1, const float max2, const float max3, const float maxA)
-{
-	gColorMode = mode;
-	if (max1 == -1) {
-		return; 
-	}
-
-	if (max2 == -1 && max3 == -1 && maxA == -1) {
-		gColorMax1 = max1;
-		gColorMax2 = max1;
-		gColorMax3 = max1;
-		gColorMaxA = max1;
-	}
-	else if (maxA == -1) {
-		gColorMax1 = max1;
-		gColorMax2 = max2;
-		gColorMax3 = max3;
-	}
-	else {
-		gColorMax1 = max1;
-		gColorMax2 = max2;
-		gColorMax3 = max3;
-		gColorMaxA = maxA;
-	}
-}
-
-void background(const uint8_t gray)
-{
-	backgroundRGBA(RGBA(gray, gray, gray, 255));
-}
-
-void backgroundRGBA(const uint32_t value)
-{
-	bgColor = value;
-	if ((gpb != NULL) && (width > 0) && (height > 0))
-	{
-		raster_rgba_rect_fill(gpb, 0, 0, width, height, bgColor);
-	}
-}
-
-void backgroundImage(pb_rgba *bg)
-{
-	raster_rgba_blit(gpb, 0, 0, bg);
-}
-
 // r,g,b values are from 0 to 1
 // h = [0,360], s = [0,1], v = [0,1]
 //		if s == 0, then h = -1 (undefined)
+
 
 void RGBtoHSV(float r, float g, float b, float *h, float *s, float *v)
 {
@@ -473,6 +415,122 @@ void HSVtoRGB(float *r, float *g, float *b, float h, float s, float v)
 
 }
 
+COLOR HSBA(float h, float s, float v, float a)
+{
+	float r=0, g=0, b=0;
+	HSVtoRGB(&r, &g, &b, MAP(h, 0, gColorMax1,0,360), MAP(s, 0, gColorMax2,0,1), MAP(v, 0, gColorMax3, 0,1));
+
+	return RGBA(r*255, g*255, b*255, MAP(a, 0, gColorMaxA, 0, 255));
+}
+
+void colorMode(const COLORMODE mode, const float max1, const float max2, const float max3, const float maxA)
+{
+	gColorMode = mode;
+	if (max1 == -1) {
+		return; 
+	}
+
+	if (max2 == -1 && max3 == -1 && maxA == -1) {
+		gColorMax1 = max1;
+		gColorMax2 = max1;
+		gColorMax3 = max1;
+		gColorMaxA = max1;
+	}
+	else if (maxA == -1) {
+		gColorMax1 = max1;
+		gColorMax2 = max2;
+		gColorMax3 = max3;
+	}
+	else {
+		gColorMax1 = max1;
+		gColorMax2 = max2;
+		gColorMax3 = max3;
+		gColorMaxA = maxA;
+	}
+}
+
+COLOR colorFromRGBA(const float v1, const float v2, const float v3, const float alpha)
+{
+	if (v2 == -1 && v3 == -1 && alpha == -1) {
+		//color(gray)
+		if (gColorMode == COLOR_MODE_RGB) {
+			return RGBA(
+				MAP(v1, 0, gColorMax1, 0, 255), 
+				MAP(v1, 0, gColorMax1, 0, 255), 
+				MAP(v1, 0, gColorMax1, 0, 255), 
+				(int)gColorMaxA);
+		}
+	} else if (alpha == -1) {
+		//color(v1, v2, v3)
+		if (gColorMode == COLOR_MODE_RGB) {
+			return RGBA(
+				MAP(v1, 0, gColorMax1, 0, 255), 
+				MAP(v2, 0, gColorMax2, 0, 255), 
+				MAP(v3, 0, gColorMax3, 0, 255), 
+				(int)gColorMaxA);
+		}
+	}
+	else if (v3 == -1) {
+		//color(v1, alpha)
+		if (gColorMode == COLOR_MODE_RGB) {
+			return RGBA(
+				MAP(v1, 0, gColorMax1, 0, 255), 
+				MAP(v1, 0, gColorMax1, 0, 255), 
+				MAP(v1, 0, gColorMax1, 0, 255), 
+				MAP(alpha, 0, gColorMaxA, 0, 255));
+		}
+	}
+	else {
+		// color(v1, v2, v3, alpha)
+		if (gColorMode == COLOR_MODE_RGB) {
+			return RGBA(
+				(int)MAP(v1, 0, gColorMax1, 0, 255), 
+				(int)MAP(v2, 0, gColorMax2, 0, 255), 
+				(int)MAP(v3, 0, gColorMax3, 0, 255), 
+				(int)MAP(alpha, 0, gColorMaxA, 0, 255));
+		}
+	}
+
+	return 0;
+}
+
+COLOR colorFromHSBA(const float v1, const float v2, const float v3, const float alpha)
+{
+	return HSBA(v1, v2, v3, alpha);
+}
+
+COLOR color(const float v1, const float v2, const float v3, const float alpha)
+{
+	if (gColorMode == COLOR_MODE_RGB) {
+		return colorFromRGBA(v1, v2, v3, alpha);
+	}
+
+	return colorFromHSBA(v1, v2, v3, alpha);
+
+	return 0;
+}
+
+void background(const float v1, const float v2, const float v3, const float alpha)
+{
+	backgroundRGBA(color(v1, v2, v3, alpha));
+}
+
+void backgroundRGBA(const uint32_t value)
+{
+	bgColor = value;
+	if ((gpb != NULL) && (width > 0) && (height > 0))
+	{
+		raster_rgba_rect_fill(gpb, 0, 0, width, height, bgColor);
+	}
+}
+
+void backgroundImage(pb_rgba *bg)
+{
+	raster_rgba_blit(gpb, 0, 0, bg);
+}
+
+
+
 void noFill()
 {
 	fillColor = 0;
@@ -483,12 +541,12 @@ void noStroke()
 	strokeColor = 0;
 }
 
-void stroke(const uint8_t value, const uint8_t alpha)
+void stroke(const float v1, const float v2, const float v3, const float alpha)
 {
-	strokeColor = RGBA(value, value, value, alpha);
+	strokeColor = color(v1, v2, v3, alpha);
 }
 
-void strokeRGBA(const uint32_t value)
+void strokeRGBA(const COLOR value)
 {
 	strokeColor = value;
 }
@@ -503,12 +561,12 @@ void strokeWeight(const float weight)
 	gstrokeWeight = weight;
 }
 
-void fill(const uint8_t gray, const uint8_t alpha)
+void fill(const float v1, const float v2, const float v3, const float alpha)
 {
-	fillColor = RGBA(gray, gray, gray, alpha);
+	fillColor = color(v1, v2, v3, alpha);
 }
 
-void fillRGBA(const uint32_t value)
+void fillRGBA(const COLOR value)
 {
 	fillColor = value;
 }
