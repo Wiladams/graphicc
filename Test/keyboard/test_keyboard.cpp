@@ -13,7 +13,7 @@ static const int gMaxMode = 3;
 static int gMode = 0;
 static const int gridSize = 8;
 
-static bool gShowKeyRect = true;
+static bool gShowKeyRect = false;
 static bool showGrid = false;
 static bool gShowCrosshair = true;
 
@@ -38,32 +38,32 @@ void  keyReleased()
 {
 	switch (keyCode)
 	{
-	case VK_SPACE:
+	case KC_SPACE:
 		write_PPM_binary("test_keyboard.ppm", gpb);
 		break;
 
-	case VK_F1:
+	case KC_F1:
 		showGrid = !showGrid;
 		break;
-	case VK_F2:
+	case KC_F2:
 		gShowKeyRect = !gShowKeyRect;
 		break;
-	case VK_F3:
+	case KC_F3:
 		gShowCrosshair = !gShowCrosshair;
 		break;
 
-	case VK_RIGHT: // increase width of keyRect
+	case KC_RIGHT: // increase width of keyRect
 		keyRect.width += 1;
 		break;
 
-	case VK_LEFT:
+	case KC_LEFT:
 		keyRect.width -= 1;
 		if (keyRect.width < 4) keyRect.width = 4;
 		break;
-	case VK_UP:
+	case KC_UP:
 		keyRect.height += 1;
 		break;
-	case VK_DOWN:
+	case KC_DOWN:
 		keyRect.height -= 1;
 		if (keyRect.height < 4) keyRect.height = 4;
 		break;

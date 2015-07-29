@@ -47,5 +47,8 @@
     <ClInclude Include="dproc_clock.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="vkeys.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

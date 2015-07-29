@@ -7,6 +7,7 @@
 #include "graphicc.h"
 #include "linearalgebra.h"
 #include "raster_rgba.h"
+#include "vkeys.h"
 
 #include "agg_embedded_raster_fonts.h"
 
