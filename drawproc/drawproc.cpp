@@ -6,7 +6,7 @@
 
 #include <vector>
 #include <math.h>
-
+#include <cstdlib>
 
 // Globals for the environment
 pb_rgba *gpb;
@@ -15,7 +15,7 @@ size_t height = 0;
 pb_rect pixelFrame;
 
 RECTMODE grectMode = CORNER;
-int gellipseMode = CORNER;
+RECTMODE gellipseMode = CORNER;
 
 
 // color setting
@@ -319,9 +319,17 @@ void redraw()
 }
 
 // Math
-int random(const int rndMax)
+double random(const float low, const float high)
 {
-	return rand() % rndMax;
+	double frac = (double)rand() / RAND_MAX;
+	double ret = low + frac * (high - low);
+	
+	return ret;
+}
+
+double random(const float rndMax)
+{
+	return random(0, rndMax);
 }
 
 // color setting
@@ -587,13 +595,56 @@ void bezier(const int x1, const int y1, const int x2, const int y2, const int x3
 	polyline(gpb, curve, segments, strokeColor);
 }
 
+void ellipseMode(const RECTMODE mode)
+{
+	gellipseMode = mode;
+}
+
 void ellipse(const int a, const int b, const int c, const int d)
 {
-	size_t xradius = c / 2;
-	size_t yradius = d / 2;
+	int x1 = 0, y1 = 0;
+	int rwidth = 0, rheight = 0;
 
-	uint32_t cx = a + xradius;
-	uint32_t cy = b + yradius;
+	switch (gellipseMode) {
+	case CORNER:
+		x1 = a;
+		y1 = b;
+		rwidth = c;
+		rheight = d;
+		break;
+
+	case CORNERS:
+		x1 = a;
+		y1 = b;
+		rwidth = c - a + 1;
+		rheight = d - b + 1;
+		break;
+
+	case CENTER:
+		x1 = a - c / 2;
+		y1 = b - d / 2;
+		rwidth = c;
+		rheight = d;
+		break;
+
+	case RADIUS:
+		x1 = a - c;
+		y1 = b - d;
+		rwidth = c * 2;
+		rheight = d * 2;
+		break;
+	}
+
+
+	size_t xradius = rwidth / 2;
+	size_t yradius = rheight / 2;
+
+	if (xradius == 0 || yradius == 0) {
+		return;
+	}
+
+	uint32_t cx = x1+ rwidth/2;
+	uint32_t cy = y1 + rheight/2;
 
 	raster_rgba_ellipse_fill(gpb, cx, cy, xradius, yradius, fillColor);
 	raster_rgba_ellipse_stroke(gpb, cx, cy, xradius, yradius, strokeColor);

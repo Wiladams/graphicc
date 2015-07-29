@@ -111,7 +111,7 @@ extern uint32_t bgColor;
 extern pb_rgba *bgImage;
 
 extern RECTMODE grectMode;
-extern int gellipseMode;
+extern RECTMODE gellipseMode;
 
 // Initialization
 void init();
@@ -170,7 +170,7 @@ void strokeRGBA(const COLOR value);
 void stroke(const float v1, const float v2 = -1, const float v3 = -1, const float alpha=-1);
 
 // attributes
-void ellipseMode(const int mode);
+void ellipseMode(const RECTMODE mode);
 void noSmooth();
 void rectMode(const RECTMODE mode);
 //void smooth();
@@ -213,7 +213,8 @@ void bezierVertex(const int x1, const int y1, const int x2, const int y2, const 
 void endShape(const int kindOfClose = STROKE);
 
 // Math
-int random(const int);
+double random(const float low, const float high);
+double random(const float high);
 
 // Some color manipulation routines
 inline uint32_t darker(const uint32_t acolor, const float factor = 0.60)
