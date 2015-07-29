@@ -40,6 +40,7 @@ void raster_rgba_vline_fade(pb_rgba *pb, int y1, int color1, int y2, int color2,
 
 // SRCOVER
 int raster_rgba_hline_blend(pb_rgba *pb, unsigned int x, unsigned int y, unsigned int length, int value);
+void raster_rgba_line_cover(pb_rgba *pb, unsigned int x1, unsigned int y1, unsigned int x2, unsigned int y2, int color);
 
 
 

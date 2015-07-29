@@ -460,24 +460,22 @@ COLOR colorFromRGBA(const float v1, const float v2, const float v3, const float 
 				MAP(v1, 0, gColorMax1, 0, 255), 
 				(int)gColorMaxA);
 		}
-	} else if (alpha == -1) {
+	} else if (v2 != -1 && v3 == -1 && alpha == -1) {
+		//color(v1, alpha)
+			return RGBA(
+				MAP(v1, 0, gColorMax1, 0, 255),
+				MAP(v1, 0, gColorMax1, 0, 255),
+				MAP(v1, 0, gColorMax1, 0, 255),
+				MAP(v2, 0, gColorMaxA, 0, 255));
+	}
+	else if (v3 == -1) {
 		//color(v1, v2, v3)
 		if (gColorMode == COLOR_MODE_RGB) {
 			return RGBA(
-				MAP(v1, 0, gColorMax1, 0, 255), 
-				MAP(v2, 0, gColorMax2, 0, 255), 
-				MAP(v3, 0, gColorMax3, 0, 255), 
+				MAP(v1, 0, gColorMax1, 0, 255),
+				MAP(v2, 0, gColorMax2, 0, 255),
+				MAP(v3, 0, gColorMax3, 0, 255),
 				(int)gColorMaxA);
-		}
-	}
-	else if (v3 == -1) {
-		//color(v1, alpha)
-		if (gColorMode == COLOR_MODE_RGB) {
-			return RGBA(
-				MAP(v1, 0, gColorMax1, 0, 255), 
-				MAP(v1, 0, gColorMax1, 0, 255), 
-				MAP(v1, 0, gColorMax1, 0, 255), 
-				MAP(alpha, 0, gColorMaxA, 0, 255));
 		}
 	}
 	else {
@@ -575,7 +573,7 @@ void fillRGBA(const COLOR value)
 void polyline(pb_rgba *pb, Pt3 *curve, const int nPts, int color)
 {
 	for (int idx = 0; idx < nPts; idx++) {
-		raster_rgba_line(pb, curve[idx].x, curve[idx].y, curve[idx + 1].x, curve[idx + 1].y, color);
+		raster_rgba_line_cover(pb, curve[idx].x, curve[idx].y, curve[idx + 1].x, curve[idx + 1].y, color);
 	}
 }
 
@@ -613,7 +611,7 @@ void line(const int x1, const int y1, const int x2, const int y2)
 		return;
 	}
 
-	raster_rgba_line(gpb, xx1, yy1, xx2, yy2, strokeColor);
+	raster_rgba_line_cover(gpb, xx1, yy1, xx2, yy2, strokeColor);
 }
 
 void lineloop(const Vector2dVector &pts)

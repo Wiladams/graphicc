@@ -321,6 +321,61 @@ void raster_rgba_line(pb_rgba *pb, unsigned int x1, unsigned int y1, unsigned in
 	}
 }
 
+/*
+	In this case, the pixel transfer operation is SRC_OVER instead of SRC_COPY
+	Ideally, the cover would be fast enough that we would not need copy, but until
+	then, it's ok to have to separate versions.
+
+*/
+void raster_rgba_line_cover(pb_rgba *pb, unsigned int x1, unsigned int y1, unsigned int x2, unsigned int y2, int color)
+{
+	int dx, dy;
+	int i;
+	int sdx, sdy, dxabs, dyabs;
+	unsigned int x, y, px, py;
+
+	dx = x2 - x1;      /* the horizontal distance of the line */
+	dy = y2 - y1;      /* the vertical distance of the line */
+	dxabs = abs(dx);
+	dyabs = abs(dy);
+	sdx = sgn(dx);
+	sdy = sgn(dy);
+	x = dyabs >> 1;
+	y = dxabs >> 1;
+	px = x1;
+	py = y1;
+
+	pb_rgba_set_pixel(pb, x1, y1, color);
+
+	if (dxabs >= dyabs) /* the line is more horizontal than vertical */
+	{
+		for (i = 0; i<dxabs; i++)
+		{
+			y += dyabs;
+			if (y >= (unsigned int)dxabs)
+			{
+				y -= dxabs;
+				py += sdy;
+			}
+			px += sdx;
+			pb_rgba_cover_pixel(pb, px, py, color);
+		}
+	}
+	else /* the line is more vertical than horizontal */
+	{
+		for (i = 0; i<dyabs; i++)
+		{
+			x += dxabs;
+			if (x >= (unsigned int)dyabs)
+			{
+				x -= dyabs;
+				px += sdx;
+			}
+			py += sdy;
+			pb_rgba_cover_pixel(pb, px, py, color);
+		}
+	}
+}
 
 void raster_rgba_blit(pb_rgba *pb, const int x, const int y, pb_rgba *src)
 {

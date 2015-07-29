@@ -13,13 +13,14 @@ void keyReleased()
 	}
 
 	draw();
+	redraw();	// since we're not in a loop, we must force a redraw()
 }
 
 void setup()
 {
 	size(200, 200);
 
-	//noLoop();
+	noLoop();
 }
 
 void drawRGB()
