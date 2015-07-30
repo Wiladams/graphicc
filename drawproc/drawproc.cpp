@@ -426,7 +426,7 @@ void HSVtoRGB(float *r, float *g, float *b, float h, float s, float v)
 COLOR HSBA(float h, float s, float v, float a)
 {
 	float r=0, g=0, b=0;
-	HSVtoRGB(&r, &g, &b, MAP(h, 0, gColorMax1,0,360), MAP(s, 0, gColorMax2,0,1), MAP(v, 0, gColorMax3, 0,1));
+	HSVtoRGB(&r, &g, &b, h, s, v);
 
 	return RGBA(r*255, g*255, b*255, MAP(a, 0, gColorMaxA, 0, 255));
 }
@@ -502,7 +502,24 @@ COLOR colorFromRGBA(const float v1, const float v2, const float v3, const float 
 
 COLOR colorFromHSBA(const float v1, const float v2, const float v3, const float alpha)
 {
+	float r = 0, g = 0, b = 0;
+	//HSVtoRGB(&r, &g, &b, MAP(h, 0, gColorMax1, 0, 360), MAP(s, 0, gColorMax2, 0, 1), MAP(v, 0, gColorMax3, 0, 1));
+
+
+	if (v2 == -1 && v3 == -1 && alpha == -1) {
+		return HSBA(0, 0, 
+			MAP(v1, 0, gColorMax3, 0, 1), 
+			MAP(gColorMaxA, 0, gColorMaxA, 0, 255));
+	}
+	else if (v2 != -1 && v3 == -1 && alpha == -1) {
+		//color(v1, alpha)
+		return HSBA(0, 0, 
+			MAP(v1, 0, gColorMax3, 0, 1), 
+			MAP(alpha, 0, gColorMaxA, 0, 255));
+	}
+
 	return HSBA(v1, v2, v3, alpha);
+
 }
 
 COLOR color(const float v1, const float v2, const float v3, const float alpha)
