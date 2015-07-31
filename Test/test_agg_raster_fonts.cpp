@@ -51,21 +51,21 @@ void keyReleased()
 {
 	switch (keyCode)
 	{
-		case VK_UP:
+		case KC_UP:
 			fontidx--;
 			if (fontidx < 0) {
 				fontidx = numfonts - 1;
 			}
 		break;
 
-		case VK_DOWN:
+		case KC_DOWN:
 			fontidx++;
 			if (fontidx >= numfonts){
 				fontidx = 0;
 			}
 		break;
 
-		case VK_SPACE:
+		case KC_SPACE:
 			write_PPM_binary("test_agg_raster_fonts.ppm", gpb);
 		break;
 	}

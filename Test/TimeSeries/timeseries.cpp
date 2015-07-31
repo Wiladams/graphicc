@@ -296,7 +296,7 @@ LRESULT CALLBACK keyPressed(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 		break;
 
 
-	case VK_SPACE:
+	case KC_SPACE:
 		write_PPM_binary("test_text.ppm", gpb);
 		break;
 

@@ -413,21 +413,21 @@ void keyReleased()
 {
 	switch (keyCode)
 	{
-	case VK_RIGHT:
+	case KC_RIGHT:
 		currentRoutine++;
 		if (currentRoutine >= nRoutines) {
 			currentRoutine = 0;
 		}
 		break;
 
-	case VK_LEFT:
+	case KC_LEFT:
 		currentRoutine--;
 		if (currentRoutine < 0) {
 			currentRoutine = nRoutines - 1;
 		}
 		break;
 
-	case VK_SPACE:
+	case KC_SPACE:
 		dumpimage = true;
 		break;
 	}

@@ -35,25 +35,25 @@ void GUIStyle::DrawFrame(int x, int y, int w, int h, int style)
 	if (style == Sunken) {
 		for (int n = 0; n < this->borderWidth; n++)
 		{
-			stroke(this->highlightColor);
+			strokeRGBA(this->highlightColor);
 			line(x + n, y + h - n, x + w - n, y + h - n);		// bottom shadow
 			line(x + w - n, y + n, x + w - n, y + h);			// right shadow
 		}
 
 		for (int n = 0; n < this->borderWidth; n++) {
-			stroke(this->shadowColor);
+			strokeRGBA(this->shadowColor);
 			line(x + n, y + n, x + w - n, y + n);	    // top edge
 			line(x + n, y + n, x + n, y + h - n);	    // left edge
 		}
 	} else if (style == Raised) {
 		for (int n = 0; n < this->borderWidth - 1; n++) {
-			stroke(this->shadowColor);
+			strokeRGBA(this->shadowColor);
 			line(x + n, y + h - n, x + w - n, y + h - n);   // bottom shadow
 			line(x + w - n, y + n, x + w - n, y + h);	    // right shadow
 		}
 
 		for (int n = 0; n < this->borderWidth; n++) {
-			stroke(this->highlightColor);
+			strokeRGBA(this->highlightColor);
 			line(x + n, y + n, x + w - n, y + n);	    //top edge
 			line(x + n, y + n, x + n, y + h - n);	    //left edge
 		}
@@ -64,7 +64,7 @@ void GUIStyle::DrawSunkenRect(const int x, const int y, const int w, const int h
 {			   
 	noStroke();
 
-	fill(this->baseColor);
+	fillRGBA(this->baseColor);
 	rect(x, y, w, h);
 
 	DrawFrame(x, y, w, h, Sunken);
@@ -73,7 +73,7 @@ void GUIStyle::DrawSunkenRect(const int x, const int y, const int w, const int h
 void GUIStyle::DrawRaisedRect(const int x, const int y, const int w, const int h)
 {
 	noStroke();
-	fill(this->baseColor);
+	fillRGBA(this->baseColor);
 	rect(x, y, w, h);
 	DrawFrame(x, y, w, h, Raised);
 }

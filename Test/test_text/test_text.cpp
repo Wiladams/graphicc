@@ -14,7 +14,7 @@ static int gMode = 0;
 void draw();
 
 
-void CALLBACK mousePressed()
+void mousePressed()
 {
 	gMode++;
 	if (gMode >= gMaxMode) {
@@ -24,16 +24,15 @@ void CALLBACK mousePressed()
 	draw();
 }
 
-LRESULT CALLBACK keyReleased(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
+void  keyReleased()
 {
-	switch (wParam)
+	switch (keyCode)
 	{
-	case VK_SPACE:
+	case KC_SPACE:
 		write_PPM_binary("test_text.ppm", gpb);
 		break;
 	}
 
-	return 0;
 }
 
 void setup()
@@ -41,14 +40,11 @@ void setup()
 	size(320, 240);
 	background(pLightGray);
 	noLoop();
-
-	//setOnMousePressedHandler(mousePressed);
-	setOnKeyReleasedHandler(keyReleased);
 }
 
 void draw()
 {
-	background(pLightGray);
+	backgroundRGBA(pLightGray);
 
 	styler.SetBaseColor(pLightGray);
 	styler.DrawFrame(20, 20, 100, 100, Sunken);
@@ -56,14 +52,14 @@ void draw()
 	styler.DrawRaisedRect(100, 100, 100, 100);
 
 	// Draw some lines
-	stroke(pBlack);
+	strokeRGBA(pBlack);
 	line(width / 2, 0, width / 2, height - 1);
 	line(0, height / 2, width - 1, height / 2);
 
 	// draw some text
 	int midx = width / 2;
 	int midy = height / 2;
-	fill(pBlack);
+	fillRGBA(pBlack);
 	textAlign(TX_LEFT);
 	text("LEFT", midx, 20);
 	
@@ -86,11 +82,11 @@ void draw()
 	textAlign(TX_LEFT, TX_BOTTOM);
 	text("LEFT BOTTOM",0,height);
 
-	stroke(pRed);
+	strokeRGBA(pRed);
 	line(midx - 6, midy, midx + 6, midy);
 	line(midx, midy - 6, midx, midy + 6);
 
-	fill(pWhite);
+	fillRGBA(pWhite);
 	textAlign(TX_CENTER, TX_CENTER);
 	text("CENTER CENTER", midx, midy);
 

@@ -459,32 +459,29 @@ void colorMode(const COLORMODE mode, const float max1, const float max2, const f
 
 COLOR colorFromRGBA(const float v1, const float v2, const float v3, const float alpha)
 {
-	if (v2 == -1 && v3 == -1 && alpha == -1) {
+	if ((v1 != -1) && (v2 == -1) && (v3 == -1) && (alpha == -1)) {
 		//color(gray)
-		if (gColorMode == COLOR_MODE_RGB) {
 			return RGBA(
 				MAP(v1, 0, gColorMax1, 0, 255), 
 				MAP(v1, 0, gColorMax1, 0, 255), 
 				MAP(v1, 0, gColorMax1, 0, 255), 
 				(int)gColorMaxA);
-		}
-	} else if (v2 != -1 && v3 == -1 && alpha == -1) {
+	
+	} else if ((v1 != -1) && (v2 != -1) && (v3 == -1) && (alpha == -1)) {
 		//color(v1, alpha)
-			return RGBA(
-				MAP(v1, 0, gColorMax1, 0, 255),
-				MAP(v1, 0, gColorMax1, 0, 255),
-				MAP(v1, 0, gColorMax1, 0, 255),
-				MAP(v2, 0, gColorMaxA, 0, 255));
+		return RGBA(
+			MAP(v1, 0, gColorMax1, 0, 255),
+			MAP(v1, 0, gColorMax1, 0, 255),
+			MAP(v1, 0, gColorMax1, 0, 255),
+			MAP(v2, 0, gColorMaxA, 0, 255));
 	}
-	else if (v3 == -1) {
+	else if ((v1 != -1) && (v2 != -1) && (v3 != -1) && (alpha == -1)) {
 		//color(v1, v2, v3)
-		if (gColorMode == COLOR_MODE_RGB) {
-			return RGBA(
-				MAP(v1, 0, gColorMax1, 0, 255),
-				MAP(v2, 0, gColorMax2, 0, 255),
-				MAP(v3, 0, gColorMax3, 0, 255),
-				(int)gColorMaxA);
-		}
+		return RGBA(
+			MAP(v1, 0, gColorMax1, 0, 255),
+			MAP(v2, 0, gColorMax2, 0, 255),
+			MAP(v3, 0, gColorMax3, 0, 255),
+			(int)gColorMaxA);
 	}
 	else {
 		// color(v1, v2, v3, alpha)
@@ -502,24 +499,37 @@ COLOR colorFromRGBA(const float v1, const float v2, const float v3, const float 
 
 COLOR colorFromHSBA(const float v1, const float v2, const float v3, const float alpha)
 {
-	float r = 0, g = 0, b = 0;
-	//HSVtoRGB(&r, &g, &b, MAP(h, 0, gColorMax1, 0, 360), MAP(s, 0, gColorMax2, 0, 1), MAP(v, 0, gColorMax3, 0, 1));
-
-
-	if (v2 == -1 && v3 == -1 && alpha == -1) {
+	if ((v1 != -1) && (v2 == -1) && (v3 == -1) && (alpha == -1)) {
+		//color(v)
 		return HSBA(0, 0, 
 			MAP(v1, 0, gColorMax3, 0, 1), 
 			MAP(gColorMaxA, 0, gColorMaxA, 0, 255));
 	}
-	else if (v2 != -1 && v3 == -1 && alpha == -1) {
-		//color(v1, alpha)
+	else if ((v1 != -1) && (v2 != -1) && (v3 == -1) && (alpha == -1)) {
+		//color(v, alpha)
 		return HSBA(0, 0, 
 			MAP(v1, 0, gColorMax3, 0, 1), 
+			MAP(v2, 0, gColorMaxA, 0, 255));
+	}
+	else if ((v1 != -1) && (v2 != -1) && (v3 != -1) && (alpha == -1)) {
+		//color(h, s, v)
+		return HSBA(
+			MAP(v1, 0, gColorMax1, 0, 255),
+			MAP(v2, 0, gColorMax2, 0, 255),
+			MAP(v3, 0, gColorMax3, 0, 255),
+			MAP(gColorMaxA, 0, gColorMaxA, 0, 255));
+
+	}
+	else if ((v1 != -1) && (v2 != -1) && (v3 != -1) && (alpha != -1)) {
+		//color(h, s, v, a)
+		return HSBA(
+			MAP(v1, 0, gColorMax1, 0, 255),
+			MAP(v2, 0, gColorMax2, 0, 255),
+			MAP(v3, 0, gColorMax3, 0, 255),
 			MAP(alpha, 0, gColorMaxA, 0, 255));
 	}
 
-	return HSBA(v1, v2, v3, alpha);
-
+	return 0;
 }
 
 COLOR color(const float v1, const float v2, const float v3, const float alpha)
