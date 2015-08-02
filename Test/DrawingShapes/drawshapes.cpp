@@ -9,7 +9,7 @@ int sizeMax = 30;
 
 void fadeScreen()
 {
-	fillRGBA(RGBA(130, 130, 240, screenFadeValue));
+	fill(130, 130, 240, screenFadeValue);
 	noStroke();
 	rect(0, 0, width, height);
 }
@@ -18,7 +18,7 @@ void paintShapes(bool isDragged)
 {
 	if (isDragged) {
 		noStroke();
-		fillRGBA(pWhite);
+		fill(pWhite);
 		ellipse(mouseX, mouseY, radiusX, radiusY);
 	}
 	else {
@@ -34,7 +34,7 @@ void mousePressed()
 	radiusX = random(sizeMax);
 	radiusY = random(sizeMax);
 
-	fillRGBA(RGBA(random(255), random(255), random(255), 255));
+	fill(random(255), random(255), random(255), 255);
 
 }
 
@@ -51,7 +51,7 @@ void mouseDragged()
 void setup()
 {
 	size(400, 400);
-	backgroundRGBA(RGBA(130, 130, 240, 255));
+	background(130, 130, 240, 255);
 	noFill();
 
 }

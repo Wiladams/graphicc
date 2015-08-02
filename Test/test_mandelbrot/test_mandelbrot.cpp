@@ -28,8 +28,8 @@ static int mHeight = 64;
 void drawMouse()
 {	
 	rectMode(CENTER);
-	strokeRGBA(pBlack);
-	fillRGBA(RGBA(0, 127, 255, 127));
+	stroke(pBlack);
+	fill(0, 127, 255, 127);
 	rect(mouseX, mouseY, mWidth, mHeight);
 }
 
@@ -70,7 +70,7 @@ void drawMandelbrot()
 			else{
 				int rc = MAP(n, 0, MaxIterations- 1, 0, 255);
 
-				stroke(RGBA(rc, 0, 0, 255));
+				stroke(rc, 0, 0, 255);
 				point(x, y);
 			}
 		}
@@ -101,6 +101,7 @@ void mouseWheel()
 {
 	//int fwKeys = GET_KEYSTATE_WPARAM(wParam);
 	//int zDelta = GET_WHEEL_DELTA_WPARAM(wParam);
+	int zDelta = 0;
 
 	// zDelta > 0 ==> away from user 
 	if (zDelta > 0) {
@@ -112,9 +113,6 @@ void mouseWheel()
 		MinRe -= 0.1;
 		MaxRe += 0.1;
 	}
-
-
-	return 0;
 }
 
 extern "C"
@@ -122,10 +120,6 @@ void setup()
 {
 	size(1024, 768);
 	background(pLightGray);
-
-	setOnMouseWheelHandler(mouseWheel);
-	//setOnMouseDownHandler(mouseDown);
-	setOnMousePressedHandler(mouseDown);
 }
 
 extern "C"

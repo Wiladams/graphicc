@@ -19,8 +19,8 @@ static int gMode = 0;
 void drawShape()
 {
 	rectMode(CENTER);
-	fillRGBA(RGBA(random(255), random(255), random(255), 255));
-	backgroundRGBA(pLightGray);
+	fill(random(255), random(255), random(255), 255);
+	background(pLightGray);
 
 	switch (gMode)
 	{
@@ -40,12 +40,12 @@ void drawShape()
 					(width / 2) + 100, 10,
 				};
 				static int nverts = 4;
-				raster_rgba_convex_polygon_fill(gpb, polyverts, nverts, pixelFrame, pYellow);
+				raster_rgba_convex_polygon_fill(gpb, polyverts, nverts, pixelFrame, pYellow.value);
 	} break;
 
 	case 3:
 		//noFill();
-		fillRGBA(pWhite);
+		fill(pWhite);
 		beginShape(GR_POINTS);
 		vertex(30, 20);
 		bezierVertex(80, 0, 80, 75, 30, 75);
@@ -75,7 +75,7 @@ void mousePressed()
 void setup()
 {
 	size(1024, 768);
-	backgroundRGBA(pLightGray);
+	background(pLightGray);
 	noLoop();
 }
 

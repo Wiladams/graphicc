@@ -20,13 +20,15 @@ limitations under the License.
 #define pipeline_opengl_h 1
 
 #include "graphicc.h"
+#include "linearalgebra.h"
+
 #include <math.h>
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-	void ogl_transform_rows(real *res, const mat4 &tmat, const real *inpts, const size_t nrows);
+void ogl_transform_rows(real *res, const mat4 &tmat, const real *inpts, const size_t nrows);
 
 void ogl_translate(mat4 &c, const real dx, const real dy, const real dz);
 

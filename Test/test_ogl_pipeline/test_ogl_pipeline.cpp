@@ -4,7 +4,7 @@
 #include <stdio.h>
 #include <math.h>
 
-LRESULT CALLBACK keyPressed(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
+
 //#define LOWORD(l)           ((WORD)(((DWORD_PTR)(l)) & 0xffff))
 //#define HIWORD(l)           ((WORD)((((DWORD_PTR)(l)) >> 16) & 0xffff))
 
@@ -19,37 +19,37 @@ real winCentery = (winResy / 2)-1;
 
 real3 eye = { -0.25, 1, 2 };
 
-LRESULT CALLBACK keyPressed(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
+void  keyPressed()
 {
-	switch (wParam)
+	switch (key)
 	{
-		case VK_RIGHT:
+		case KC_RIGHT:
 			eye[0] += 0.25;
 		break;
 
-		case VK_LEFT:
+		case KC_LEFT:
 			eye[0] -= 0.25;
 		break;
 
-		case VK_UP:
+		case KC_UP:
 			eye[1] += 0.125;
 			break;
 
-		case VK_DOWN:
+		case KC_DOWN:
 			eye[1] -= 0.125;
 			break;
 
-		case VK_SPACE:
+		case KC_SPACE:
 			write_PPM_binary("test_ogl_pipeline.ppm", gpb);
 		break;
 	}
 
-	return 0;
+
 }
 
-LRESULT CALLBACK mouseWheel(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
+void  mouseWheel()
 {
-	int16_t delta = HIWORD(wParam);
+	int16_t delta = 0; // HIWORD(wParam);
 	if (delta > 0) {
 		eye[2] -= 0.25;
 	}
@@ -57,14 +57,10 @@ LRESULT CALLBACK mouseWheel(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 		eye[2] += 0.25;
 	}
 
-	return 0;
 }
 
 void setup()
 {
-	setOnKeyPressedHandler(keyPressed);
-	setOnMouseWheelHandler(mouseWheel);
-
 	size(winResx, winResy);
 	background(pLightGray);
 	//noLoop();
@@ -320,5 +316,4 @@ void draw()
 	//	drawText();
 	drawAxes();
 	drawShape();
-
 }

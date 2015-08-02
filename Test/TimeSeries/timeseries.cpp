@@ -15,7 +15,6 @@ void drawDataPoints(const int col);
 void drawTitle();
 void drawYearLabels();
 
-LRESULT CALLBACK keyPressed(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
 
 // Data ranges
 float dataMin;
@@ -123,8 +122,6 @@ const char * getColumnName(const int col)
 
 void setup()
 {
-	setOnKeyTypedHandler(keyPressed);
-
 	size(720, 405);
 
 	dataMin = 0;
@@ -152,7 +149,7 @@ void drawTitle()
 	setFont(verdana18_bold);
 
 	// draw title of current plot
-	fillGray(0);
+	fill(0);
 	textSize(20);
 	textAlign(TX_LEFT, TX_BOTTOM);
 	const char * title = getColumnName(currentColumn);
@@ -173,7 +170,7 @@ void drawDataPoints(const int col)
 
 void drawAxisLabels()
 {
-	fillGray(0);
+	fill(0);
 	textSize(13);
 	//textLeading(15);
 
@@ -193,7 +190,7 @@ void drawYearLabels()
 
 	setFont(gse7x11);
 
-	stroke(RGBA(224, 224, 224, 255));
+	stroke(224, 224, 224, 255);
 	strokeWeight(1);
 
 	fill(pBlack);
@@ -214,7 +211,7 @@ void drawVolumeLabels()
 {
 	char numbuff[256];
 
-	fillGray(0);
+	fill(0);
 	textSize(10);
 	textAlign(TX_RIGHT, TX_CENTER);
 
@@ -248,12 +245,12 @@ void drawVolumeLabels()
 
 void draw()
 {
-	background(RGBA(224,224,224,255));
+	background(224,224,224,255);
 	//background(pLightGray);
 	//background(aliceblue);
 
 	// plot area as white box
-	fillGray(255);
+	fill(255);
 	rectMode(CORNERS);
 	noStroke();
 	rect(plotX1, plotY1, plotX2, plotY2);
@@ -261,7 +258,7 @@ void draw()
 	drawTitle();
 
 	// plot the actual columnar data
-	stroke(RGBA(0x56, 0x79, 0xc1, 255));
+	stroke(0x56, 0x79, 0xc1, 255);
 	strokeWeight(5);
 	drawDataPoints(currentColumn);
 
@@ -277,7 +274,7 @@ void draw()
 
 
 
-LRESULT CALLBACK keyPressed(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
+void  keyPressed()
 {
 	switch (key)
 	{
@@ -302,7 +299,4 @@ LRESULT CALLBACK keyPressed(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 
 	}
 
-
-
-	return 0;
 }

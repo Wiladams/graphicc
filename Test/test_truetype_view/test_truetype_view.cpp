@@ -153,7 +153,7 @@ void drawText()
 			int w, h;
 			bitmap = stbtt_GetCodepointBitmap(&finfo, 0, scale, text[idx], &w, &h, 0, 0);
 
-			raster_rgba_blend_alphamap(gpb, xpos, ypos + baseline + y0, bitmap, w, h, pYellow);
+			raster_rgba_blend_alphamap(gpb, xpos, ypos + baseline + y0, bitmap, w, h, pYellow.value);
 
 			//printf("%d %d %d", baseline, y0, y1);
 			xpos += (advance * scale);
