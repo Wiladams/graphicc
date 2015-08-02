@@ -130,6 +130,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Hue", "examples\Hue\Hue.vcx
 		{22E0AE80-590C-4C3F-AB8E-15437D25E2D2} = {22E0AE80-590C-4C3F-AB8E-15437D25E2D2}
 	EndProjectSection
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Saturation", "examples\Saturation\Saturation.vcxproj", "{D652EBFE-708D-418B-A6AF-B24B2C7BE69D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -252,6 +254,10 @@ Global
 		{FA8930B8-A6EE-49A2-B8E2-FEAEDA253D8A}.Debug|Win32.Build.0 = Debug|Win32
 		{FA8930B8-A6EE-49A2-B8E2-FEAEDA253D8A}.Release|Win32.ActiveCfg = Release|Win32
 		{FA8930B8-A6EE-49A2-B8E2-FEAEDA253D8A}.Release|Win32.Build.0 = Release|Win32
+		{D652EBFE-708D-418B-A6AF-B24B2C7BE69D}.Debug|Win32.ActiveCfg = Debug|Win32
+		{D652EBFE-708D-418B-A6AF-B24B2C7BE69D}.Debug|Win32.Build.0 = Debug|Win32
+		{D652EBFE-708D-418B-A6AF-B24B2C7BE69D}.Release|Win32.ActiveCfg = Release|Win32
+		{D652EBFE-708D-418B-A6AF-B24B2C7BE69D}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
