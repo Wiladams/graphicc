@@ -57,13 +57,6 @@ int mouseButton = 0;
 typedef std::vector< Vector2d > Vector2dVector;
 
 
-// utils
-static inline float MIN2(float a, float b){return a < b ? a : b;}
-static inline float MAX2(float a, float b){return a > b ? a : b;}
-
-static inline float MIN3(float a, float b, float c){return MIN2(MIN2(a, b), c);}
-static inline float MAX3(float a, float b, float c){return MAX2(MAX2(a, b), c);}
-
 // Time
 uint64_t millis()
 {
