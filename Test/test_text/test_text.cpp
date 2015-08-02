@@ -6,6 +6,7 @@
 */
 #include "drawproc.h"
 #include "GUIStyle.h"
+#include <stdio.h>
 
 static GUIStyle styler;
 static const int gMaxMode = 3;
@@ -40,11 +41,16 @@ void setup()
 	size(320, 240);
 	background(pLightGray);
 	noLoop();
+
+	//COLOR c;
+	//c.value = RGBA(10, 20, 30, 255);
+
+	//printf("%d %d %d %d", c.r, c.g, c.b, c.a);
 }
 
 void draw()
 {
-	backgroundRGBA(pLightGray);
+	background(pLightGray);
 
 	styler.SetBaseColor(pLightGray);
 	styler.DrawFrame(20, 20, 100, 100, Sunken);
@@ -52,14 +58,14 @@ void draw()
 	styler.DrawRaisedRect(100, 100, 100, 100);
 
 	// Draw some lines
-	strokeRGBA(pBlack);
+	stroke(pBlack);
 	line(width / 2, 0, width / 2, height - 1);
 	line(0, height / 2, width - 1, height / 2);
 
 	// draw some text
 	int midx = width / 2;
 	int midy = height / 2;
-	fillRGBA(pBlack);
+	fill(pBlack);
 	textAlign(TX_LEFT);
 	text("LEFT", midx, 20);
 	
@@ -82,11 +88,11 @@ void draw()
 	textAlign(TX_LEFT, TX_BOTTOM);
 	text("LEFT BOTTOM",0,height);
 
-	strokeRGBA(pRed);
+	stroke(pRed);
 	line(midx - 6, midy, midx + 6, midy);
 	line(midx, midy - 6, midx, midy + 6);
 
-	fillRGBA(pWhite);
+	fill(pWhite);
 	textAlign(TX_CENTER, TX_CENTER);
 	text("CENTER CENTER", midx, midy);
 

@@ -1,6 +1,6 @@
 #pragma once
 
-#define BGR_DOMINANT 1
+//#define BGR_DOMINANT 1
 
 #include "animwin32.h"
 
@@ -39,7 +39,19 @@ void redraw();
 /*
 Drawing API
 */
-typedef uint32_t COLOR;
+struct COLOR
+{
+	COLOR() :value(0){}
+	COLOR(const COLOR &other) :value(other.value){}
+	COLOR(const uint8_t r, const uint8_t g, const uint8_t b, const uint8_t a):r(r),g(g),b(b),a(a){}
+
+	union {
+		struct {
+			uint8_t b, g, r, a;
+		};
+		uint32_t value;
+	};
+};
 
 typedef enum COLORMODE {
 	COLOR_MODE_RGB,
@@ -108,7 +120,7 @@ extern pb_rgba *gpb;
 extern pb_rect pixelFrame;
 
 
-extern uint32_t bgColor;
+extern COLOR bgColor;
 extern pb_rgba *bgImage;
 
 extern RECTMODE grectMode;
@@ -156,18 +168,19 @@ extern bool isKeyPressed;
 // Setting colors
 void colorMode(const COLORMODE mode, const float max1=-1, const float max2=-1, const float max3=-1, const float maxA=-1);
 COLOR color(const float v1, const float v2=-1, const float v3=-1, const float alpha=-1);
+
 void background(const float v1, const float v2 = -1, const float v3 = -1, const float alpha = -1);
-void backgroundRGBA(const COLOR value);
+void background(const COLOR value);
 void backgroundImage(pb_rgba *bg);
 //void clear();
 
 //void colorMode();
 void noFill();
 void fill(const float v1, const float v2 = -1, const float v3 = -1, const float alpha = -1);
-void fillRGBA(const COLOR value);
+void fill(const COLOR value);
 
 void noStroke();
-void strokeRGBA(const COLOR value);
+void stroke(const COLOR value);
 void stroke(const float v1, const float v2 = -1, const float v3 = -1, const float alpha=-1);
 
 // attributes
@@ -217,40 +230,19 @@ void endShape(const int kindOfClose = STROKE);
 double random(const float low, const float high);
 double random(const float high);
 
-// Some color manipulation routines
-inline uint32_t darker(const uint32_t acolor, const float factor = 0.60)
-{
-	uint8_t red = GET_R(acolor) *factor;
-	uint8_t green = GET_G(acolor) * factor;
-	uint8_t blue = GET_B(acolor) * factor;
-	uint8_t alpha = GET_A(acolor);
 
-	return RGBA(red, green, blue, alpha);
-}
+#define pRed		COLOR(255, 0, 0, 255)
+#define pGreen		COLOR(0, 255, 0, 255)
+#define pBlue		COLOR(0, 0, 255, 255)
 
-inline uint32_t brighter(const uint32_t acolor, const float factor=0.80)
-{
-	uint8_t red = (min(GET_R(acolor) *(1.0 / factor), 255));
-	uint8_t green = (min(GET_G(acolor) * (1.0 / 0.85), 255));
-	uint8_t blue = (min(GET_B(acolor) * (1.0 / factor), 255));
-	uint8_t alpha = GET_A(acolor);
+#define pBlack		COLOR(0, 0, 0, 255)
+#define pWhite		COLOR(255, 255, 255, 255)
+#define pYellow		COLOR(255, 255, 0, 255)
+#define pTurquoise	COLOR(0, 255, 255, 255)
+#define pDarkGray	COLOR(93, 93, 93, 255)
+#define pGray		COLOR(127,127,127,255)
+#define pLightGray	COLOR(163, 163, 163, 255)
 
-	return RGBA(red, green, blue, alpha);
-}
-
-
-#define pRed		RGBA(255, 0, 0, 255)
-#define pGreen		RGBA(0, 255, 0, 255)
-#define pBlue		RGBA(0, 0, 255, 255)
-
-#define pBlack		RGBA(0, 0, 0, 255)
-#define pWhite		RGBA(255, 255, 255, 255)
-#define pYellow		RGBA(255, 255, 0, 255)
-#define pTurquoise	RGBA(0, 255, 255, 255)
-#define pDarkGray	RGBA(93, 93, 93, 255)
-#define pGray		RGBA(127,127,127,255)
-#define pLightGray	RGBA(163, 163, 163, 255)
-
-#define aliceblue	RGBA(240, 248, 255, 255)
-#define cornsilk	RGBA(255, 248, 220, 255)
+#define aliceblue	COLOR(240, 248, 255, 255)
+#define cornsilk	COLOR(255, 248, 220, 255)
 

@@ -25,11 +25,11 @@ float gColorMax2 = 255;
 float gColorMax3 = 255;
 float gColorMaxA = 255;
 
-COLOR bgColor = pDarkGray;
+COLOR bgColor = COLOR(93, 93, 93, 255);		// pDarkGray;
 pb_rgba *bgImage = nullptr;
-COLOR strokeColor = RGBA(0, 0, 0, 255);
+COLOR strokeColor = COLOR(0, 0, 0, 255);
 float gstrokeWeight = 1;
-COLOR fillColor = RGBA(255, 255, 255, 255);
+COLOR fillColor = COLOR(255, 255, 255, 255);
 
 // Text Settings
 font_t gfont;
@@ -428,7 +428,7 @@ COLOR HSBA(float h, float s, float v, float a)
 	float r=0, g=0, b=0;
 	HSVtoRGB(&r, &g, &b, h, s, v);
 
-	return RGBA(r*255, g*255, b*255, MAP(a, 0, gColorMaxA, 0, 255));
+	return COLOR(r*255, g*255, b*255, (int)a);
 }
 
 void colorMode(const COLORMODE mode, const float max1, const float max2, const float max3, const float maxA)
@@ -461,7 +461,7 @@ COLOR colorFromRGBA(const float v1, const float v2, const float v3, const float 
 {
 	if ((v1 != -1) && (v2 == -1) && (v3 == -1) && (alpha == -1)) {
 		//color(gray)
-			return RGBA(
+			return COLOR(
 				MAP(v1, 0, gColorMax1, 0, 255), 
 				MAP(v1, 0, gColorMax1, 0, 255), 
 				MAP(v1, 0, gColorMax1, 0, 255), 
@@ -469,7 +469,7 @@ COLOR colorFromRGBA(const float v1, const float v2, const float v3, const float 
 	
 	} else if ((v1 != -1) && (v2 != -1) && (v3 == -1) && (alpha == -1)) {
 		//color(v1, alpha)
-		return RGBA(
+		return COLOR(
 			MAP(v1, 0, gColorMax1, 0, 255),
 			MAP(v1, 0, gColorMax1, 0, 255),
 			MAP(v1, 0, gColorMax1, 0, 255),
@@ -477,7 +477,7 @@ COLOR colorFromRGBA(const float v1, const float v2, const float v3, const float 
 	}
 	else if ((v1 != -1) && (v2 != -1) && (v3 != -1) && (alpha == -1)) {
 		//color(v1, v2, v3)
-		return RGBA(
+		return COLOR(
 			MAP(v1, 0, gColorMax1, 0, 255),
 			MAP(v2, 0, gColorMax2, 0, 255),
 			MAP(v3, 0, gColorMax3, 0, 255),
@@ -486,7 +486,7 @@ COLOR colorFromRGBA(const float v1, const float v2, const float v3, const float 
 	else {
 		// color(v1, v2, v3, alpha)
 		if (gColorMode == COLOR_MODE_RGB) {
-			return RGBA(
+			return COLOR(
 				(int)MAP(v1, 0, gColorMax1, 0, 255), 
 				(int)MAP(v2, 0, gColorMax2, 0, 255), 
 				(int)MAP(v3, 0, gColorMax3, 0, 255), 
@@ -494,7 +494,7 @@ COLOR colorFromRGBA(const float v1, const float v2, const float v3, const float 
 		}
 	}
 
-	return 0;
+	return COLOR();
 }
 
 COLOR colorFromHSBA(const float v1, const float v2, const float v3, const float alpha)
@@ -514,22 +514,22 @@ COLOR colorFromHSBA(const float v1, const float v2, const float v3, const float 
 	else if ((v1 != -1) && (v2 != -1) && (v3 != -1) && (alpha == -1)) {
 		//color(h, s, v)
 		return HSBA(
-			MAP(v1, 0, gColorMax1, 0, 255),
-			MAP(v2, 0, gColorMax2, 0, 255),
-			MAP(v3, 0, gColorMax3, 0, 255),
+			MAP(v1, 0, gColorMax1, 0, 360),
+			MAP(v2, 0, gColorMax2, 0, 1),
+			MAP(v3, 0, gColorMax3, 0, 1),
 			MAP(gColorMaxA, 0, gColorMaxA, 0, 255));
 
 	}
 	else if ((v1 != -1) && (v2 != -1) && (v3 != -1) && (alpha != -1)) {
 		//color(h, s, v, a)
 		return HSBA(
-			MAP(v1, 0, gColorMax1, 0, 255),
-			MAP(v2, 0, gColorMax2, 0, 255),
-			MAP(v3, 0, gColorMax3, 0, 255),
+			MAP(v1, 0, gColorMax1, 0, 360),
+			MAP(v2, 0, gColorMax2, 0, 1),
+			MAP(v3, 0, gColorMax3, 0, 1),
 			MAP(alpha, 0, gColorMaxA, 0, 255));
 	}
 
-	return 0;
+	return COLOR();
 }
 
 COLOR color(const float v1, const float v2, const float v3, const float alpha)
@@ -539,21 +539,19 @@ COLOR color(const float v1, const float v2, const float v3, const float alpha)
 	}
 
 	return colorFromHSBA(v1, v2, v3, alpha);
-
-	return 0;
 }
 
 void background(const float v1, const float v2, const float v3, const float alpha)
 {
-	backgroundRGBA(color(v1, v2, v3, alpha));
+	background(color(v1, v2, v3, alpha));
 }
 
-void backgroundRGBA(const uint32_t value)
+void background(const COLOR value)
 {
 	bgColor = value;
 	if ((gpb != NULL) && (width > 0) && (height > 0))
 	{
-		raster_rgba_rect_fill(gpb, 0, 0, width, height, bgColor);
+		raster_rgba_rect_fill(gpb, 0, 0, width, height, bgColor.value);
 	}
 }
 
@@ -566,12 +564,12 @@ void backgroundImage(pb_rgba *bg)
 
 void noFill()
 {
-	fillColor = 0;
+	fillColor = COLOR();
 }
 
 void noStroke()
 {
-	strokeColor = 0;
+	strokeColor = COLOR();
 }
 
 void stroke(const float v1, const float v2, const float v3, const float alpha)
@@ -579,7 +577,7 @@ void stroke(const float v1, const float v2, const float v3, const float alpha)
 	strokeColor = color(v1, v2, v3, alpha);
 }
 
-void strokeRGBA(const COLOR value)
+void stroke(const COLOR value)
 {
 	strokeColor = value;
 }
@@ -599,16 +597,16 @@ void fill(const float v1, const float v2, const float v3, const float alpha)
 	fillColor = color(v1, v2, v3, alpha);
 }
 
-void fillRGBA(const COLOR value)
+void fill(const COLOR value)
 {
 	fillColor = value;
 }
 
 // 2D primitives
-void polyline(pb_rgba *pb, Pt3 *curve, const int nPts, int color)
+void polyline(pb_rgba *pb, Pt3 *curve, const int nPts, COLOR color)
 {
 	for (int idx = 0; idx < nPts; idx++) {
-		raster_rgba_line_cover(pb, curve[idx].x, curve[idx].y, curve[idx + 1].x, curve[idx + 1].y, color);
+		raster_rgba_line_cover(pb, curve[idx].x, curve[idx].y, curve[idx + 1].x, curve[idx + 1].y, color.value);
 	}
 }
 
@@ -673,8 +671,8 @@ void ellipse(const int a, const int b, const int c, const int d)
 	uint32_t cx = x1+ rwidth/2;
 	uint32_t cy = y1 + rheight/2;
 
-	raster_rgba_ellipse_fill(gpb, cx, cy, xradius, yradius, fillColor);
-	raster_rgba_ellipse_stroke(gpb, cx, cy, xradius, yradius, strokeColor);
+	raster_rgba_ellipse_fill(gpb, cx, cy, xradius, yradius, fillColor.value);
+	raster_rgba_ellipse_stroke(gpb, cx, cy, xradius, yradius, strokeColor.value);
 }
 
 void line(const int x1, const int y1, const int x2, const int y2)
@@ -689,7 +687,7 @@ void line(const int x1, const int y1, const int x2, const int y2)
 		return;
 	}
 
-	raster_rgba_line_cover(gpb, xx1, yy1, xx2, yy2, strokeColor);
+	raster_rgba_line_cover(gpb, xx1, yy1, xx2, yy2, strokeColor.value);
 }
 
 void lineloop(const Vector2dVector &pts)
@@ -736,12 +734,12 @@ void point(const int x, const int y)
 		return;
 
 	if (gstrokeWeight <= 1) {
-		pb_rgba_cover_pixel(gpb, x, y, strokeColor);
+		pb_rgba_cover_pixel(gpb, x, y, strokeColor.value);
 	}
 	else {
 		// draw an ellipse centered at the specified point
 		// with a width of the strokeWeight
-		raster_rgba_ellipse_fill(gpb, x, y, gstrokeWeight / 2, gstrokeWeight / 2, strokeColor);
+		raster_rgba_ellipse_fill(gpb, x, y, gstrokeWeight / 2, gstrokeWeight / 2, strokeColor.value);
 	}
 }
 
@@ -792,14 +790,13 @@ void rect(const int a, const int b, const int c, const int d)
 	if ((crect.width == 0) || (crect.height == 0))
 		return;
 
-	if (fillColor != 0) {
-		//raster_rgba_rect_fill_blend(gpb, x1, y1, rwidth, rheight, fillColor);
-		raster_rgba_rect_fill_blend(gpb, crect.x, crect.y, crect.width, crect.height, fillColor);
+	if (fillColor.value != 0) {
+		raster_rgba_rect_fill_blend(gpb, crect.x, crect.y, crect.width, crect.height, fillColor.value);
 	}
 
 	// if the strokeColor != 0 then 
 	// frame the rectangle in the strokeColor
-	if (strokeColor != 0) {
+	if (strokeColor.value != 0) {
 		int pts[] = {
 			crect.x, crect.y,
 			crect.x, crect.y + crect.height - 1,
@@ -817,11 +814,11 @@ void rect(const int a, const int b, const int c, const int d)
 
 void triangle(const int x1, const int y1, const int x2, const int y2, const int x3, const int y3)
 {
-	if (fillColor != 0) {
-		raster_rgba_triangle_fill(gpb, x1, y1, x2, y2, x3, y3, fillColor);
+	if (fillColor.value != 0) {
+		raster_rgba_triangle_fill(gpb, x1, y1, x2, y2, x3, y3, fillColor.value);
 	}
 
-	if (strokeColor != 0) {
+	if (strokeColor.value != 0) {
 		int pts[] = {
 			x1, y1,
 			x2, y2,
@@ -834,7 +831,7 @@ void triangle(const int x1, const int y1, const int x2, const int y2, const int 
 void quad(const int x1, const int y1, const int x2, const int y2, const int x3, const int y3, const int x4, const int y4)
 {
 	// preserve current stroke color
-	uint32_t savedStroke = strokeColor;
+	COLOR savedStroke = strokeColor;
 
 	noStroke();
 	// triangle 1
@@ -846,7 +843,7 @@ void quad(const int x1, const int y1, const int x2, const int y2, const int x3, 
 	// outline
 	stroke(savedStroke);
 
-	if (strokeColor != 0) {
+	if (strokeColor.value != 0) {
 		int pts[] = {
 			x1, y1,
 			x2, y2,
@@ -1035,7 +1032,7 @@ bool triangulate_process(const Vector2dVector &contour)
 
 void polygon(const Vector2dVector &pts)
 {
-	uint32_t oldStroke = strokeColor;
+	COLOR oldStroke = strokeColor;
 
 	//  Invoke the triangulator to render the polygon as triangles
 	noStroke();
@@ -1100,7 +1097,7 @@ void bezierVertex(const int x1, const int y1, const int x2, const int y2, const 
 void endShape(const int kindOfFinish)
 {
 	int n = gShape.size();
-	uint32_t oldStroke = strokeColor;
+	COLOR oldStroke = strokeColor;
 
 	switch (gShapeKind) {
 		case GR_POINTS:
@@ -1208,7 +1205,7 @@ void text(const char *str, const int x, const int y)
 		ty = y - gfont.height;
 		break;
 	}
-	scan_str(gpb, &gfont, tx, ty, str, fillColor);
+	scan_str(gpb, &gfont, tx, ty, str, fillColor.value);
 }
 
 void textAlign(const int alignX, const int alignY)

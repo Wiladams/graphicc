@@ -52,6 +52,10 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TimeSeries", "Test\TimeSeri
 	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "test_text", "Test\test_text\test_text.vcxproj", "{7F4CC594-1AA3-4EAF-B599-2471345B32D2}"
+	ProjectSection(ProjectDependencies) = postProject
+		{5856A423-63AB-4119-A3B7-0ED0CF7B61FE} = {5856A423-63AB-4119-A3B7-0ED0CF7B61FE}
+		{22E0AE80-590C-4C3F-AB8E-15437D25E2D2} = {22E0AE80-590C-4C3F-AB8E-15437D25E2D2}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "keyboard", "Test\keyboard\keyboard.vcxproj", "{B134EA74-F328-4D23-9B77-2918EBF04D86}"
 	ProjectSection(ProjectDependencies) = postProject
@@ -115,6 +119,12 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "colorMode", "examples\color
 	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "RadialGradient", "examples\RadialGradient\RadialGradient.vcxproj", "{08DDE6BE-7A45-4CC8-8722-56A9C5BF5632}"
+	ProjectSection(ProjectDependencies) = postProject
+		{5856A423-63AB-4119-A3B7-0ED0CF7B61FE} = {5856A423-63AB-4119-A3B7-0ED0CF7B61FE}
+		{22E0AE80-590C-4C3F-AB8E-15437D25E2D2} = {22E0AE80-590C-4C3F-AB8E-15437D25E2D2}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Hue", "examples\Hue\Hue.vcxproj", "{FA8930B8-A6EE-49A2-B8E2-FEAEDA253D8A}"
 	ProjectSection(ProjectDependencies) = postProject
 		{5856A423-63AB-4119-A3B7-0ED0CF7B61FE} = {5856A423-63AB-4119-A3B7-0ED0CF7B61FE}
 		{22E0AE80-590C-4C3F-AB8E-15437D25E2D2} = {22E0AE80-590C-4C3F-AB8E-15437D25E2D2}
@@ -238,6 +248,10 @@ Global
 		{08DDE6BE-7A45-4CC8-8722-56A9C5BF5632}.Debug|Win32.Build.0 = Debug|Win32
 		{08DDE6BE-7A45-4CC8-8722-56A9C5BF5632}.Release|Win32.ActiveCfg = Release|Win32
 		{08DDE6BE-7A45-4CC8-8722-56A9C5BF5632}.Release|Win32.Build.0 = Release|Win32
+		{FA8930B8-A6EE-49A2-B8E2-FEAEDA253D8A}.Debug|Win32.ActiveCfg = Debug|Win32
+		{FA8930B8-A6EE-49A2-B8E2-FEAEDA253D8A}.Debug|Win32.Build.0 = Debug|Win32
+		{FA8930B8-A6EE-49A2-B8E2-FEAEDA253D8A}.Release|Win32.ActiveCfg = Release|Win32
+		{FA8930B8-A6EE-49A2-B8E2-FEAEDA253D8A}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

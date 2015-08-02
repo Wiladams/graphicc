@@ -90,21 +90,22 @@ void draw()
 
 	setFont(fontlist[fontidx].data);
 
+	fill(pBlack);
 	textAlign(TX_LEFT, TX_TOP);
-	fillRGBA(pBlack);
 	text(fontlist[fontidx].name, 0, 0);
+
 	text(CAPS, 0, gfont.height * 1);
 
-	fillRGBA(pRed);
+	fill(pRed);
 	text(LOWS, 0, gfont.height * 2);
 
-	fillRGBA(pGreen);
+	fill(pGreen);
 	text(NUMS, 0, gfont.height * 3);
 
-	fillRGBA(pBlue);
+	fill(pBlue);
 	text(SYMS, 0, gfont.height * 4);
 
-	fillRGBA(pBlack);
+	fill(pBlack);
 	text(SOME, 0, gfont.height * 5);
 }
 

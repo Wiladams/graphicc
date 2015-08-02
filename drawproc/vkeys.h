@@ -1,4 +1,7 @@
-// Virtual key codes returned from Windows APIs
+// Virtual key codes 
+// these are typically associated with the Windows APIs
+// but they are fairly universal
+
 
 typedef enum VKEYS {
 	/*
@@ -16,54 +19,54 @@ typedef enum VKEYS {
 			*0x07:unassigned
 */
 
-KC_BACK = 0x08,
-KC_TAB = 0x09,
+	KC_BACK = 0x08,
+	KC_TAB = 0x09,
 
 /*
 *0x0A - 0x0B:reserved
 */
 
-KC_CLEAR = 0x0C,
-KC_RETURN = 0x0D,
+	KC_CLEAR = 0x0C,
+	KC_RETURN = 0x0D,
 
-KC_SHIFT = 0x10,
-KC_CONTROL = 0x11,
-KC_MENU = 0x12,
-KC_PAUSE = 0x13,
-KC_CAPITAL = 0x14,
+	KC_SHIFT = 0x10,
+	KC_CONTROL = 0x11,
+	KC_MENU = 0x12,
+	KC_PAUSE = 0x13,
+	KC_CAPITAL = 0x14,
 
-KC_KANA = 0x15,  //HANGEUL        0x15  //old name - should be here for compatibility
+	KC_KANA = 0x15,  //HANGEUL        0x15  //old name - should be here for compatibility
 
-KC_HANGUL = 0x15,
-KC_JUNJA = 0x17,
-KC_FINAL = 0x18,
-KC_HANJA = 0x19,
-KC_KANJI = 0x19,
+	KC_HANGUL = 0x15,
+	KC_JUNJA = 0x17,
+	KC_FINAL = 0x18,
+	KC_HANJA = 0x19,
+	KC_KANJI = 0x19,
 
-KC_ESCAPE = 0x1B,
+	KC_ESCAPE = 0x1B,
 
-KC_CONVERT = 0x1C,
-KC_NONCONVERT = 0x1D,
-KC_ACCEPT = 0x1E,
-KC_MODECHANGE = 0x1F,
+	KC_CONVERT = 0x1C,
+	KC_NONCONVERT = 0x1D,
+	KC_ACCEPT = 0x1E,
+	KC_MODECHANGE = 0x1F,
 
 
-KC_SPACE = 0x20,
-KC_PRIOR = 0x21,
-KC_NEXT = 0x22,
-KC_END = 0x23,
-KC_HOME = 0x24,
-KC_LEFT = 0x25,
-KC_UP = 0x26,
-KC_RIGHT = 0x27,
-KC_DOWN = 0x28,
-KC_SELECT = 0x29,
-KC_PRINT = 0x2A,
-KC_EXECUTE = 0x2B,
-KC_SNAPSHOT = 0x2C,
-KC_INSERT = 0x2D,
-KC_DELETE = 0x2E,
-KC_HELP = 0x2F,
+	KC_SPACE = 0x20,
+	KC_PRIOR = 0x21,
+	KC_NEXT = 0x22,
+	KC_END = 0x23,
+	KC_HOME = 0x24,
+	KC_LEFT = 0x25,
+	KC_UP = 0x26,
+	KC_RIGHT = 0x27,
+	KC_DOWN = 0x28,
+	KC_SELECT = 0x29,
+	KC_PRINT = 0x2A,
+	KC_EXECUTE = 0x2B,
+	KC_SNAPSHOT = 0x2C,
+	KC_INSERT = 0x2D,
+	KC_DELETE = 0x2E,
+	KC_HELP = 0x2F,
 
 /*
 	*0 - 9 are the same as ASCII '0' - '9' (0x30 - 0x39)

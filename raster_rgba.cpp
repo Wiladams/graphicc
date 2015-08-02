@@ -154,7 +154,7 @@ void raster_rgba_span(pb_rgba *pb, const uint32_t x, const uint32_t y, const siz
 	}
 }
 
-void raster_rgba_hline_fade(pb_rgba *pb, int x1, int color1, int x2, int color2, int y)
+void raster_rgba_hline_fade(pb_rgba *pb, int x1, uint32_t color1, int x2, uint32_t color2, int y)
 {
 	int xdiff = x2 - x1;
 	if (xdiff == 0)
@@ -187,7 +187,7 @@ void raster_rgba_hline_fade(pb_rgba *pb, int x1, int color1, int x2, int color2,
 	}
 }
 
-void raster_rgba_vline_fade(pb_rgba *pb, int y1, int color1, int y2, int color2, int x)
+void raster_rgba_vline_fade(pb_rgba *pb, int y1, uint32_t color1, int y2, uint32_t color2, int x)
 {
 	int ydiff = y2 - y1;
 	if (ydiff == 0)
@@ -220,7 +220,7 @@ void raster_rgba_vline_fade(pb_rgba *pb, int y1, int color1, int y2, int color2,
 	}
 }
 
-int raster_rgba_hline(pb_rgba *pb, unsigned int x, unsigned int y, unsigned int length, int value)
+int raster_rgba_hline(pb_rgba *pb, unsigned int x, unsigned int y, unsigned int length, uint32_t value)
 {
 	size_t terminus = x + length;
 	terminus = terminus - x;
@@ -237,7 +237,7 @@ int raster_rgba_hline(pb_rgba *pb, unsigned int x, unsigned int y, unsigned int 
 
 
 
-int raster_rgba_hline_blend(pb_rgba *pb, unsigned int x, unsigned int y, unsigned int length, int value)
+int raster_rgba_hline_blend(pb_rgba *pb, unsigned int x, unsigned int y, unsigned int length, uint32_t value)
 {
 	size_t terminus = x + length;
 	terminus = terminus - x;
@@ -255,7 +255,7 @@ int raster_rgba_hline_blend(pb_rgba *pb, unsigned int x, unsigned int y, unsigne
 	return 0;
 }
 
-int raster_rgba_vline(pb_rgba *pb, unsigned int x, unsigned int y, unsigned int length, int value)
+int raster_rgba_vline(pb_rgba *pb, unsigned int x, unsigned int y, unsigned int length, uint32_t value)
 {
 	unsigned int * data = &((unsigned int *)pb->data)[y*(int)pb->frame.width + x];
 	size_t count = 1;
@@ -271,7 +271,7 @@ int raster_rgba_vline(pb_rgba *pb, unsigned int x, unsigned int y, unsigned int 
 
 
 // Bresenham simple line drawing
-void raster_rgba_line(pb_rgba *pb, unsigned int x1, unsigned int y1, unsigned int x2, unsigned int y2, int color)
+void raster_rgba_line(pb_rgba *pb, unsigned int x1, unsigned int y1, unsigned int x2, unsigned int y2, uint32_t color)
 {
 	int dx, dy;
 	int i;
@@ -327,7 +327,7 @@ void raster_rgba_line(pb_rgba *pb, unsigned int x1, unsigned int y1, unsigned in
 	then, it's ok to have to separate versions.
 
 */
-void raster_rgba_line_cover(pb_rgba *pb, unsigned int x1, unsigned int y1, unsigned int x2, unsigned int y2, int color)
+void raster_rgba_line_cover(pb_rgba *pb, unsigned int x1, unsigned int y1, unsigned int x2, unsigned int y2, uint32_t color)
 {
 	int dx, dy;
 	int i;
@@ -397,7 +397,7 @@ void raster_rgba_blit(pb_rgba *pb, const int x, const int y, pb_rgba *src)
 	}
 }
 
-void raster_rgba_blend_alphamap(pb_rgba *pb, const int x, const int y, const unsigned char *bitmap, const int w, const int h, const int color)
+void raster_rgba_blend_alphamap(pb_rgba *pb, const int x, const int y, const unsigned char *bitmap, const int w, const int h, const uint32_t color)
 {
 	int xpos = x;
 	int ypos = y;

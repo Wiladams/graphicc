@@ -6,7 +6,7 @@
 
 
 #include <stdio.h>
-
+/*
 #define pRed		RGBA(255, 0, 0, 255)
 #define pGreen		RGBA(0, 255, 0, 255)
 #define pBlue		RGBA(0, 0, 255, 255)
@@ -20,3 +20,4 @@
 
 #define aliceblue	RGBA(240, 248, 255, 255)
 #define cornsilk	RGBA(255, 248, 220, 255)
+*/

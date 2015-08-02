@@ -22,9 +22,9 @@
 #include <stdlib.h>
 
 
-static uint32_t colors[] = {
+static COLOR colors[] = {
 	pBlack,
-	RGBA(255, 0, 0, 202),	// Red
+	COLOR(255, 0, 0, 202),	// Red
 	pDarkGray,
 	pGreen,
 	pLightGray,
@@ -57,7 +57,7 @@ static int frameCount = 0;
 static double starttime = 0;
 
 typedef struct {
-	uint32_t color;
+	COLOR color;
 	double interval;
 }bar;
 
@@ -112,18 +112,18 @@ void drawRandomRectangles()
 	//noStroke();
 	stroke(0);
 
-	for (int cnt = 1001; cnt; cnt--)
+	for (int cnt = 100; cnt; cnt--)
 	{
 		uint8_t r = rand() % 255;
 		uint8_t g = rand() % 255;
 		uint8_t b = rand() % 255;
-		uint32_t c = RGBA(r, g, b, 202);
+		COLOR c = COLOR(r, g, b, 255);
 
 		int x1 = rand() % (width - 1);
 		int y1 = rand() % (height - 1);
 
 		//noFill();
-		fillRGBA(c);
+		fill(c);
 		rect(x1, y1, lwidth, lheight);
 	}
 }
@@ -144,7 +144,6 @@ void drawRandomLines()
 		uint8_t r = rand() % 255;
 		uint8_t g = rand() % 255;
 		uint8_t b = rand() % 255;
-		uint32_t c = RGBA(r, g, b, 255);
 
 		int x = rand() % width - 1;
 		int y = rand() % height - 1;
@@ -154,7 +153,7 @@ void drawRandomLines()
 		int x2 = x + rand() % halfsize - 1;
 		int y2 = y + rand() % halfsize - 1;
 
-		stroke(c);
+		stroke(COLOR(r, g, b, 255));
 		line(x1, y1, x2, y2);
 	}
 }
@@ -192,7 +191,7 @@ void drawRandomTriangles()
 		uint8_t r = rand() % 255;
 		uint8_t g = rand() % 255;
 		uint8_t b = rand() % 255;
-		uint32_t c = RGBA(r, g, b, 202);
+		//uint32_t c = RGBA(r, g, b, 202);
 
 		int x1 = rand() % (width - 64)+20;
 		int y1 = rand() % (height - 64)+20;
@@ -211,7 +210,7 @@ void drawRandomTriangles()
 		int y3 = (rand() % yrange) + miny;
 
 		//noFill();
-		fill(c);
+		fill(r, g, b, 202);
 		triangle(x1, y1, x2, y2, x3, y3);
 	}
 }
@@ -235,7 +234,7 @@ void drawBars()
 
 		double secfrag = fmod(seconds(), bars[offset].interval);
 		int barheight = MAP(secfrag, 0, bars[offset].interval, 4, height - 1);
-		fillRGBA(bars[offset].color);
+		fill(bars[offset].color);
 		int x1 = offset*(bargap + barwidth) + bargap;
 		int y1 = height - barheight;
 		rect(x1, y1, barwidth, barheight);
@@ -250,7 +249,7 @@ void drawBars()
 	b[(polyidx * 2) + 1] = height - 1;
 
 	//fill(RGBA(127, 127, 127, 80));
-	fillRGBA(RGBA(0, 127, 255, 120));
+	fill(COLOR(0, 127, 255, 120));
 	polygon(numbars + 2, b);
 
 	free(b);
@@ -268,7 +267,7 @@ void drawPolygon()
 	};
 	int nverts = (sizeof(a) / sizeof(a[0]))/2;
 
-	fillRGBA(pYellow);
+	fill(pYellow);
 	polygon(nverts, a);
 
 	int b[] = {
@@ -283,7 +282,7 @@ void drawPolygon()
 	};
 	int bverts = (sizeof(b) / sizeof(b[0]))/2;
 
-	fillRGBA(pGreen);
+	fill(pGreen);
 	polygon(bverts, b);
 
 }
@@ -351,6 +350,19 @@ beginShape(GR_POLYGON);
 
 }
 
+void drawColors()
+{
+	rectMode(CORNERS);
+
+	fill(pRed);
+	rect(0, 0, width - 1, 60);
+	
+	fill(pGreen);
+	rect(0, 60, width - 1, 120);
+
+	fill(pBlue);
+	rect(0, 120, width - 1, 180);
+}
 void drawMouse()
 {
 	int mWidth = 128;
@@ -358,7 +370,7 @@ void drawMouse()
 
 	rectMode(CENTER);
 	stroke(pBlack);
-	fillRGBA(RGBA(0, 127, 255, 200));
+	fill(0, 127, 255, 200);
 	rect(mouseX, mouseY, mWidth, mHeight);
 }
 
@@ -402,12 +414,36 @@ void drawLinearMotion()
 	}
 }
 
+
+typedef void(*DrawingHandler)();
+
+
+DrawingHandler gDrawRoutines[] = {
+	drawColors,
+	drawEllipses,
+	drawLines,
+	drawPoints,
+	drawRects,
+	drawTriangles,
+	drawQuads,
+	//drawPolygon,
+	drawShapes,
+
+	drawRandomRectangles,
+	drawRandomLines,
+	drawRandomTriangles,
+	drawBars,
+	drawLinearMotion
+
+};
+
 static bool dumpimage = false;
-static const int nRoutines = 12;
+static const int nRoutines = sizeof(gDrawRoutines) / sizeof(gDrawRoutines[0]);
 static int currentRoutine = 0;
 int desiredWidth = 640;
 int desiredHeight = 480;
 pb_rgba localpb;
+
 
 void keyReleased()
 {
@@ -437,9 +473,8 @@ void keyReleased()
 
 void setup()
 {
-
 	size(desiredWidth, desiredHeight);
-	backgroundRGBA(pLightGray);
+	background(pLightGray);
 
 	a = height / 2;
 
@@ -461,26 +496,7 @@ void setup()
 	resettime();
 }
 
-typedef void (* DrawingHandler)();
 
-
-DrawingHandler gDrawRoutines[] = {
-	drawEllipses,
-	drawLines,
-	drawPoints,
-	drawRects,
-	drawTriangles,
-	drawQuads,
-	//drawPolygon,
-	drawShapes,
-
-	drawRandomRectangles,
-	drawRandomLines,
-	drawRandomTriangles,
-	drawBars,
-	drawLinearMotion
-
-};
 
 
 void draw()

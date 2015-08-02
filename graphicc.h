@@ -84,7 +84,7 @@ inline real RADIANS(const real degrees) { return (real)(G_DTOR * degrees); }
 
 // map a value (a) from between rlo <= a <= rhi to  shi <= b <= slo
 inline double MAP(double a, double rlo, double rhi, double slo, double shi) {return slo + ((double)(a - rlo) / (rhi - rlo)) * (shi - slo);}
-
+inline double CLAMP(double a, double rlo, double rhi){ return a < rlo ? rlo : (a>rhi ? rhi : a); }
 
 // turn a division by 255 into something 
 // much cheaper to calculate
@@ -178,8 +178,8 @@ inline void pb_rect_intersection(pb_rect &c, const pb_rect &a, const pb_rect &b)
 {
 	coord x = a.x > b.x ? a.x : b.x;
 	coord y = a.y > b.y ? a.y : b.y;
-	coord right = ((a.x + a.width - 1) < (b.x + b.width - 1)) ? (a.x + a.width - 1) : (b.x + b.width - 1);
-	coord bottom = ((a.y + a.height - 1) < (b.y + b.height - 1)) ? (a.y + a.height - 1) : (b.y + b.height - 1);
+	coord right = ((a.x + a.width) < (b.x + b.width)) ? (a.x + a.width) : (b.x + b.width);
+	coord bottom = ((a.y + a.height) < (b.y + b.height)) ? (a.y + a.height) : (b.y + b.height);
 
 	coord width = ((right - x) > 0) ? (right - x) : 0;
 	coord height = ((bottom - y) > 0) ? (bottom - y) : 0;
@@ -327,8 +327,8 @@ extern "C" {
 	//void font_str_box(const font_t *f, const char * str, int *x, int *y, int *swidth, int *sheight);
 
 	void glyph_t_span(const font_t *f, glyph_t *g, unsigned i, cover_type *m_span);
-	int scan_glyph(pb_rgba *pb, font_t *font, glyph_t *glyph, const int x, const int y, const int color);
-	int scan_str(pb_rgba *pb, font_t *font, const int x, const int y, const char *chars, const int color);
+	int scan_glyph(pb_rgba *pb, font_t *font, glyph_t *glyph, const int x, const int y, const uint32_t color);
+	int scan_str(pb_rgba *pb, font_t *font, const int x, const int y, const char *chars, const uint32_t color);
 
 #ifdef __cplusplus
 }

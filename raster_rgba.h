@@ -31,16 +31,16 @@ bool clipLine(const pb_rect &bounds, int &x0, int &y0, int &x1, int &y1);
 void raster_rgba_span(pb_rgba *pb, const uint32_t x, const uint32_t y, const size_t len, const uint32_t *data);
 
 // SRCCOPY
-int raster_rgba_hline(pb_rgba *pb, unsigned int x, unsigned int y, unsigned int length, int value);
-int raster_rgba_vline(pb_rgba *pb, unsigned int x, unsigned int y, unsigned int length, int value);
-void raster_rgba_line(pb_rgba *pb, unsigned int x1, unsigned int y1, unsigned int x2, unsigned int y2, int value);
+int raster_rgba_hline(pb_rgba *pb, unsigned int x, unsigned int y, unsigned int length, const uint32_t value);
+int raster_rgba_vline(pb_rgba *pb, unsigned int x, unsigned int y, unsigned int length, const uint32_t value);
+void raster_rgba_line(pb_rgba *pb, unsigned int x1, unsigned int y1, unsigned int x2, unsigned int y2, const uint32_t value);
 
 void raster_rgba_hline_fade(pb_rgba *pb, int x1, int color1, int x2, int color2, int y);
 void raster_rgba_vline_fade(pb_rgba *pb, int y1, int color1, int y2, int color2, int x);
 
 // SRCOVER
-int raster_rgba_hline_blend(pb_rgba *pb, unsigned int x, unsigned int y, unsigned int length, int value);
-void raster_rgba_line_cover(pb_rgba *pb, unsigned int x1, unsigned int y1, unsigned int x2, unsigned int y2, int color);
+int raster_rgba_hline_blend(pb_rgba *pb, unsigned int x, unsigned int y, unsigned int length, const uint32_t color);
+void raster_rgba_line_cover(pb_rgba *pb, unsigned int x1, unsigned int y1, unsigned int x2, unsigned int y2, uint32_t color);
 
 
 
@@ -71,16 +71,16 @@ void raster_rgba_blit(pb_rgba *pb, const int x, const int y, pb_rgba *src);
 	h - height of alphamap, in bytes
 	color - base color value
 */
-void raster_rgba_blend_alphamap(pb_rgba *pb, const int x, const int y, const unsigned char *bitmap, const int w, const int h, const int color);
+void raster_rgba_blend_alphamap(pb_rgba *pb, const int x, const int y, const unsigned char *bitmap, const int w, const int h, const uint32_t color);
 
-inline void raster_rgba_rect_fill(pb_rgba *pb, const int x, const int y, const int width, const int height, const int value)
+inline void raster_rgba_rect_fill(pb_rgba *pb, const int x, const int y, const int width, const int height, const uint32_t value)
 {
 	for (int idx = 0; idx < height; idx++){
 		raster_rgba_hline(pb, x, y + idx, width, value);
 	}
 }
 
-inline void raster_rgba_rect_fill_blend(pb_rgba *pb, const int x, const int y, const int width, const int height, const int value)
+inline void raster_rgba_rect_fill_blend(pb_rgba *pb, const int x, const int y, const int width, const int height, const uint32_t value)
 {
 	for (int idx = 0; idx < height; idx++){
 		raster_rgba_hline_blend(pb, x, y + idx, width, value);

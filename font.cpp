@@ -132,7 +132,7 @@ void glyph_t_span(const font_t *f, glyph_t *g, unsigned i, cover_type *m_span)
 	//return m_span;
 }
 
-int scan_glyph(pb_rgba *pb, font_t *font, glyph_t *glyph, const int x, const int y, const int color)
+int scan_glyph(pb_rgba *pb, font_t *font, glyph_t *glyph, const int x, const int y, const uint32_t color)
 {
 	cover_type m_span[32];
 	int line = font->height;
@@ -155,7 +155,7 @@ int scan_glyph(pb_rgba *pb, font_t *font, glyph_t *glyph, const int x, const int
 
 }
 
-int scan_str(pb_rgba *pb, font_t *font, const int x, const int y, const char *chars, const int color)
+int scan_str(pb_rgba *pb, font_t *font, const int x, const int y, const char *chars, const uint32_t color)
 {
 	glyph_t ginfo;
 

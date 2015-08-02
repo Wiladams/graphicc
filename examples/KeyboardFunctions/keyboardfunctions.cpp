@@ -1,6 +1,5 @@
 #include "drawproc.h"
 
-typedef uint32_t color;
 
 int maxHeight = 40;
 int minHeight = 20;
@@ -13,16 +12,17 @@ int y = 0;                      // Y position of the letters
 bool newletter;
 
 int numChars = 26;      // There are 26 characters in the alphabet
-color *colors = new color[numChars];
+COLOR *colors = new COLOR[numChars];
 
 void setup() {
 	size(640, 360);
 	noStroke();
-	//colorMode(HSB, numChars);
+	colorMode(COLOR_MODE_HSB, numChars);
 	background(numChars / 2);
+
 	// Set a gray value for each key
 	for (int i = 0; i < numChars; i++) {
-		colors[i] = RGBA(i, numChars, numChars, 255);
+		colors[i] = COLOR(i, numChars, numChars, 255);
 	}
 }
 
