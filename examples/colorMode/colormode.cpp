@@ -3,6 +3,17 @@
 int drawMode = 0;
 static const int maxModes = 3;
 
+void mouseReleased()
+{
+	drawMode += 1;
+	if (drawMode >= maxModes) {
+		drawMode = 0;
+	}
+
+	draw();
+	redraw();	// since we're not in a loop, we must force a redraw()
+}
+
 void keyReleased()
 {
 	if (keyCode == VK_SPACE) {
