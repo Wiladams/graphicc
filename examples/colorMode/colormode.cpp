@@ -1,31 +1,19 @@
 #include "drawproc.h"
 
-int drawMode = 0;
-static const int maxModes = 3;
+int drawMode = 1;
+static const int lastMode = 3;
 
 void mouseReleased()
 {
 	drawMode += 1;
-	if (drawMode >= maxModes) {
-		drawMode = 0;
+	if (drawMode > lastMode) {
+		drawMode = 1;
 	}
 
 	draw();
 	redraw();	// since we're not in a loop, we must force a redraw()
 }
 
-void keyReleased()
-{
-	if (keyCode == VK_SPACE) {
-		drawMode += 1;
-		if (drawMode >= maxModes) {
-			drawMode = 0;
-		}
-	}
-
-	draw();
-	redraw();	// since we're not in a loop, we must force a redraw()
-}
 
 void setup()
 {
@@ -70,15 +58,15 @@ void draw()
 	background(0);
 
 	switch (drawMode) {
-		case 0:
+		case 1:
 			drawRGB();
 		break;
 
-		case 1:
+		case 2:
 			drawHSB();
 		break;
 
-		case 2:
+		case 3:
 			drawTeal();
 		break;
 	}
