@@ -31,6 +31,7 @@
 
 #include "graphicc.h"
 #include "raster_rgba.h"
+//#include "drawproc.h"
 
 #define CBlack RGBA(0,0,0,255)
 

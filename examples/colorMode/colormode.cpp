@@ -49,12 +49,9 @@ void drawHSB()
 
 void drawTeal()
 {
-	COLOR bg;  
-
 	colorMode(COLOR_MODE_HSB, 360, 100, 100);
-	bg = color(180, 50, 50);
 
-	backgroundRGBA(bg);
+	background(180, 50, 50);
 }
 
 void draw()

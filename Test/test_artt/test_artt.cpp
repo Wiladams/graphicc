@@ -5,7 +5,7 @@
 APolyVertex squareScreen[4];
 AVector squareView[4];
 APolygon square = {
-	pBlue,
+	pBlue.value,
 	FLAT,	// shading 
 	4,
 	squareScreen,
@@ -33,7 +33,7 @@ void setup()
 {
 	size(viewWidth, viewHeight);
 	canvas = new ACanvas(gpb);
-	backgroundRGBA(pLightGray);
+	background(pLightGray);
 
 	// draw polygon
 	APolyVertex tsc[3];
@@ -42,7 +42,7 @@ void setup()
 	tsc[2].x = 10; tsc[2].y = 200;
 
 	APolygon tri = {
-		pBlue,
+		pBlue.value,
 		FLAT,	// shading 
 		3,
 		tsc,
@@ -56,7 +56,7 @@ void setup()
 
 void draw()
 {
-	backgroundRGBA(pLightGray);
+	background(pLightGray);
 
 	// rotate camera around z axis
 	AVector camDir = cam.getDirection();

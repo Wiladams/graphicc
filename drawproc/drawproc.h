@@ -42,7 +42,7 @@ Drawing API
 struct COLOR
 {
 	COLOR() :value(0){}
-	COLOR(const COLOR &other) :value(other.value){}
+	//COLOR(const COLOR &other) :value(other.value){}
 	COLOR(const uint8_t r, const uint8_t g, const uint8_t b, const uint8_t a):r(r),g(g),b(b),a(a){}
 
 	union {
