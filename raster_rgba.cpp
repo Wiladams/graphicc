@@ -377,7 +377,7 @@ void raster_rgba_line_cover(pb_rgba *pb, unsigned int x1, unsigned int y1, unsig
 	}
 }
 
-void raster_rgba_blit(pb_rgba *pb, const int x, const int y, pb_rgba *src)
+void raster_rgba_blit(pb_rgba *pb, const int x, const int y, const pb_rgba *src)
 {
 	uint32_t *dstPtr = (uint32_t *)pb->data;
 	uint32_t *srcPtr = (uint32_t *)src->data;

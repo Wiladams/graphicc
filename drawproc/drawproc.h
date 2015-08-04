@@ -112,6 +112,13 @@ struct Vector3d
 	};
 };
 
+struct PImage
+{
+	pb_rgba fb;
+};
+
+
+
 // Global variables
 extern size_t width;
 extern size_t height;
@@ -225,6 +232,10 @@ void beginShape(const int shapeKind = GR_POLYGON);
 void vertex(const int x, const int y);
 void bezierVertex(const int x1, const int y1, const int x2, const int y2, const int x3, const int y3);
 void endShape(const int kindOfClose = STROKE);
+
+// Images
+void image(const PImage *img, const float a, const float b, const float c=-1, const float d=-1);
+PImage * loadImage(const char *filename, const char *extension = nullptr);
 
 // Math
 double random(const float low, const float high);

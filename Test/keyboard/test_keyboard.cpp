@@ -17,6 +17,7 @@ static bool gShowKeyRect = false;
 static bool showGrid = false;
 static bool gShowCrosshair = true;
 
+PImage *kbImage;
 pb_rgba fb;
 pb_rect keyRect = { 0, 0, 34, 34 };
 
@@ -115,7 +116,7 @@ void drawMouseInfo()
 	// draw a white banner across the bottom
 	noStroke();
 	fill(pWhite);
-	rect(0, fb.frame.height + 2, width, 24);
+	rect(0, height - 1 - 34, width, 34);
 
 	if (gShowKeyRect) {
 		// draw the key rectangle
@@ -132,14 +133,15 @@ void drawMouseInfo()
 		seconds());
 	fill(pBlack);
 	textAlign(TX_LEFT, TX_TOP);
-	text(infobuff, 0, fb.frame.height + 2);
+	text(infobuff, 0, height-34);
 
 }
 
 void draw()
 {
 	background(pLightGray);
-	backgroundImage(&fb);
+	image(kbImage, 0, 0);
+
 	drawCrossHairs();
 	drawGrid();
 
@@ -148,10 +150,9 @@ void draw()
 
 void setup()
 {
-	int ret = PPM_read_binary("c:/repos/graphicc/Test/windows-keyboard-60-keys.ppm", &fb);
-//	int ret = PPM_read_binary("..\\Test\\windows-keyboard-60-keys.ppm", &fb);
+	kbImage = loadImage("c:/repos/graphicc/Test/windows-keyboard-60-keys.ppm", nullptr);
 	
-	size(fb.frame.width+4, fb.frame.height+4+30);
+	size(kbImage->fb.frame.width, kbImage->fb.frame.height+4+30);
 	background(pLightGray);
 }
 
