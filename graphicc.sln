@@ -132,6 +132,14 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Hue", "examples\Hue\Hue.vcx
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Saturation", "examples\Saturation\Saturation.vcxproj", "{D652EBFE-708D-418B-A6AF-B24B2C7BE69D}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "eyetrack", "examples\eyetrack\eyetrack.vcxproj", "{934B19C8-2090-4ED0-9C63-C24505A76FFE}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "BannerSketch", "examples\BannerSketch\BannerSketch.vcxproj", "{775611F9-5577-4432-A591-C52B400C27D7}"
+	ProjectSection(ProjectDependencies) = postProject
+		{5856A423-63AB-4119-A3B7-0ED0CF7B61FE} = {5856A423-63AB-4119-A3B7-0ED0CF7B61FE}
+		{22E0AE80-590C-4C3F-AB8E-15437D25E2D2} = {22E0AE80-590C-4C3F-AB8E-15437D25E2D2}
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -258,6 +266,14 @@ Global
 		{D652EBFE-708D-418B-A6AF-B24B2C7BE69D}.Debug|Win32.Build.0 = Debug|Win32
 		{D652EBFE-708D-418B-A6AF-B24B2C7BE69D}.Release|Win32.ActiveCfg = Release|Win32
 		{D652EBFE-708D-418B-A6AF-B24B2C7BE69D}.Release|Win32.Build.0 = Release|Win32
+		{934B19C8-2090-4ED0-9C63-C24505A76FFE}.Debug|Win32.ActiveCfg = Debug|Win32
+		{934B19C8-2090-4ED0-9C63-C24505A76FFE}.Debug|Win32.Build.0 = Debug|Win32
+		{934B19C8-2090-4ED0-9C63-C24505A76FFE}.Release|Win32.ActiveCfg = Release|Win32
+		{934B19C8-2090-4ED0-9C63-C24505A76FFE}.Release|Win32.Build.0 = Release|Win32
+		{775611F9-5577-4432-A591-C52B400C27D7}.Debug|Win32.ActiveCfg = Debug|Win32
+		{775611F9-5577-4432-A591-C52B400C27D7}.Debug|Win32.Build.0 = Debug|Win32
+		{775611F9-5577-4432-A591-C52B400C27D7}.Release|Win32.ActiveCfg = Release|Win32
+		{775611F9-5577-4432-A591-C52B400C27D7}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

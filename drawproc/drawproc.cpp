@@ -618,7 +618,7 @@ void ellipseMode(const RECTMODE mode)
 	gellipseMode = mode;
 }
 
-void ellipse(const int a, const int b, const int c, const int d)
+void ellipse(const float a, const float b, const float c, const float d)
 {
 	int x1 = 0, y1 = 0;
 	int rwidth = 0, rheight = 0;

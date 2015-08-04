@@ -363,37 +363,10 @@ void drawColors()
 	fill(pBlue);
 	rect(0, 120, width - 1, 180);
 }
-void drawMouse()
-{
-	int mWidth = 128;
-	int mHeight = 128;
 
-	rectMode(CENTER);
-	stroke(pBlack);
-	fill(0, 127, 255, 200);
-	rect(mouseX, mouseY, mWidth, mHeight);
-}
 
-// Draw information about the mouse
-// location, buttons pressed, etc
-void drawMouseInfo()
-{
-	// draw a white banner across the top
-	noStroke();
-	fill(255);
-	rect(0, 0, width, 24);
 
-	// select verdana font
-	setFont(verdana17);
 
-	// write some text
-	double fps = (double)frameCount / seconds();
-
-	char infobuff[256];
-	sprintf_s(infobuff, "Mouse X: %3d Y: %3d\tFPS: %f\n", mouseX, mouseY, fps);
-	fill(0);
-	text(infobuff, 10, 0);
-}
 
 static float a;
 
@@ -469,7 +442,59 @@ void keyReleased()
 	}
 }
 
+// Draw information about the mouse
+// location, buttons pressed, etc
+void drawMouseInfo()
+{
+	// draw a white banner across the bottom
+	noStroke();
+	fill(255);
+	rectMode(CORNER);
+	rect(0, height - 24, width, 24);
 
+	// select verdana font
+	setFont(verdana17);
+
+	// write some text
+	double fps = (double)frameCount / seconds();
+
+	char infobuff[256];
+	sprintf_s(infobuff, "Mouse X: %3d Y: %3d\tFPS: %f\n", mouseX, mouseY, fps);
+	fill(0);
+	text(infobuff, 10, height-24);
+}
+
+void drawMouse()
+{
+	int mWidth = 128;
+	int mHeight = 128;
+
+	rectMode(CENTER);
+	stroke(pBlack);
+	fill(0, 127, 255, 200);
+	rect(mouseX, mouseY, mWidth, mHeight);
+}
+
+void draw()
+{
+	frameCount++;
+
+	background(pLightGray);
+
+	DrawingHandler handler = gDrawRoutines[currentRoutine];
+	handler();
+
+
+
+//	drawMouse();
+	drawMouseInfo();
+
+	if (dumpimage)
+	{
+		write_PPM_binary("test_main.ppm", gpb);
+		dumpimage = false;
+	}
+}
 
 void setup()
 {
@@ -499,26 +524,7 @@ void setup()
 
 
 
-void draw()
-{
-	frameCount++;
 
-	background(pLightGray);
-
-	DrawingHandler handler = gDrawRoutines[currentRoutine];
-	handler();
-
-
-
-	drawMouse();
-	drawMouseInfo();
-
-	if (dumpimage)
-	{
-		write_PPM_binary("test_main.ppm", gpb);
-		dumpimage = false;
-	}
-}
 
 
 
