@@ -436,10 +436,22 @@ typedef void(* EllipseHandler)(pb_rgba *pb, const uint32_t cx, const uint32_t cy
 
 inline void Plot4EllipsePoints(pb_rgba *pb, const uint32_t cx, const uint32_t cy, const unsigned int x, const unsigned int y, const uint32_t color)
 {
-	pb_rgba_cover_pixel(pb, cx + x, cy + y, color);
-	pb_rgba_cover_pixel(pb, cx - x, cy + y, color);
-	pb_rgba_cover_pixel(pb, cx - x, cy - y, color);
-	pb_rgba_cover_pixel(pb, cx + x, cy - y, color);
+	unsigned int lowx = cx - x;
+	unsigned int maxx = cx + x;
+	unsigned int lowy = cy - y;
+	unsigned int maxy = cy + y;
+
+	if (pb_rect_contains_point(pb->frame, maxx, maxy))
+		pb_rgba_cover_pixel(pb, cx + x, cy + y, color);
+	
+	if (pb_rect_contains_point(pb->frame, lowx, maxy))
+		pb_rgba_cover_pixel(pb, cx - x, cy + y, color);
+	
+	if (pb_rect_contains_point(pb->frame, lowx, lowy))
+		pb_rgba_cover_pixel(pb, cx - x, cy - y, color);
+	
+	if (pb_rect_contains_point(pb->frame, maxx, lowy))
+		pb_rgba_cover_pixel(pb, cx + x, cy - y, color);
 }
 
 inline void fill2EllipseLines(pb_rgba *pb, const uint32_t cx, const uint32_t cy, const unsigned int x, const unsigned int y, const uint32_t color)

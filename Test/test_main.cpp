@@ -364,7 +364,18 @@ void drawColors()
 	rect(0, 120, width - 1, 180);
 }
 
+void drawROYGBIV()
+{
+	noStroke(); 
 
+	colorMode(COLOR_MODE_HSB,width);
+	for (int i = 0; i < width; i++){
+		//fill(i, width, width);
+		//rect(i, 0, i, height);
+		stroke(i, width, width);
+		line(i, 0, i, height - 1);
+	}
+}
 
 
 
@@ -393,6 +404,8 @@ typedef void(*DrawingHandler)();
 
 DrawingHandler gDrawRoutines[] = {
 	drawColors,
+	drawROYGBIV,
+
 	drawEllipses,
 	drawLines,
 	drawPoints,
@@ -417,6 +430,13 @@ int desiredWidth = 640;
 int desiredHeight = 480;
 pb_rgba localpb;
 
+void mouseReleased()
+{
+	currentRoutine++;
+	if (currentRoutine >= nRoutines) {
+		currentRoutine = 0;
+	}
+}
 
 void keyReleased()
 {
@@ -446,6 +466,8 @@ void keyReleased()
 // location, buttons pressed, etc
 void drawMouseInfo()
 {
+	colorMode(COLOR_MODE_RGB, 255, 255, 255, 255);
+
 	// draw a white banner across the bottom
 	noStroke();
 	fill(255);
@@ -478,6 +500,8 @@ void drawMouse()
 void draw()
 {
 	frameCount++;
+
+	colorMode(COLOR_MODE_RGB, 255, 255, 255, 255);
 
 	background(pLightGray);
 

@@ -11,6 +11,7 @@
 
 #include "agg_embedded_raster_fonts.h"
 
+#define radians RADIANS
 
 #ifdef __cplusplus
 extern "C" {
