@@ -36,6 +36,7 @@ limitations under the License.
 
 #include <stdint.h>
 #include <string.h>
+#include <stdlib.h>
 #include <math.h>
 
 #define BGR_DOMINANT 1
@@ -83,16 +84,19 @@ inline real DEGREES(const real radians) { return (real)(G_RTOD * radians); }
 inline real RADIANS(const real degrees) { return (real)(G_DTOR * degrees); }
 
 // utils
-static inline float MIN2(float a, float b){ return a < b ? a : b; }
-static inline float MAX2(float a, float b){ return a > b ? a : b; }
+#define min3(a,b,c) __min(__min(a,b),c)
+#define max3(a,b,c) __max(__max(a,b),c)
 
-static inline float MIN3(float a, float b, float c){ return MIN2(MIN2(a, b), c); }
-static inline float MAX3(float a, float b, float c){ return MAX2(MAX2(a, b), c); }
+//static inline float MIN2(float a, float b){ return a < b ? a : b; }
+//static inline float MAX2(float a, float b){ return a > b ? a : b; }
+
+//static inline float MIN3(float a, float b, float c){ return MIN2(MIN2(a, b), c); }
+//static inline float MAX3(float a, float b, float c){ return MAX2(MAX2(a, b), c); }
 
 // map a value (a) from between rlo <= a <= rhi to  shi <= b <= slo
 inline double MAP(double a, double rlo, double rhi, double slo, double shi) { return slo + (a - rlo) * (shi - slo) / (rhi - rlo); }
 //inline double CLAMP(double a, double rlo, double rhi){ return a < rlo ? rlo : (a>rhi ? rhi : a); }
-inline double CLAMP(double a, double rlo, double rhi){ return MIN2(MAX2(a, rlo), rhi); }
+inline double CLAMP(double a, double rlo, double rhi){ return __min(__max(a, rlo), rhi); }
 
 // turn a division by 255 into something 
 // much cheaper to calculate

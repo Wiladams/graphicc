@@ -13,6 +13,7 @@ pb_rgba *gpb;
 size_t width = 0;
 size_t height = 0;
 pb_rect pixelFrame;
+unsigned int frameCount = 0;
 
 RECTMODE grectMode = CORNER;
 RECTMODE gellipseMode = CORNER;
@@ -333,16 +334,16 @@ double random(const float rndMax)
 
 void RGBtoHSV(float r, float g, float b, float *h, float *s, float *v)
 {
-	float min, max, delta;
+	float minv, maxv, delta;
 
-	min = MIN3(r, g, b);
-	max = MAX3(r, g, b);
-	*v = max;				// v
+	minv = min3(r, g, b);
+	maxv = max3(r, g, b);
+	*v = maxv;				// v
 
-	delta = max - min;
+	delta = maxv - minv;
 
-	if (max != 0)
-		*s = delta / max;		// s
+	if (maxv != 0)
+		*s = delta / maxv;		// s
 	else {
 		// r = g = b = 0		// s = 0, v is undefined
 		*s = 0;
@@ -350,9 +351,9 @@ void RGBtoHSV(float r, float g, float b, float *h, float *s, float *v)
 		return;
 	}
 
-	if (r == max)
+	if (r == maxv)
 		*h = (g - b) / delta;		// between yellow & magenta
-	else if (g == max)
+	else if (g == maxv)
 		*h = 2 + (b - r) / delta;	// between cyan & yellow
 	else
 		*h = 4 + (r - g) / delta;	// between magenta & cyan
@@ -801,8 +802,6 @@ void rect(const int a, const int b, const int c, const int d)
 	}
 }
 
-#define min3(a,b,c) min(min(a,b),c)
-#define max3(a,b,c) max(max(a,b),c)
 
 
 void triangle(const int x1, const int y1, const int x2, const int y2, const int x3, const int y3)
