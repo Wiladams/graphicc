@@ -4,6 +4,7 @@
 
 //#include <windowsx.h>	// GET_X_LPARAM
 
+#include <stack>
 #include <vector>
 #include <math.h>
 #include <cstdlib>
@@ -56,7 +57,9 @@ int mouseButton = 0;
 // Typedef an STL vector of vertices which are used to represent
 // a polygon/contour and a series of triangles.
 typedef std::vector< Vector2d > Vector2dVector;
+typedef std::stack< mat3> TransformStack;
 
+static TransformStack gtransStack;
 
 // Time
 uint64_t millis()
@@ -311,6 +314,28 @@ void redraw()
 {
 	forceDraw();
 }
+
+// Coordinate transformation
+/*
+void applyMatrix();
+void popMatrix();
+void printMatrix();
+void pushMatrix();
+void resetMatrix();
+void rotate();
+void rotateX();
+void rotateY();
+void rotateZ();
+void scale();
+void shearX();
+void shearY();
+void shearZ();
+*/
+void translate(const coord x, const coord y, const coord z)
+{
+
+}
+
 
 // Math
 double random(const float low, const float high)
@@ -675,6 +700,7 @@ void line(const int x1, const int y1, const int x2, const int y2)
 	int yy1 = y1;
 	int xx2 = x2;
 	int yy2 = y2;
+
 
 	if (!clipLine(pixelFrame, xx1, yy1, xx2, yy2))
 	{

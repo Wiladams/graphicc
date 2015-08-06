@@ -21,6 +21,21 @@ PImage *kbImage;
 pb_rgba fb;
 pb_rect keyRect = { 0, 0, 34, 34 };
 
+
+/*
+Key coordinates
+
+*/
+struct keyloc {
+	pb_rect loc;
+	int vkey;
+};
+
+struct keyloc locations[] = {
+	{ { 0, 0, 0, 0 }, KC_SPACE }
+};
+
+
 void  mousePressed()
 {
 	gMode++;
@@ -150,6 +165,7 @@ void draw()
 
 void setup()
 {
+	// Adjust this path to match where the keyboard image file is
 	kbImage = loadImage("c:/repos/graphicc/Test/windows-keyboard-60-keys.ppm", nullptr);
 	
 	size(kbImage->fb.frame.width, kbImage->fb.frame.height+4+30);

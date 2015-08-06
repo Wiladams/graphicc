@@ -195,7 +195,7 @@ void stroke(const float v1, const float v2 = -1, const float v3 = -1, const floa
 void ellipseMode(const RECTMODE mode);
 void noSmooth();
 void rectMode(const RECTMODE mode);
-//void smooth();
+void smooth();
 //void strokeCap();
 //void strokeJoin();
 void strokeWeight(const float weight);
@@ -242,6 +242,23 @@ PImage * loadImage(const char *filename, const char *extension = nullptr);
 double random(const float low, const float high);
 double random(const float high);
 inline double sq(const double value) { return value*value; }
+
+// Coordinate transformation
+void applyMatrix();
+void popMatrix();
+void printMatrix();
+void pushMatrix();
+void resetMatrix();
+void rotate(const float angle, const coord x, const coord y, const coord z);
+void rotateX(const float anglex);
+void rotateY(const float angley);
+void rotateZ(const float anglez);
+void scale(const float a, const float b, const float c);
+void shearX();
+void shearY();
+void shearZ();
+void translate(const coord x, const coord y, const coord z = 0);
+
 
 #define pRed		COLOR(255, 0, 0, 255)
 #define pGreen		COLOR(0, 255, 0, 255)
