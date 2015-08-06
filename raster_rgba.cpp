@@ -444,8 +444,22 @@ inline void Plot4EllipsePoints(pb_rgba *pb, const uint32_t cx, const uint32_t cy
 
 inline void fill2EllipseLines(pb_rgba *pb, const uint32_t cx, const uint32_t cy, const unsigned int x, const unsigned int y, const uint32_t color)
 {
-	raster_rgba_hline_blend(pb, cx - x, cy + y, 2*x, color);
-	raster_rgba_hline_blend(pb, cx - x, cy - y, 2 * x, color);
+	int x1 = cx - x;
+	int y1 = cy+y;
+	int x2 = cx + x;
+	int y2 = cy+y;
+
+	if (clipLine(pb->frame, x1, y1, x2, y2)) {
+		raster_rgba_hline_blend(pb, x1, y1, x2-x1, color);
+	}
+	
+	y1 = cy - y;
+	y2 = cy - y;
+	if (clipLine(pb->frame, x1, y1, x2, y2)) {
+		raster_rgba_hline_blend(pb, x1, y1, x2 - x1, color);
+	}
+
+	//raster_rgba_hline_blend(pb, cx - x, cy - y, 2 * x, color);
 }
 
 void raster_rgba_ellipse(pb_rgba *pb, const uint32_t cx, const uint32_t cy, const size_t xradius, size_t yradius, const uint32_t color, EllipseHandler handler)

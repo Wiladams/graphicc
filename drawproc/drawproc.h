@@ -240,7 +240,7 @@ PImage * loadImage(const char *filename, const char *extension = nullptr);
 // Math
 double random(const float low, const float high);
 double random(const float high);
-
+inline double sq(const double value) { return value*value; }
 
 #define pRed		COLOR(255, 0, 0, 255)
 #define pGreen		COLOR(0, 255, 0, 255)
