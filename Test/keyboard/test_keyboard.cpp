@@ -31,8 +31,137 @@ struct keyloc {
 	int vkey;
 };
 
+/*
+28	Function Keys
+100 Numerics
+140 QWERTY
+*160	+ keypad
+180	Caps Lock
+220	Shift Keys
+*240	Enter Keys
+260 Space
+*/
+
 struct keyloc locations[] = {
-	{ { 0, 0, 0, 0 }, KC_SPACE }
+	// Row 1
+	{ { 0, 0, 0, 0 }, KC_ESCAPE },
+	{ { 0, 0, 0, 0 }, KC_F1 },
+	{ { 0, 0, 0, 0 }, KC_F2 },
+	{ { 0, 0, 0, 0 }, KC_F3 },
+	{ { 0, 0, 0, 0 }, KC_F4 },
+	{ { 0, 0, 0, 0 }, KC_F5 },
+	{ { 0, 0, 0, 0 }, KC_F6 },
+	{ { 0, 0, 0, 0 }, KC_F7 },
+	{ { 0, 0, 0, 0 }, KC_F8 },
+	{ { 0, 0, 0, 0 }, KC_F9 },
+	{ { 0, 0, 0, 0 }, KC_F10 },
+	{ { 0, 0, 0, 0 }, KC_F11 },
+	{ { 0, 0, 0, 0 }, KC_F12 },
+	{ { 0, 0, 0, 0 }, KC_PRINT },
+	{ { 0, 0, 0, 0 }, KC_SCROLL },
+	{ { 0, 0, 0, 0 }, KC_PAUSE },
+
+	// Row 2
+	{ { 0, 0, 0, 0 }, KC_OEM_3 },	// ~
+	{ { 0, 0, 0, 0 }, KC_1 },
+	{ { 0, 0, 0, 0 }, KC_2 },
+	{ { 0, 0, 0, 0 }, KC_3 },
+	{ { 0, 0, 0, 0 }, KC_4 },
+	{ { 0, 0, 0, 0 }, KC_5 },
+	{ { 0, 0, 0, 0 }, KC_6 },
+	{ { 0, 0, 0, 0 }, KC_7 },
+	{ { 0, 0, 0, 0 }, KC_8 },
+	{ { 0, 0, 0, 0 }, KC_9 },
+	{ { 0, 0, 0, 0 }, KC_0 },
+	{ { 0, 0, 0, 0 }, KC_OEM_MINUS },
+	{ { 0, 0, 0, 0 }, KC_OEM_PLUS },
+	{ { 0, 0, 0, 0 }, KC_BACK },
+	{ { 0, 0, 0, 0 }, KC_INSERT },
+	{ { 0, 0, 0, 0 }, KC_HOME },
+	{ { 0, 0, 0, 0 }, KC_PRIOR },		// Page Up
+	{ { 0, 0, 0, 0 }, KC_NUMLOCK },
+	{ { 0, 0, 0, 0 }, KC_DIVIDE },
+	{ { 0, 0, 0, 0 }, KC_MULTIPLY },
+	{ { 0, 0, 0, 0 }, KC_SUBTRACT },
+
+	// Row 3 - QWERTY
+	{ { 0, 0, 0, 0 }, KC_TAB },
+	{ { 0, 0, 0, 0 }, KC_Q },
+	{ { 0, 0, 0, 0 }, KC_W },
+	{ { 0, 0, 0, 0 }, KC_E },
+	{ { 0, 0, 0, 0 }, KC_R },
+	{ { 0, 0, 0, 0 }, KC_T },
+	{ { 0, 0, 0, 0 }, KC_Y },
+	{ { 0, 0, 0, 0 }, KC_U },
+	{ { 0, 0, 0, 0 }, KC_I },
+	{ { 0, 0, 0, 0 }, KC_O },
+	{ { 0, 0, 0, 0 }, KC_P },
+	{ { 0, 0, 0, 0 }, KC_OEM_4 },	// [{
+	{ { 0, 0, 0, 0 }, KC_OEM_6 },	// ]}
+	{ { 0, 0, 0, 0 }, KC_OEM_5 },	// \|
+	{ { 0, 0, 0, 0 }, KC_DELETE },
+	{ { 0, 0, 0, 0 }, KC_END },
+	{ { 0, 0, 0, 0 }, KC_NEXT },	// Page Down
+	{ { 0, 0, 0, 0 }, KC_NUMPAD7 },	// or Home
+	{ { 0, 0, 0, 0 }, KC_NUMPAD8 },	// or Up
+	{ { 0, 0, 0, 0 }, KC_NUMPAD9 },	// or PgUp
+
+	// Row - Keypad Plus
+	{ { 0, 0, 0, 0 }, KC_ADD },
+
+	// Row 4 - ASDF
+	{ { 0, 0, 0, 0 }, KC_CAPITAL },
+	{ { 0, 0, 0, 0 }, KC_A },
+	{ { 0, 0, 0, 0 }, KC_S },
+	{ { 0, 0, 0, 0 }, KC_D },
+	{ { 0, 0, 0, 0 }, KC_F },
+	{ { 0, 0, 0, 0 }, KC_G },
+	{ { 0, 0, 0, 0 }, KC_H },
+	{ { 0, 0, 0, 0 }, KC_J },
+	{ { 0, 0, 0, 0 }, KC_K },
+	{ { 0, 0, 0, 0 }, KC_L },
+	{ { 0, 0, 0, 0 }, KC_OEM_1 },	// ;:
+	{ { 0, 0, 0, 0 }, KC_OEM_7 },	// '"
+	{ { 0, 0, 0, 0 }, KC_RETURN },
+	{ { 0, 0, 0, 0 }, KC_NUMPAD4 },	// or LEFT
+	{ { 0, 0, 0, 0 }, KC_NUMPAD5 },
+	{ { 0, 0, 0, 0 }, KC_NUMPAD6 },	// or RIGHT
+
+	// Row 5 - ZXCV
+	{ { 0, 0, 0, 0 }, KC_LSHIFT },
+	{ { 0, 0, 0, 0 }, KC_Z },
+	{ { 0, 0, 0, 0 }, KC_X },
+	{ { 0, 0, 0, 0 }, KC_C },
+	{ { 0, 0, 0, 0 }, KC_V },
+	{ { 0, 0, 0, 0 }, KC_B },
+	{ { 0, 0, 0, 0 }, KC_N },
+	{ { 0, 0, 0, 0 }, KC_M },
+	{ { 0, 0, 0, 0 }, KC_OEM_COMMA },
+	{ { 0, 0, 0, 0 }, KC_OEM_PERIOD },
+	{ { 0, 0, 0, 0 }, KC_OEM_2 },		// /?
+	{ { 0, 0, 0, 0 }, KC_RSHIFT },
+	{ { 0, 0, 0, 0 }, KC_UP },
+	{ { 0, 0, 0, 0 }, KC_NUMPAD1 },
+	{ { 0, 0, 0, 0 }, KC_NUMPAD2 },
+	{ { 0, 0, 0, 0 }, KC_NUMPAD3 },
+
+	// Row - Keypad ENTER
+	{ { 0, 0, 0, 0 }, KC_OEM_NEC_EQUAL },
+
+	// Row 5 - SPACE
+	{ { 0, 0, 0, 0 }, KC_CONTROL },		// LCONTROL
+	{ { 0, 0, 0, 0 }, KC_LWIN },
+	{ { 0, 0, 0, 0 }, KC_SPACE },		// LALT
+	{ { 0, 0, 0, 0 }, KC_SPACE },
+	{ { 0, 0, 0, 0 }, KC_SPACE },		// RALT
+	{ { 0, 0, 0, 0 }, KC_RWIN },
+	{ { 0, 0, 0, 0 }, KC_MENU },		// RMENU
+	{ { 0, 0, 0, 0 }, KC_CONTROL },		// RCONTROL
+	{ { 0, 0, 0, 0 }, KC_LEFT },
+	{ { 0, 0, 0, 0 }, KC_DOWN },
+	{ { 0, 0, 0, 0 }, KC_RIGHT },
+	{ { 0, 0, 0, 0 }, KC_NUMPAD0 },
+	{ { 0, 0, 0, 0 }, KC_DECIMAL },
 };
 
 
@@ -143,9 +272,9 @@ void drawMouseInfo()
 	// select verdana font
 	setFont(verdana17);
 	char infobuff[256];
-	sprintf_s(infobuff, "Mouse X: %3d Y: %3d    Key: (%3f, %3f)(%3.0f, %3.0f)  Seconds: %3.2f", mouseX, mouseY, 
+	sprintf_s(infobuff, "Mouse X: %3d Y: %3d    Key: (%3f, %3f)(%3.0f, %3.0f)  Key Code: 0x%x", mouseX, mouseY, 
 		keyRect.x, keyRect.y, keyRect.width, keyRect.height,
-		seconds());
+		keyCode);
 	fill(pBlack);
 	textAlign(TX_LEFT, TX_TOP);
 	text(infobuff, 0, height-34);
