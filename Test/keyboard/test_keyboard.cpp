@@ -8,18 +8,7 @@ Do some simple mouse and keyboard tracking
 #include "guistyle.h"
 #include <stdio.h>
 
-static GUIStyle styler;
-static const int gMaxMode = 3;
-static int gMode = 0;
-static const int gridSize = 8;
 
-static bool gShowKeyRect = false;
-static bool showGrid = false;
-static bool gShowCrosshair = true;
-
-PImage *kbImage;
-pb_rgba fb;
-pb_rect keyRect = { 0, 0, 34, 34 };
 
 
 /*
@@ -29,141 +18,196 @@ Key coordinates
 struct keyloc {
 	pb_rect loc;
 	int vkey;
+
+	bool contains(const coord x, const coord y)
+	{
+		coord left = loc.x - loc.width / 2;
+		coord right = loc.x + loc.width / 2;
+		coord top = loc.y - loc.height / 2;
+		coord bottom = loc.y + loc.height / 2;
+
+		if (x<left || x>right) {
+			return false;
+		}
+
+		if (y<top || y>bottom) {
+			return false;
+		}
+
+		return true;
+	}
 };
 
-/*
-28	Function Keys
-100 Numerics
-140 QWERTY
-*160	+ keypad
-180	Caps Lock
-220	Shift Keys
-*240	Enter Keys
-260 Space
-*/
+static GUIStyle styler;
+static const int gMaxMode = 3;
+static int gMode = 0;
+static const int gridSize = 8;
+static struct keyloc hoverKey;
+
+static bool gShowKeyRect = false;
+static bool showGrid = false;
+static bool gShowCrosshair = false;
+static bool gShowKeyOutlines = false;
+
+PImage *kbImage;
+pb_rgba fb;
+pb_rect keyRect = { 0, 0, 34, 34 };
+
 
 struct keyloc locations[] = {
-	// Row 1
-	{ { 0, 0, 0, 0 }, KC_ESCAPE },
-	{ { 0, 0, 0, 0 }, KC_F1 },
-	{ { 0, 0, 0, 0 }, KC_F2 },
-	{ { 0, 0, 0, 0 }, KC_F3 },
-	{ { 0, 0, 0, 0 }, KC_F4 },
-	{ { 0, 0, 0, 0 }, KC_F5 },
-	{ { 0, 0, 0, 0 }, KC_F6 },
-	{ { 0, 0, 0, 0 }, KC_F7 },
-	{ { 0, 0, 0, 0 }, KC_F8 },
-	{ { 0, 0, 0, 0 }, KC_F9 },
-	{ { 0, 0, 0, 0 }, KC_F10 },
-	{ { 0, 0, 0, 0 }, KC_F11 },
-	{ { 0, 0, 0, 0 }, KC_F12 },
-	{ { 0, 0, 0, 0 }, KC_PRINT },
-	{ { 0, 0, 0, 0 }, KC_SCROLL },
-	{ { 0, 0, 0, 0 }, KC_PAUSE },
+	// Row 1 - function keys
+	{ { 30, 28, 32,34 }, KC_ESCAPE },
+	// F1 cluster
+	{ { 96, 28, 32, 34 }, KC_F1 },
+	{ { 134, 28, 32, 34 }, KC_F2 },
+	{ { 172, 28, 32, 34 }, KC_F3 },
+	{ { 210, 28, 32, 34 }, KC_F4 },
+	// F5 cluster
+	{ { 270, 28, 32, 34 }, KC_F5 },
+	{ { 308, 28, 32, 34 }, KC_F6 },
+	{ { 346, 28, 32, 34 }, KC_F7 },
+	{ { 384, 28, 32, 34 }, KC_F8 },
+	// F9 cluster
+	{ { 445, 28, 32, 34 }, KC_F9 },
+	{ { 483, 28, 32, 34 }, KC_F10 },
+	{ { 521, 28, 32, 34 }, KC_F11 },
+	{ { 559, 28, 32, 34 }, KC_F12 },
+	// Print Screen cluster
+	{ { 618, 28, 32, 34 }, KC_PRINT },
+	{ { 656, 28, 32, 34 }, KC_SCROLL },
+	{ { 694, 28, 32, 34 }, KC_PAUSE },
+
 
 	// Row 2
-	{ { 0, 0, 0, 0 }, KC_OEM_3 },	// ~
-	{ { 0, 0, 0, 0 }, KC_1 },
-	{ { 0, 0, 0, 0 }, KC_2 },
-	{ { 0, 0, 0, 0 }, KC_3 },
-	{ { 0, 0, 0, 0 }, KC_4 },
-	{ { 0, 0, 0, 0 }, KC_5 },
-	{ { 0, 0, 0, 0 }, KC_6 },
-	{ { 0, 0, 0, 0 }, KC_7 },
-	{ { 0, 0, 0, 0 }, KC_8 },
-	{ { 0, 0, 0, 0 }, KC_9 },
-	{ { 0, 0, 0, 0 }, KC_0 },
-	{ { 0, 0, 0, 0 }, KC_OEM_MINUS },
-	{ { 0, 0, 0, 0 }, KC_OEM_PLUS },
-	{ { 0, 0, 0, 0 }, KC_BACK },
-	{ { 0, 0, 0, 0 }, KC_INSERT },
-	{ { 0, 0, 0, 0 }, KC_HOME },
-	{ { 0, 0, 0, 0 }, KC_PRIOR },		// Page Up
-	{ { 0, 0, 0, 0 }, KC_NUMLOCK },
-	{ { 0, 0, 0, 0 }, KC_DIVIDE },
-	{ { 0, 0, 0, 0 }, KC_MULTIPLY },
-	{ { 0, 0, 0, 0 }, KC_SUBTRACT },
+	{ { 30, 100, 32, 32 }, KC_OEM_3 },	// ~
+	{ { 68, 100, 32, 32 }, KC_1 },
+	{ { 106, 100, 32, 32 }, KC_2 },
+	{ { 144, 100, 32, 32 }, KC_3 },
+	{ { 182, 100, 32, 32 }, KC_4 },
+	{ { 220, 100, 32, 32 }, KC_5 },
+	{ { 258, 100, 32, 32 }, KC_6 },
+	{ { 296, 100, 32, 32 }, KC_7 },
+	{ { 334, 100, 32, 32 }, KC_8 },
+	{ { 370, 100, 32, 32 }, KC_9 },
+	{ { 408, 100, 32, 32 }, KC_0 },
+	{ { 446, 100, 32, 32 }, KC_OEM_MINUS },
+	{ { 486, 100, 32, 32 }, KC_OEM_PLUS },
+	{ { 542, 100, 66, 32 }, KC_BACK },
+	// INSERT cluster
+	{ { 618, 100, 32, 34 }, KC_INSERT },
+	{ { 656, 100, 32, 34 }, KC_HOME },
+	{ { 694, 100, 32, 34 }, KC_PRIOR },		// Page Up
+	// Num Lock cluster
+	{ { 754, 100, 32, 34 }, KC_NUMLOCK },
+	{ { 792, 100, 32, 34 }, KC_DIVIDE },
+	{ { 830, 100, 32, 34 }, KC_MULTIPLY },
+	{ { 868, 100, 32, 34 }, KC_SUBTRACT },
 
 	// Row 3 - QWERTY
-	{ { 0, 0, 0, 0 }, KC_TAB },
-	{ { 0, 0, 0, 0 }, KC_Q },
-	{ { 0, 0, 0, 0 }, KC_W },
-	{ { 0, 0, 0, 0 }, KC_E },
-	{ { 0, 0, 0, 0 }, KC_R },
-	{ { 0, 0, 0, 0 }, KC_T },
-	{ { 0, 0, 0, 0 }, KC_Y },
-	{ { 0, 0, 0, 0 }, KC_U },
-	{ { 0, 0, 0, 0 }, KC_I },
-	{ { 0, 0, 0, 0 }, KC_O },
-	{ { 0, 0, 0, 0 }, KC_P },
-	{ { 0, 0, 0, 0 }, KC_OEM_4 },	// [{
-	{ { 0, 0, 0, 0 }, KC_OEM_6 },	// ]}
-	{ { 0, 0, 0, 0 }, KC_OEM_5 },	// \|
-	{ { 0, 0, 0, 0 }, KC_DELETE },
-	{ { 0, 0, 0, 0 }, KC_END },
-	{ { 0, 0, 0, 0 }, KC_NEXT },	// Page Down
-	{ { 0, 0, 0, 0 }, KC_NUMPAD7 },	// or Home
-	{ { 0, 0, 0, 0 }, KC_NUMPAD8 },	// or Up
-	{ { 0, 0, 0, 0 }, KC_NUMPAD9 },	// or PgUp
+	{ { 38, 140, 50, 32 }, KC_TAB },
+	{ { 86, 140, 32, 32 }, KC_Q },
+	{ { 124, 140, 32, 32 }, KC_W },
+	{ { 162, 140, 32, 32 }, KC_E },
+	{ { 200, 140, 32, 32 }, KC_R },
+	{ { 238, 140, 32, 32 }, KC_T },
+	{ { 276, 140, 32, 32 }, KC_Y },
+	{ { 314, 140, 32, 32 }, KC_U },
+	{ { 352, 140, 32, 32 }, KC_I },
+	{ { 390, 140, 32, 32 }, KC_O },
+	{ { 428, 140, 32, 32 }, KC_P },
+	{ { 466, 140, 32, 32 }, KC_OEM_4 },	// [{
+	{ { 504, 140, 32, 32 }, KC_OEM_6 },	// ]}
+	{ { 550, 140, 50, 32 }, KC_OEM_5 },	// \|
+	// Delete cluster
+	{ { 618, 140, 32, 32 }, KC_DELETE },
+	{ { 656, 140, 32, 32 }, KC_END },
+	{ { 694, 140, 32, 32 }, KC_NEXT },	// Page Down
+
+	{ { 754, 140, 32, 32 }, KC_NUMPAD7 },	// or Home
+	{ { 792, 140, 32, 32 }, KC_NUMPAD8 },	// or Up
+	{ { 830, 140, 32, 32 }, KC_NUMPAD9 },	// or PgUp
 
 	// Row - Keypad Plus
-	{ { 0, 0, 0, 0 }, KC_ADD },
+	{ { 868, 160, 32, 70 }, KC_ADD },
 
 	// Row 4 - ASDF
-	{ { 0, 0, 0, 0 }, KC_CAPITAL },
-	{ { 0, 0, 0, 0 }, KC_A },
-	{ { 0, 0, 0, 0 }, KC_S },
-	{ { 0, 0, 0, 0 }, KC_D },
-	{ { 0, 0, 0, 0 }, KC_F },
-	{ { 0, 0, 0, 0 }, KC_G },
-	{ { 0, 0, 0, 0 }, KC_H },
-	{ { 0, 0, 0, 0 }, KC_J },
-	{ { 0, 0, 0, 0 }, KC_K },
-	{ { 0, 0, 0, 0 }, KC_L },
-	{ { 0, 0, 0, 0 }, KC_OEM_1 },	// ;:
-	{ { 0, 0, 0, 0 }, KC_OEM_7 },	// '"
-	{ { 0, 0, 0, 0 }, KC_RETURN },
-	{ { 0, 0, 0, 0 }, KC_NUMPAD4 },	// or LEFT
-	{ { 0, 0, 0, 0 }, KC_NUMPAD5 },
-	{ { 0, 0, 0, 0 }, KC_NUMPAD6 },	// or RIGHT
+	{ { 44, 180, 60, 32 }, KC_CAPITAL },
+	{ { 96, 180, 32, 32 }, KC_A },
+	{ { 134, 180, 32, 32 }, KC_S },
+	{ { 172, 180, 32, 32 }, KC_D },
+	{ { 210, 180, 32, 32 }, KC_F },
+	{ { 248, 180, 32, 32 }, KC_G },
+	{ { 286, 180, 32, 32 }, KC_H },
+	{ { 324, 180, 32, 32 }, KC_J },
+	{ { 362, 180, 32, 32 }, KC_K },
+	{ { 400, 180, 32, 32 }, KC_L },
+	{ { 438, 180, 32, 32 }, KC_OEM_1 },	// ;:
+	{ { 476, 180, 32, 32 }, KC_OEM_7 },	// '"
+	{ { 536, 180, 76, 32 }, KC_RETURN },
+	// Keypad 4 cluster
+	{ { 754, 180, 32, 32 }, KC_NUMPAD4 },	// or LEFT
+	{ { 792, 180, 32, 32 }, KC_NUMPAD5 },
+	{ { 830, 180, 32, 32 }, KC_NUMPAD6 },	// or RIGHT
 
 	// Row 5 - ZXCV
-	{ { 0, 0, 0, 0 }, KC_LSHIFT },
-	{ { 0, 0, 0, 0 }, KC_Z },
-	{ { 0, 0, 0, 0 }, KC_X },
-	{ { 0, 0, 0, 0 }, KC_C },
-	{ { 0, 0, 0, 0 }, KC_V },
-	{ { 0, 0, 0, 0 }, KC_B },
-	{ { 0, 0, 0, 0 }, KC_N },
-	{ { 0, 0, 0, 0 }, KC_M },
-	{ { 0, 0, 0, 0 }, KC_OEM_COMMA },
-	{ { 0, 0, 0, 0 }, KC_OEM_PERIOD },
-	{ { 0, 0, 0, 0 }, KC_OEM_2 },		// /?
-	{ { 0, 0, 0, 0 }, KC_RSHIFT },
-	{ { 0, 0, 0, 0 }, KC_UP },
-	{ { 0, 0, 0, 0 }, KC_NUMPAD1 },
-	{ { 0, 0, 0, 0 }, KC_NUMPAD2 },
-	{ { 0, 0, 0, 0 }, KC_NUMPAD3 },
+	{ { 56, 218, 86, 32 }, KC_LSHIFT },
+	{ { 122, 218, 32, 32 }, KC_Z },
+	{ { 160, 218, 32, 32 }, KC_X },
+	{ { 198, 218, 32, 32 }, KC_C },
+	{ { 237, 218, 32, 32 }, KC_V },
+	{ { 275, 218, 32, 32 }, KC_B },
+	{ { 313, 218, 32, 32 }, KC_N },
+	{ { 351, 218, 32, 32 }, KC_M },
+	{ { 389, 218, 32, 32 }, KC_OEM_COMMA },
+	{ { 428, 218, 32, 32 }, KC_OEM_PERIOD },
+	{ { 467, 218, 32, 32 }, KC_OEM_2 },		// /?
+	{ { 532, 218, 86, 32 }, KC_RSHIFT },
+	{ { 656, 218, 32, 32 }, KC_UP },
+	// Keypad 1 cluster
+	{ { 754, 218, 32, 32 }, KC_NUMPAD1 },
+	{ { 792, 218, 32, 32 }, KC_NUMPAD2 },
+	{ { 830, 218, 32, 32 }, KC_NUMPAD3 },
 
 	// Row - Keypad ENTER
-	{ { 0, 0, 0, 0 }, KC_OEM_NEC_EQUAL },
+	{ { 868, 238, 32, 72 }, KC_OEM_NEC_EQUAL },
 
 	// Row 5 - SPACE
-	{ { 0, 0, 0, 0 }, KC_CONTROL },		// LCONTROL
-	{ { 0, 0, 0, 0 }, KC_LWIN },
-	{ { 0, 0, 0, 0 }, KC_SPACE },		// LALT
-	{ { 0, 0, 0, 0 }, KC_SPACE },
-	{ { 0, 0, 0, 0 }, KC_SPACE },		// RALT
-	{ { 0, 0, 0, 0 }, KC_RWIN },
-	{ { 0, 0, 0, 0 }, KC_MENU },		// RMENU
-	{ { 0, 0, 0, 0 }, KC_CONTROL },		// RCONTROL
-	{ { 0, 0, 0, 0 }, KC_LEFT },
-	{ { 0, 0, 0, 0 }, KC_DOWN },
-	{ { 0, 0, 0, 0 }, KC_RIGHT },
-	{ { 0, 0, 0, 0 }, KC_NUMPAD0 },
-	{ { 0, 0, 0, 0 }, KC_DECIMAL },
+	{ { 38, 258, 50, 32 }, KC_CONTROL },		// LCONTROL
+	{ { 92, 258, 46, 32 }, KC_LWIN },
+	{ { 140, 258, 44, 32 }, KC_SPACE },		// LALT
+	{ { 270, 258, 202, 32 }, KC_SPACE },	// SPACE BAR
+	{ { 398, 258, 44, 32 }, KC_SPACE },		// RALT
+	{ { 448, 258, 44, 32 }, KC_RWIN },
+	{ { 496, 258, 44, 32 }, KC_MENU },		// RMENU
+	{ { 550, 258, 50, 32 }, KC_CONTROL },		// RCONTROL
+
+	{ { 618, 258, 32, 32 }, KC_LEFT },
+	{ { 656, 258, 32, 32 }, KC_DOWN },
+	{ { 694, 258, 32, 32 }, KC_RIGHT },
+	
+	{ { 773, 258, 70, 32 }, KC_NUMPAD0 },
+	{ { 830, 258, 32, 32 }, KC_DECIMAL },
 };
 
+static int nKeyLocs = sizeof(locations) / sizeof(locations[0]);
+
+
+
+// traverse key locations table looking for a match
+// for the specified location
+bool findKey(const coord x, const coord y, struct keyloc &loc)
+{
+	loc.vkey = 0;
+
+	for (int idx = 0; idx < nKeyLocs; idx++) {
+		if (locations[idx].contains(x, y)) {
+			loc = locations[idx];
+			return true;
+		}
+	}
+
+	return false;
+}
 
 void  mousePressed()
 {
@@ -177,6 +221,8 @@ void  mouseMoved()
 {
 	keyRect.x = mouseX - keyRect.width / 2;
 	keyRect.y = mouseY - keyRect.height / 2;
+
+	findKey(mouseX, mouseY, hoverKey);
 }
 
 void  keyReleased()
@@ -195,6 +241,9 @@ void  keyReleased()
 		break;
 	case KC_F3:
 		gShowCrosshair = !gShowCrosshair;
+		break;
+	case KC_F4:
+		gShowKeyOutlines = !gShowKeyOutlines;
 		break;
 
 	case KC_RIGHT: // increase width of keyRect
@@ -217,6 +266,36 @@ void  keyReleased()
 	keyRect.x = mouseX - keyRect.width / 2;
 	keyRect.y = mouseY - keyRect.height / 2;
 
+}
+
+void drawKeys()
+{
+	static int nkeylocs = sizeof(locations) / sizeof(locations[0]);
+
+	if (!gShowKeyOutlines) {
+		return;
+	}
+
+	rectMode(CENTER);
+	stroke(pRed);
+	noFill();
+	for (int idx = 0; idx < nkeylocs; idx++){
+		if (locations[idx].loc.x != 0) {
+			rect(locations[idx].loc.x, locations[idx].loc.y, locations[idx].loc.width, locations[idx].loc.height);
+		}
+	}
+}
+
+void drawHoverKey()
+{
+	if (hoverKey.vkey == 0) {
+		return;
+	}
+
+	rectMode(CENTER);
+	stroke(pYellow);
+	noFill();
+	rect(hoverKey.loc.x, hoverKey.loc.y, hoverKey.loc.width, hoverKey.loc.height);
 }
 
 void drawCrossHairs()
@@ -258,6 +337,7 @@ void drawGrid()
 void drawMouseInfo()
 {
 	// draw a white banner across the bottom
+	rectMode(CORNER);
 	noStroke();
 	fill(pWhite);
 	rect(0, height - 1 - 34, width, 34);
@@ -266,6 +346,7 @@ void drawMouseInfo()
 		// draw the key rectangle
 		fill(COLOR(255, 238, 200, 180));
 		stroke(pDarkGray);
+		rectMode(CORNER);
 		rect(keyRect.x, keyRect.y, keyRect.width, keyRect.height);
 	}
 
@@ -288,6 +369,8 @@ void draw()
 
 	drawCrossHairs();
 	drawGrid();
+	drawKeys();
+	drawHoverKey();
 
 	drawMouseInfo();
 }
