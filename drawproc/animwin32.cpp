@@ -255,7 +255,12 @@ void OnPaint(HDC hdc, PAINTSTRUCT &ps)
 //
 //
 
-
+uint32_t bitops32_extract_range(const uint32_t value, const int offset, const int length)
+{
+	uint32_t res = value >> offset;
+	res = res & ~(1 << length);
+	return res;
+}
 
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
@@ -266,11 +271,19 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	{
 		case WM_CHAR:
 		case WM_KEYDOWN:
-		case WM_KEYUP:
+		case WM_KEYUP:{
+			uint32_t scanCode = bitops32_extract_range((uint32_t)lParam, 16, 8);
+			uint32_t context = bitops32_extract_range((uint32_t)lParam, 29, 1);
+			uint32_t previousState = bitops32_extract_range((uint32_t)lParam, 30, 1);
+			uint32_t transitionState = bitops32_extract_range((uint32_t)lParam, 31, 1);
+
+			printf("scan code: %d context: %d  previous: %d  transition: %d\n", scanCode, context, previousState, transitionState);
+
 			if (gkbdHandler != nullptr)
-			{
-				return gkbdHandler(hWnd, message, wParam, lParam);
-			}				
+						  {
+							  return gkbdHandler(hWnd, message, wParam, lParam);
+						  }
+		}
 		break;
 
 
