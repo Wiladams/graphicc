@@ -239,17 +239,17 @@ LRESULT CALLBACK mouseHandler(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPa
 }
 
 
-
-void init()
+void initFont()
 {
 	// Setup text
 	font_t_init(&gfont, verdana12);
 	gTextSize = 10;
 	gTextAlignX = TX_LEFT;
 	gTextAlignY = TX_TOP;
+}
 
-
-	
+void initInput()
+{
 	HMODULE modH = GetModuleHandle(NULL);
 
 	// Keyboard handling routines
@@ -273,8 +273,6 @@ void init()
 // size of window
 void size(const size_t lwidth, const size_t lheight)
 {
-	init();
-
 	width = lwidth;
 	height = lheight;
 
@@ -282,6 +280,8 @@ void size(const size_t lwidth, const size_t lheight)
 	pixelFrame.y = 0;
 	pixelFrame.width = width;
 	pixelFrame.height = height;
+
+	initFont();
 
 	void *data = SetWindowSize(lwidth, lheight);
 
@@ -298,6 +298,8 @@ void size(const size_t lwidth, const size_t lheight)
 
 	// paint the background at least once before beginning
 	raster_rgba_rect_fill(gpb, 0, 0, width, height, RGBA(0,0,0,255));
+
+	initInput();
 }
 
 void noLoop()
