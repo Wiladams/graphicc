@@ -96,7 +96,7 @@ inline real RADIANS(const real degrees) { return (real)(G_DTOR * degrees); }
 // map a value (a) from between rlo <= a <= rhi to  shi <= b <= slo
 inline double MAP(double a, double rlo, double rhi, double slo, double shi) { return slo + (a - rlo) * (shi - slo) / (rhi - rlo); }
 //inline double CLAMP(double a, double rlo, double rhi){ return a < rlo ? rlo : (a>rhi ? rhi : a); }
-inline double CLAMP(double a, double rlo, double rhi){ return __min(__max(a, rlo), rhi); }
+inline double CLAMP(const double a, const double rlo=0.0, const double rhi=1.0){ return __min(__max(a, rlo), rhi); }
 
 // turn a division by 255 into something 
 // much cheaper to calculate
