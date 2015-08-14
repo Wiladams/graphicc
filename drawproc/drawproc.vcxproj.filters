@@ -50,5 +50,8 @@
     <ClInclude Include="vkeys.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="key_scancodes.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
