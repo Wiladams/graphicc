@@ -174,11 +174,11 @@ struct keyloc locations[] = {
 	// Row 5 - SPACE
 	{ { 38, 257, 50, 31 }, KC_CONTROL },		// LCONTROL
 	{ { 91, 257, 44, 31 }, KC_LWIN },
-	{ { 140, 257, 44, 31 }, KC_SPACE },		// LALT
+	{ { 140, 257, 44, 31 }, KC_LMENU },		// LALT
 	{ { 270, 257, 202, 31 }, KC_SPACE },	// SPACE BAR
-	{ { 398, 257, 44, 31 }, KC_SPACE },		// RALT
+	{ { 398, 257, 44, 31 }, KC_RMENU },		// RALT
 	{ { 448, 257, 44, 31 }, KC_RWIN },
-	{ { 496, 257, 44, 31 }, KC_MENU },		// RMENU
+	{ { 496, 257, 44, 31 }, KC_APPS },		// Actual Menu Key
 	{ { 550, 257, 50, 31 }, KC_CONTROL },		// RCONTROL
 
 	{ { 618, 257, 32, 31 }, KC_LEFT },
@@ -268,9 +268,10 @@ void  keyReleased()
 
 }
 
+static int nkeylocs = sizeof(locations) / sizeof(locations[0]);
+
 void drawKeys()
 {
-	static int nkeylocs = sizeof(locations) / sizeof(locations[0]);
 
 	if (!gShowKeyOutlines) {
 		return;
@@ -296,6 +297,23 @@ void drawHoverKey()
 	stroke(pYellow);
 	noFill();
 	rect(hoverKey.loc.x, hoverKey.loc.y, hoverKey.loc.width, hoverKey.loc.height);
+}
+
+// Draw the pressed state of all keys
+// on the keyboard
+void drawKeyStates()
+{
+	static int KEY_IS_DOWN = 0x8000;
+
+	fill(pLightGray);
+	noStroke();
+	rectMode(CENTER);
+	for (int idx = 0; idx < nkeylocs; idx++)
+	{
+		if (::GetAsyncKeyState(locations[idx].vkey) & KEY_IS_DOWN) {
+			rect(locations[idx].loc.x, locations[idx].loc.y, locations[idx].loc.width, locations[idx].loc.height);
+		}
+	}
 }
 
 void drawCrossHairs()
@@ -370,6 +388,7 @@ void draw()
 	drawCrossHairs();
 	drawGrid();
 	drawKeys();
+	drawKeyStates();
 	drawHoverKey();
 
 	drawMouseInfo();
