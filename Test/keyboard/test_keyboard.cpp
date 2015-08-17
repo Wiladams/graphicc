@@ -305,7 +305,8 @@ void drawKeyStates()
 {
 	static int KEY_IS_DOWN = 0x8000;
 
-	fill(pLightGray);
+	//fill(pLightGray);
+	fill(COLOR(163, 163, 163, 127));
 	noStroke();
 	rectMode(CENTER);
 	for (int idx = 0; idx < nkeylocs; idx++)
@@ -371,9 +372,9 @@ void drawMouseInfo()
 	// select verdana font
 	setFont(verdana17);
 	char infobuff[256];
-	sprintf_s(infobuff, "Mouse X: %3d Y: %3d    Key: (%3f, %3f)(%3.0f, %3.0f)  Key Code: 0x%x", mouseX, mouseY, 
-		keyRect.x, keyRect.y, keyRect.width, keyRect.height,
-		keyCode);
+	sprintf_s(infobuff, "Mouse X: %3d Y: %3d    Key Pressed: 0x%x  Hover VKey: 0x%x", 
+		mouseX, mouseY,
+		keyCode, hoverKey.vkey);
 	fill(pBlack);
 	textAlign(TX_LEFT, TX_TOP);
 	text(infobuff, 0, height-34);
